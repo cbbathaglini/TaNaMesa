@@ -4,12 +4,21 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 error_reporting(E_ALL & ~E_NOTICE);
-//require_once __DIR__ . '/../classes/Sessao/Sessao.php';
+require_once __DIR__ . '/../classes/Sessao/Sessao.php';
 
 
 switch ($_GET['action']):
     case 'principal':
         require_once 'tela_inicial.php';
+        break;
+
+    case 'login':
+        require_once 'index.php';
+        break;
+
+    case 'sair':
+        Sessao::getInstance()->logoff();
+        header('Location: controlador.php?action=login');
         break;
 
     /*

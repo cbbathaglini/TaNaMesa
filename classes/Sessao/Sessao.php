@@ -26,17 +26,17 @@ class Sessao {
         return self::$instance;
     }
 
-    public function logar($numero, $senha) {
+    public function logar($CPF, $senha) {
 
         try {
 
             unset($_SESSION['TANAMESA']);
-            if ($numero != null && $numero != '' && $senha != '' && $senha != null) {
+            if ($CPF != null && $CPF != '' && $senha != '' && $senha != null) {
 
                 $objUsuario = new Usuario();
                 $objUsuarioRN = new UsuarioRN();
 
-                $objUsuario->setNumero($numero);
+                $objUsuario->setCPF($CPF);
                 $objUsuario->setSenha($senha);
                 $objUsuarioRN->validar_cadastro($objUsuario);
 
@@ -55,7 +55,7 @@ class Sessao {
 
                 $objRel_usuario_perfilUsuario = new Rel_usuario_perfilUsuario();
                 $objRel_usuario_perfilUsuario_RN = new Rel_usuario_perfilUsuario_RN();
-                $objRel_usuario_perfilUsuario->setIdUsuario_fk($arr_usuario[0]->getIdUsuario());
+                $objRel_usuario_perfilUsuario->setIdUsuario($arr_usuario[0]->getIdUsuario());
                 $perfis_usuario = $objRel_usuario_perfilUsuario_RN->listar($objRel_usuario_perfilUsuario);
                 //print_r($perfis_usuario);
                 
@@ -72,7 +72,7 @@ class Sessao {
                 $objRel_perfilUsuario_recurso_RN = new Rel_perfilUsuario_recurso_RN();
 
                 foreach ($perfis_usuario as $perfis) {
-                    $objRel_perfilUsuario_recurso->setIdPerfilUsuario_fk($perfis->getIdPerfilUsuario_fk());
+                    $objRel_perfilUsuario_recurso->setIdPerfilUsuario($perfis->getIdPerfilUsuario());
                     $recursos = $objRel_perfilUsuario_recurso_RN->listar_recursos($objRel_perfilUsuario_recurso);
                 }
 
@@ -84,7 +84,7 @@ class Sessao {
                 $objRecurso = new Recurso();
                 $objRecursoRN = new RecursoRN();
                 foreach ($recursos as $r) {
-                    $objRecurso->setIdRecurso($r->getIdRecurso_fk());
+                    $objRecurso->setIdRecurso($r->getIdRecurso());
                     $objRecurso = $objRecursoRN->consultar($objRecurso);
                     $arr_recursos[] = $objRecurso->getNome();
                 }
@@ -92,7 +92,7 @@ class Sessao {
                 //print_r($arr_recursos);
                 $_SESSION['TANAMESA'] = array();
                 $_SESSION['TANAMESA']['ID_USUARIO'] = $arr_usuario[0]->getIdUsuario();
-                $_SESSION['TANAMESA']['NUMERO'] = $arr_usuario[0]->getMatricula();
+                $_SESSION['TANAMESA']['CPF'] = $arr_usuario[0]->getCPF();
                 $_SESSION['TANAMESA']['RECURSOS'] = $arr_recursos;
                 $_SESSION['TANAMESA']['CHAVE'] = hash('sha256', random_bytes(50));
 
@@ -150,8 +150,8 @@ class Sessao {
       
     }
 
-    public function getMatricula() {
-        return $_SESSION['TANAMESA']['NUMERO'];
+    public function getCPF() {
+        return $_SESSION['TANAMESA']['CPF'];
     }
 
     public function assinar_link($link) {

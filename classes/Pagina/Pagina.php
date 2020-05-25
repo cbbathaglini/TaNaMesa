@@ -3,10 +3,10 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-//require_once __DIR__ . '/../Sessao/Sessao.php';
-//require_once __DIR__ . '/../Log/Log.php';
-//require_once __DIR__ . '/../Log/LogRN.php';
-//require_once __DIR__ .'/../../utils/Alert.php';
+require_once __DIR__ . '/../Sessao/Sessao.php';
+require_once __DIR__ . '/../Log/Log.php';
+require_once __DIR__ . '/../Log/LogRN.php';
+require_once __DIR__ .'/../../utils/Alert.php';
 
 class Pagina {
 
@@ -55,14 +55,14 @@ class Pagina {
 
             try {
                 
-                /*$log = new Log();
+                $log = new Log();
                 $log->setIdUsuario(Sessao::getInstance()->getIdUsuario());
                 $log->setTexto($e->__toString()."\n".$e->getTraceAsString());
                 date_default_timezone_set('America/Sao_Paulo');
                 $log->setDataHora(date("Y-m-d H:i:s"));
                 print_r($log);
                 $logRN = new LogRN();
-                $logRN->cadastrar($log);*/
+                $logRN->cadastrar($log);
                 //die("aqui");
                 
             } catch (Throwable $ex) {      
@@ -189,7 +189,65 @@ class Pagina {
     }
 
     public function montar_menu_topo() {
-        echo '<a class="navbar-brand" href="controlador.php?action=principal">Tela Inicial<i class="fas fa-virus"></i></a>';
+            //echo '<a href="controlador.php?action=principal">TELA INICIAL</a>';
+            echo'<header >
+            <!--<a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" ></a> -->
+            
+           <nav class="navbar navbar-expand-sm navbar-light bg-light">
+            <div class="mx-auto d-sm-flex d-block flex-sm-nowrap">
+
+                <a class="navbar-brand" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">Tela Inicial<i class="fas fa-virus"></i></a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse text-center" id="navbarsExample11">
+                    <ul class="navbar-nav">
+                        <!--<li class="nav-item active">
+                            <a class="nav-link" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=ca').'">Cadastro Amostra</a>
+                        </li>-->
+                        <!--<li class="nav-item">
+                            <a class="nav-link" href="#">Preparo e Armazenamento</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Extração</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">RTPCR</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Laudo</a>
+                        </li>
+                         <li class="nav-item divisor"></li> -->
+                        <li class="nav-item">
+                            <div class="dropdown">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Usuário logado:  '.Sessao::getInstance()->getCPF().'
+                                </a>
+
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                  <a class="dropdown-item" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=sair').'">Logoff</a>
+                                </div>
+                              </div>
+                            
+                            <!--<div class="dropdown">
+                                <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 Usuário logado:  '.Sessao::getInstance()->getCPF().'
+                                </button>
+                                 <div class="dropdown-menu">
+                                  <a class="dropdown-item" href=>Logoff</a>
+                                </div>
+                              </div>-->
+                          
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+                  
+
+          </header>';
+
     }
 
     public static function  abrir_body(){

@@ -2,9 +2,9 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-//session_start();
+session_start();
 try{
-    //require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
+    require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
     require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
     require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
     require_once __DIR__ . '/../../classes/PerfilUsuario/PerfilUsuario.php';
@@ -12,7 +12,7 @@ try{
     require_once __DIR__ . '/../../utils/Utils.php';
     require_once __DIR__ . '/../../utils/Alert.php';
 
-    //Sessao::getInstance()->validar();
+    Sessao::getInstance()->validar();
 
 
     $utils = new Utils();

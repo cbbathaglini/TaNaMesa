@@ -25,7 +25,7 @@ class UsuarioINT
             $disabled = ' disabled ';
         }
 
-        $arr_usuarios = $objUsuarioRN->listar($usuario = new Usuario());
+        $arr_usuarios = $objUsuarioRN->listar(new Usuario());
 
         $select_usuario = '<select ' . $disabled . ' class="form-control selectpicker" '.$onchange
             . 'id="idSel_usuarios" data-live-search="true" name="sel_usuario">'

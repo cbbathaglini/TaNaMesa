@@ -162,5 +162,21 @@ class UsuarioRN{
         }
     }
 
+
+    public function validar_cadastro(Usuario $usuario) {
+        try {
+            $objExcecao = new Excecao();
+            $objBanco = new Banco();
+            $objBanco->abrirConexao();
+            $objExcecao->lancar_validacoes();
+            $objUsuarioBD = new UsuarioBD();
+            $arr = $objUsuarioBD->validar_cadastro($usuario,$objBanco);
+
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Exception $e) {
+            throw new Excecao('Erro validando cadastro do usuário.', $e);
+        }
+    }
 }
 

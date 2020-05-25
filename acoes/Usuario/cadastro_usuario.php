@@ -3,9 +3,9 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-//session_start();
+session_start();
 try {
-    //require_once '../classes/Sessao/Sessao.php';
+    require_once '../classes/Sessao/Sessao.php';
     require_once '../classes/Pagina/Pagina.php';
     require_once '../classes/Excecao/Excecao.php';
     require_once '../classes/Usuario/Usuario.php';
@@ -14,7 +14,7 @@ try {
     require_once '../utils/Alert.php';
 
 
-    //Sessao::getInstance()->validar();
+    Sessao::getInstance()->validar();
 
     $utils = new Utils();
     $objUsuario = new Usuario();

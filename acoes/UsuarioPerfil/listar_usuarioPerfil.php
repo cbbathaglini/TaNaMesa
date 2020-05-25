@@ -2,9 +2,9 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-//session_start();
+session_start();
 try{
-    //require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
+    require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
 
     require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
     require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
@@ -18,6 +18,7 @@ try{
     require_once __DIR__ . '/../../classes/Rel_usuario_perfilUsuario/Rel_usuario_perfilUsuario.php';
     require_once __DIR__ . '/../../classes/Rel_usuario_perfilUsuario/Rel_usuario_perfilUsuario_RN.php';
 
+    Sessao::getInstance()->validar();
     $html = '';
 
      /* USUÁRIO + PERFIL DO USUÁRIO */
@@ -49,12 +50,12 @@ try{
         $html .=    '<td>'.Pagina::formatar_html($strPerfis).'</td>';
 
 
-        //if(Sessao::getInstance()->verificar_permissao('editar_usuario_perfilUsuario')) {
-            $html .= '  <td><a href="controlador.php?action=editar_usuario_perfilUsuario&idUsuario=' . $usuarioPerfil->getIdUsuario() . '"><i class="fas fa-edit "></i></a></td>';
-        //}
-        /*if(Sessao::getInstance()->verificar_permissao('remover_usuario_perfilUsuario')) {
-            $html .= '  <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_usuario_perfilUsuario&idUsuario=' . $usuario->getIdUsuario()) . '"><i class="fas fa-trash-alt"></a></td>';
-        }*/
+        if(Sessao::getInstance()->verificar_permissao('editar_usuario_perfilUsuario')) {
+            $html .= '  <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_usuario_perfilUsuario&idUsuario=' . $usuarioPerfil->getIdUsuario()) . '"><i class="fas fa-edit "></i></a></td>';
+        }
+        if(Sessao::getInstance()->verificar_permissao('remover_usuario_perfilUsuario')) {
+            $html .= '  <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_usuario_perfilUsuario&idUsuario=' . $usuarioPerfil->getIdUsuario()) . '"><i class="fas fa-trash-alt"></a></td>';
+        }
         $html .= ' </tr>';
     }
     
@@ -77,10 +78,11 @@ echo '
                 <thead>
                     <tr>
                         <th scope="col">USUÁRIO</th>
-                        <th scope="col">PERFIL</th>
-                        <th scope="col"></th>
+                        <th scope="col">PERFIL</th>';
+if(Sessao::getInstance()->verificar_permissao('editar_usuario_perfilUsuario')) {echo '<th scope="col"></th>';}
+if(Sessao::getInstance()->verificar_permissao('remover_usuario_perfilUsuario')) {echo '<th scope="col"></th>';}
                    
-                    </tr>
+echo '              </tr>
                 </thead>
                 <tbody>'
                     .$html.

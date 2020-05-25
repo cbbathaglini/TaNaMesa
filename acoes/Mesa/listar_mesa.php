@@ -2,16 +2,16 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-//session_start();
+session_start();
 try{
-    //require_once __DIR__.'/../../classes/Sessao/Sessao.php';
+    require_once __DIR__.'/../../classes/Sessao/Sessao.php';
     require_once __DIR__.'/../../classes/Pagina/Pagina.php';
     require_once __DIR__.'/../../classes/Excecao/Excecao.php';
     require_once __DIR__.'/../../classes/Mesa/Mesa.php';
     require_once __DIR__.'/../../classes/Mesa/MesaRN.php';
     require_once __DIR__.'/../../utils/Alert.php';
 
-    //Sessao::getInstance()->validar();
+    Sessao::getInstance()->validar();
 
     $objMesa = new Mesa();
     $objMesaRN = new MesaRN();
@@ -46,13 +46,13 @@ try{
                         <td>'.Pagina::formatar_html($m->getNumLugares()).'</td>
                         <td>'.Pagina::formatar_html(MesaRN::mostrarDescricaoSituacaoMesa($m->getSituacao())).'</td>';
 
-        //if(Sessao::getInstance()->verificar_permissao('editar_mesa')) {
-            $html .= '<td><a href="controlador.php?action=editar_mesa&idMesa='.Pagina::formatar_html($m->getIdMesa()).'"><i class="fas fa-edit "></i></a></td>';
-        //}
+        if(Sessao::getInstance()->verificar_permissao('editar_mesa')) {
+            $html .= '<td><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_mesa&idMesa='.Pagina::formatar_html($m->getIdMesa())).'"><i class="fas fa-edit "></i></a></td>';
+        }
 
-        //if(Sessao::getInstance()->verificar_permissao('remover_recurso')) {
-            $html .= '<td><a href="controlador.php?action=remover_mesa&idMesa='.Pagina::formatar_html($m->getIdMesa()).'"><i class="fas fa-trash-alt"></a></td>';
-        //}
+        if(Sessao::getInstance()->verificar_permissao('remover_mesa')) {
+            $html .= '<td><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=remover_mesa&idMesa='.Pagina::formatar_html($m->getIdMesa())).'"><i class="fas fa-trash-alt"></a></td>';
+        }
 
         $html .= ' </tr>';
     }

@@ -24,7 +24,7 @@ class LogRN{
             $objLog_BD = new LogBD();
             $objLog_BD->cadastrar($log,$objBanco);
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             throw new Excecao('Erro cadastrando o Log de erro.', $e);
         }
     }
@@ -42,7 +42,7 @@ class LogRN{
             $objLog_BD->alterar($log,$objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             throw new Excecao('Erro alterando o Log de erro.', $e);
         }
     }
@@ -58,7 +58,7 @@ class LogRN{
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
  
             throw new Excecao('Erro consultando o Log de erro.',$e);
         }
@@ -75,7 +75,7 @@ class LogRN{
             $objBanco->fecharConexao();
             return $arr;
 
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             throw new Excecao('Erro removendo o Log de erro.', $e);
         }
     }
@@ -92,7 +92,7 @@ class LogRN{
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             throw new Excecao('Erro listando o Log de erro.',$e);
         }
     }
@@ -108,7 +108,7 @@ class LogRN{
             $arr = $objLog_BD->pesquisar($campoBD,$valor_usuario,$objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             throw new Excecao('Erro pesquisando o Log de erro.', $e);
         }
     }

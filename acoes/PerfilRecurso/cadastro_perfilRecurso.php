@@ -3,9 +3,9 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-//session_start();
+session_start();
 try{
-    //require_once '../classes/Sessao/Sessao.php';
+    require_once '../classes/Sessao/Sessao.php';
 
     require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
     require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
@@ -24,7 +24,7 @@ try{
     require_once __DIR__ . '/../../utils/Utils.php';
     require_once __DIR__ . '/../../utils/Alert.php';
 
-    //Sessao::getInstance()->validar();
+    Sessao::getInstance()->validar();
 
     $alert = "";
     $select_perfilUsu = '';
@@ -74,7 +74,8 @@ try{
             break;
 
         case 'editar_perfilUsuario_recurso':
-
+            die("fazer editar_perfilUsuario_recurso");
+            ///////////////////////////////// FAZER ------------------------------------------
             $objPerfilUsuario->setIdPerfilUsuario($_GET['idPerfilUsuario']);
             $objPerfilUsuario = $objPerfilUsuarioRN->consultar($objPerfilUsuario);
             PerfilUsuarioINT::montar_select_perfil($select_perfilUsu, $objPerfilUsuarioRN, $objPerfilUsuario,null,null);
@@ -96,8 +97,8 @@ try{
                     $result = array_diff($recursos_selecionados_anterirormente, $_POST['sel_recursos']);
                     //print_r($result);
                     foreach ($result as $r) {
-                        $objRel_perfilUsuario_recurso->setIdPerfilUsuario_fk($_GET['idPerfilUsuario']);
-                        $objRel_perfilUsuario_recurso->setIdRecurso_fk($r);
+                        $objRel_perfilUsuario_recurso->setIdPerfilUsuario($_GET['idPerfilUsuario']);
+                        $objRel_perfilUsuario_recurso->setIdRecurso($r);
                         $objRel_perfilUsuario_recurso_RN->remover($objRel_perfilUsuario_recurso);
                     }
 
@@ -106,8 +107,8 @@ try{
                         //echo $_POST['sel_perfis'][$i];
                         //print_r($_POST['sel_recursos']);
 
-                        $objRel_perfilUsuario_recurso->setIdPerfilUsuario_fk($objPerfilUsuario->getIdPerfilUsuario());
-                        $objRel_perfilUsuario_recurso->setIdRecurso_fk($_POST['sel_recursos'][$i]);
+                        $objRel_perfilUsuario_recurso->setIdPerfilUsuario($objPerfilUsuario->getIdPerfilUsuario());
+                        $objRel_perfilUsuario_recurso->setIdRecurso($_POST['sel_recursos'][$i]);
                         $arrUP = $objRel_perfilUsuario_recurso_RN->validar_cadastro($objRel_perfilUsuario_recurso);
                         if (empty($arrUP)) {
                             $objRel_perfilUsuario_recurso_RN->cadastrar($objRel_perfilUsuario_recurso);

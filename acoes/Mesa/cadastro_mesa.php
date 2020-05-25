@@ -2,15 +2,17 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-
+session_start();
 try{
 
-    //require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
+    require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
     require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
     require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
     require_once __DIR__ . '/../../classes/Mesa/Mesa.php';
     require_once __DIR__ . '/../../classes/Mesa/MesaRN.php';
     require_once __DIR__ . '/../../utils/Alert.php';
+
+    Sessao::getInstance()->validar();
 
     $objMesa = new Mesa();
     $objMesaRN = new MesaRN();

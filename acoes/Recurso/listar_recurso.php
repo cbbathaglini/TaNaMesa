@@ -2,15 +2,15 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-//session_start();
+session_start();
 try{
-    //require_once __DIR__.'/../../classes/Sessao/Sessao.php';
+    require_once __DIR__.'/../../classes/Sessao/Sessao.php';
     require_once __DIR__.'/../../classes/Pagina/Pagina.php';
     require_once __DIR__.'/../../classes/Excecao/Excecao.php';
     require_once __DIR__.'/../../classes/Recurso/Recurso.php';
     require_once __DIR__.'/../../classes/Recurso/RecursoRN.php';
 
-    //Sessao::getInstance()->validar();
+    Sessao::getInstance()->validar();
 
     $objRecurso = new Recurso();
     $objRecursoRN = new RecursoRN();
@@ -37,13 +37,13 @@ try{
                         <td>'.Pagina::formatar_html($r->getNome()).'</td>
                         <td>'.Pagina::formatar_html($r->getSNMenu()).'</td>';
 
-        //if(Sessao::getInstance()->verificar_permissao('editar_recurso')) {
-            $html .= '<td><a href="controlador.php?action=editar_recurso&idRecurso='.Pagina::formatar_html($r->getIdRecurso()).'"><i class="fas fa-edit "></i></a></td>';
-        //}
+        if(Sessao::getInstance()->verificar_permissao('editar_recurso')) {
+            $html .= '<td><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_recurso&idRecurso='.Pagina::formatar_html($r->getIdRecurso())).'"><i class="fas fa-edit "></i></a></td>';
+        }
 
-        //if(Sessao::getInstance()->verificar_permissao('remover_recurso')) {
-            $html .= '<td><a href="controlador.php?action=remover_recurso&idRecurso='.Pagina::formatar_html($r->getIdRecurso()).'"><i class="fas fa-trash-alt"></a></td>';
-        //}
+        if(Sessao::getInstance()->verificar_permissao('remover_recurso')) {
+            $html .= '<td><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=remover_recurso&idRecurso='.Pagina::formatar_html($r->getIdRecurso())).'"><i class="fas fa-trash-alt"></i></a></td>';
+        }
 
         $html .= ' </tr>';
     }

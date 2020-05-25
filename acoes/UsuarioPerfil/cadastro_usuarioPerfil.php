@@ -2,9 +2,10 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-//session_start();
+
+session_start();
 try {
-    //require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
+    require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
 
     require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
 
@@ -24,7 +25,7 @@ try {
     require_once __DIR__ . '/../../utils/Utils.php';
     require_once __DIR__ . '/../../utils/Alert.php';
 
-    //Sessao::getInstance()->validar();
+    Sessao::getInstance()->validar();
 
     $alert = "";
     $select_usuario = '';
@@ -84,22 +85,22 @@ try {
             break;
 
         case 'editar_usuario_perfilUsuario':
+
             if (!isset($_POST['salvar_upr'])) { //enquanto não enviou o formulário com as alterações
                
                 $objUsuario->setIdUsuario($_GET['idUsuario']);
                 $objUsuario = $objUsuarioRN->consultar($objUsuario);
-                InterfacePagina::montar_select_usuario($select_usuario, $objUsuarioRN, $objUsuario);
+                UsuarioINT::montar_select_usuario($select_usuario, $objUsuarioRN, $objUsuario,null,null);
 
                 
-                $objRel_usuario_perfilUsuario->setIdUsuario_fk($_GET['idUsuario']);
+                $objRel_usuario_perfilUsuario->setIdUsuario($_GET['idUsuario']);
                 $arr_rel = $objRel_usuario_perfilUsuario_RN->listar($objRel_usuario_perfilUsuario);
                 
                 foreach ($arr_rel as $relacionamento){
-                    $perfis_selecionados .= $relacionamento->getIdPerfilUsuario_fk()."; ";
+                    $perfis_selecionados .= $relacionamento->getIdPerfilUsuario()."; ";
                 }
 
-
-                InterfacePagina::montar_select_perfil($select_perfilUsu, $objPerfilUsuarioRN, $objPerfilUsuario,$perfis_selecionados);
+                PerfilUsuarioINT::montar_select_multiplos_perfis($select_perfilUsu, $objPerfilUsuarioRN, $objPerfilUsuario,$perfis_selecionados);
 
             }
 
@@ -110,25 +111,25 @@ try {
                     $objUsuario->setIdUsuario($_GET['idUsuario']);
                     $objUsuario = $objUsuarioRN->consultar($objUsuario);
                     
-                    $objRel_usuario_perfilUsuario->setIdUsuario_fk($_GET['idUsuario']);
+                    $objRel_usuario_perfilUsuario->setIdUsuario($_GET['idUsuario']);
                     $arr_rel = $objRel_usuario_perfilUsuario_RN->listar($objRel_usuario_perfilUsuario);
                 
                     foreach ($arr_rel as $relacionamento){
-                         $perfis_selecionados_anteriormente[]= $relacionamento->getIdPerfilUsuario_fk();
+                         $perfis_selecionados_anteriormente[]= $relacionamento->getIdPerfilUsuario();
                     }
                     
                     $result = array_diff($perfis_selecionados_anteriormente, $_POST['sel_perfil']);
                                     
                     foreach ($result as $r) {
-                        $objRel_usuario_perfilUsuario->setIdPerfilUsuario_fk($r);
-                        $objRel_usuario_perfilUsuario->setIdUsuario_fk($_GET['idUsuario']);
+                        $objRel_usuario_perfilUsuario->setIdPerfilUsuario($r);
+                        $objRel_usuario_perfilUsuario->setIdUsuario($_GET['idUsuario']);
                         $objRel_usuario_perfilUsuario_RN->remover($objRel_usuario_perfilUsuario);
                     }
                     
                     $perfis_selecionados = '';
                     for ($i = 0; $i < count($_POST['sel_perfil']); $i++) {
-                        $objRel_usuario_perfilUsuario->setIdPerfilUsuario_fk($_POST['sel_perfil'][$i]);
-                        $objRel_usuario_perfilUsuario->setIdUsuario_fk($_GET['idUsuario']);
+                        $objRel_usuario_perfilUsuario->setIdPerfilUsuario($_POST['sel_perfil'][$i]);
+                        $objRel_usuario_perfilUsuario->setIdUsuario($_GET['idUsuario']);
                         
                         $arrUP = $objRel_usuario_perfilUsuario_RN->validar_cadastro($objRel_usuario_perfilUsuario);
                         if (empty($arrUP)) {
@@ -142,8 +143,8 @@ try {
                 
                 }
 
-                InterfacePagina::montar_select_usuario($select_usuario, $objUsuarioRN, $objUsuario);
-                InterfacePagina::montar_select_perfil($select_perfilUsu, $objPerfilUsuarioRN, $objPerfilUsuario,$perfis_selecionados);
+                UsuarioINT::montar_select_usuario($select_usuario, $objUsuarioRN, $objUsuario,null,null);
+                PerfilUsuarioINT::montar_select_perfil($select_perfilUsu, $objPerfilUsuarioRN, $objPerfilUsuario,$perfis_selecionados);
             }
 
 

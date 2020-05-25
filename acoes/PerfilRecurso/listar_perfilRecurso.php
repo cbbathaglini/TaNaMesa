@@ -3,9 +3,9 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-//session_start();
+session_start();
 try{
-    //require_once '../classes/Sessao/Sessao.php';
+    require_once '../classes/Sessao/Sessao.php';
 
     require_once '../classes/Pagina/Pagina.php';
     require_once '../classes/Excecao/Excecao.php';
@@ -21,7 +21,7 @@ try{
 
     $html = '';
 
-    // Sessao::getInstance()->validar();
+     Sessao::getInstance()->validar();
 
     /* RECURSO */
     $objRecurso = new Recurso();
@@ -34,7 +34,22 @@ try{
     /* PERFIL DO USUÁRIO */
     $objPerfilUsuario = new PerfilUsuario();
     $objPerfilUsuarioRN = new PerfilUsuarioRN();
-    
+
+
+    switch ($_GET['action']){
+        case 'remover_perfilUsuario_recurso':
+            try{
+                /*$objRel_perfilUsuario_recurso->S($_GET['idProtocolo']);
+                $objProtocoloRN->remover($objProtocolo);*/
+                $alert .= Alert::alert_success("fazer remoção");
+                break;
+            } catch (Throwable $ex) {
+                Pagina::getInstance()->processar_excecao($ex);
+            }
+    }
+
+
+
     $arr_perfis = $objPerfilUsuarioRN->listar($objPerfilUsuario);
     
     $arrPR = $objRel_perfilUsuario_recurso_RN->listar($objRel_perfilUsuario_recurso);
@@ -66,19 +81,15 @@ try{
          $indices_recursos = substr($indices_recursos, 0, -1);
             $html.='<tr>
                 <th scope="row">'.Pagina::formatar_html($objPerfilUsuario->getPerfil()).'</th> 
-                    <td>'.Pagina::formatar_html($recursos).'</td>
-                    <td>';
+                    <td>'.Pagina::formatar_html($recursos).'</td>';
                             
-            //if(Sessao::getInstance()->verificar_permissao('editar_rel_perfilUsuario_recurso')){
-            //    $html.= '<a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_rel_perfilUsuario_recurso&idRecurso='.Pagina::formatar_html($indices_recursos).
-             //               '&idPerfilUsuario='.Pagina::formatar_html($objPerfilUsuario->getIdPerfilUsuario())).'">Editar</a>';
-           //}
-            //$html .= '</td><td>';
-            //    if(Sessao::getInstance()->verificar_permissao('remover_rel_perfilUsuario_recurso')){
-            //       $html.= '<a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_rel_perfilUsuario_recurso&idRecurso='.Pagina::formatar_html($indices_recursos).
-            //                '&idPerfilUsuario='.Pagina::formatar_html($objPerfilUsuario->getIdPerfilUsuario())).'">Remover</a>';
-            //    }
-            //$html .='</td></tr>';
+            if(Sessao::getInstance()->verificar_permissao('editar_perfilUsuario_recurso')){
+                $html.= '<td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_perfilUsuario_recurso&idRecurso='.Pagina::formatar_html($indices_recursos).'&idPerfilUsuario='.Pagina::formatar_html($objPerfilUsuario->getIdPerfilUsuario())).'"><i class="fas fa-edit "></i></a></td>';
+            }
+            if(Sessao::getInstance()->verificar_permissao('remover_perfilUsuario_recurso')){
+                   $html.= '<td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_perfilUsuario_recurso&idRecurso='.Pagina::formatar_html($indices_recursos).'&idPerfilUsuario='.Pagina::formatar_html($objPerfilUsuario->getIdPerfilUsuario())).'"><i class="fas fa-trash-alt"></i></a></td>';
+            }
+            $html .='</tr>';
         }
 
            
@@ -93,7 +104,7 @@ Pagina::getInstance()->abrir_head("Listar Relacionamento do Perfil com os Recurs
 Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
-
+Pagina::getInstance()->mostrar_excecoes();
 
 echo '
     <div class="conteudo_listar">
@@ -115,5 +126,4 @@ echo '
 </div>';
 
 
-Pagina::getInstance()->mostrar_excecoes();
 Pagina::getInstance()->fechar_corpo();
