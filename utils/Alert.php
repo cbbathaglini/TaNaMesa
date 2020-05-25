@@ -115,38 +115,4 @@ class Alert{
                 </button>
               </div>';
     }
-    
-    public static function alert_success_capelaDisponivel(){
-        return '<div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>Sucesso!</strong> Há capelas disponíveis.
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>';
-    }
-    
-    
-     public static function alert_error_encontrar_paciente($campoProcurado){
-        return '<div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert_id" >
-                <strong>Ops!</strong> Nenhum paciente foi encontrado com esse campo ('.$campoProcurado.').
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-             ';
-    }
-    
-    public static function alert_success_encontrar_paciente($campoProcurado){
-        return '<div class="alert alert-success alert-dismissible fade show" role="alert" id="alert_id" >
-                <strong>Sucesso!</strong> Foi encontrado paciente com esse campo ('.$campoProcurado.').
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-             ';
-    }
-     
-
-
-
 }
