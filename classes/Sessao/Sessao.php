@@ -96,7 +96,6 @@ class Sessao {
                 $_SESSION['TANAMESA']['RECURSOS'] = $arr_recursos;
                 $_SESSION['TANAMESA']['CHAVE'] = hash('sha256', random_bytes(50));
 
-
                 header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=principal'));
                 die();
             }

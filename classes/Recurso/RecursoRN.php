@@ -22,7 +22,7 @@ class RecursoRN{
             
             
         }
-        return $recurso->getNome($strNome);
+        return $recurso->setNome($strNome);
 
     }
     
@@ -66,11 +66,11 @@ class RecursoRN{
 
 
     public function cadastrar(Recurso $recurso) {
+        $objBanco = new Banco();
         try {
-            
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             
             $this->validarNome($recurso,$objExcecao);
             $this->validar_s_n_menu($recurso,$objExcecao);
@@ -90,11 +90,11 @@ class RecursoRN{
     }
 
     public function alterar(Recurso $recurso) {
-         try {
-             
+        $objBanco = new Banco();
+        try {
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             
             $this->validarNome($recurso,$objExcecao);
             $this->validar_s_n_menu($recurso,$objExcecao);
@@ -114,10 +114,11 @@ class RecursoRN{
     }
 
     public function consultar(Recurso $recurso) {
+        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objRecursoBD = new RecursoBD();
             $arr =  $objRecursoBD->consultar($recurso,$objBanco);
@@ -133,10 +134,11 @@ class RecursoRN{
     }
 
     public function remover(Recurso $recurso) {
-         try {
+        $objBanco = new Banco();
+        try {
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
 
             $this->validar_existe_usuario_com_o_recurso($recurso,$objExcecao);
             $objExcecao->lancar_validacoes();
@@ -152,10 +154,11 @@ class RecursoRN{
     }
 
     public function listar(Recurso $recurso,$numLimite=null) {
+        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objRecursoBD = new RecursoBD();
             

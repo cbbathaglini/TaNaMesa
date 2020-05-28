@@ -49,6 +49,7 @@ try{
     }
 
 
+    /***************** FAZER LISTAR MELHOR ************************/
 
     $arr_perfis = $objPerfilUsuarioRN->listar($objPerfilUsuario);
     
@@ -82,7 +83,8 @@ try{
             $html.='<tr>
                 <th scope="row">'.Pagina::formatar_html($objPerfilUsuario->getPerfil()).'</th> 
                     <td>'.Pagina::formatar_html($recursos).'</td>';
-                            
+
+            //echo 'controlador.php?action=editar_perfilUsuario_recurso&idRecurso='.Pagina::formatar_html($indices_recursos).'&idPerfilUsuario='.Pagina::formatar_html($objPerfilUsuario->getIdPerfilUsuario());
             if(Sessao::getInstance()->verificar_permissao('editar_perfilUsuario_recurso')){
                 $html.= '<td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_perfilUsuario_recurso&idRecurso='.Pagina::formatar_html($indices_recursos).'&idPerfilUsuario='.Pagina::formatar_html($objPerfilUsuario->getIdPerfilUsuario())).'"><i class="fas fa-edit "></i></a></td>';
             }

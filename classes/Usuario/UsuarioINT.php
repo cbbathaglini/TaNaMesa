@@ -1,5 +1,7 @@
 <?php
-
+/*
+ *  Author: Carine Bertagnolli Bathaglini
+ */
 
 class UsuarioINT
 {

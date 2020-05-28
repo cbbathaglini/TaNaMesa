@@ -15,7 +15,7 @@ $objUsuario = $objUsuarioRN->consultar($objUsuario);
 
 Pagina::abrir_head("TÁ NA MESA");
 Pagina::getInstance()->montar_menu_topo();
-//Pagina::getInstance()->adicionar_css();
+Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::fechar_head();
 
 Pagina::abrir_body();
@@ -100,6 +100,42 @@ echo'       <div class="row">';
                             </div>';
                 }
 echo'        </div>';
+
+echo'       <div class="row">';
+                if(Sessao::getInstance()->verificar_permissao('gerar_QRCode')) {
+                    echo '<div class="col-md-12">
+                                         <a  class="btn btn-primary" STYLE="margin-top: 17px;width: 100%;" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=gerar_QRCode') . '">GERAR QRCode</a>          
+                                      </div>';
+                }
+echo'        </div>';
+
+echo'       <div class="row">';
+if(Sessao::getInstance()->verificar_permissao('cadastrar_ingrediente')) {
+        echo '<div class="col-md-6">
+                 <a  class="btn btn-primary" STYLE="margin-top: 17px;width: 100%;" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_ingrediente') . '">CADASTRAR INGREDIENTE</a>          
+              </div>';
+}
+if(Sessao::getInstance()->verificar_permissao('listar_ingrediente')) {
+        echo '  <div class="col-md-6">
+                     <a  class="btn btn-primary" STYLE="margin-top: 17px;width: 100%;" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_ingrediente') . '">LISTAR INGREDIENTE</a>          
+                </div>';
+}
+echo'        </div>';
+
+echo'       <div class="row">';
+        if(Sessao::getInstance()->verificar_permissao('cadastrar_prato')) {
+            echo '<div class="col-md-6">
+                         <a  class="btn btn-primary" STYLE="margin-top: 17px;width: 100%;" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_prato') . '">CADASTRAR PRATO</a>          
+                      </div>';
+        }
+        if(Sessao::getInstance()->verificar_permissao('listar_prato')) {
+            echo '  <div class="col-md-6">
+                             <a  class="btn btn-primary" STYLE="margin-top: 17px;width: 100%;" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_prato') . '">LISTAR PRATO</a>          
+                        </div>';
+        }
+echo'        </div>';
+
+
 echo'    </div>';
 
 Pagina::fechar_body();

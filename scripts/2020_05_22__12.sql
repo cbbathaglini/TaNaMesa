@@ -85,3 +85,10 @@ insert into tb_perfil_usuario_has_tb_recurso (idPerfilUsuario,idRecurso) VALUES
 insert into tb_perfil_usuario_has_tb_recurso (idPerfilUsuario,idRecurso) VALUES
    ((SELECT idPerfilUsuario from tb_perfil_usuario where index_perfil = 'ADMINISTRADOR'),
      (select idRecurso from tb_recurso where nome = 'remover_perfil_usuario'));
+
+
+     insert into tb_recurso (nome,s_n_menu,index_recurso) values ('gerar_QRCodes','s','GERAR_QRCODES');
+
+insert into tb_perfil_usuario_has_tb_recurso (idPerfilUsuario,idRecurso) VALUES
+   ((SELECT idPerfilUsuario from tb_perfil_usuario where index_perfil = 'ADMINISTRADOR'),
+     (select idRecurso from tb_recurso where nome = 'gerar_QRCodes'));

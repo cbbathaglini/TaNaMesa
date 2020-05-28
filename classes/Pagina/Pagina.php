@@ -79,7 +79,7 @@ class Pagina {
                     <head>
                         <meta charset="utf-8">
                         <title>' . $titulo . '</title>
-                        <link rel="icon" type="text/css" href="docs/img/coronavirus.png"><!--<i class="fas fa-virus"></i>-->
+                        <link rel="icon" type="text/css" href="##">
                         <!--<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />-->
                         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -120,21 +120,21 @@ class Pagina {
                         /* Barra de rolagem */
                         ::-webkit-scrollbar {width:9px;height:auto;background: #fff;border-bottom:none;}
                         ::-webkit-scrollbar-button:vertical {height:2px;display:block;} 
-                        ::-webkit-scrollbar-thumb:vertical {background-color: #3a5261; -webkit-border-radius: 1px;}
+                        ::-webkit-scrollbar-thumb:vertical {background-color: #56baed; -webkit-border-radius: 1px;}
                         ::-webkit-scrollbar-button:horizontal {height:2px;display:block;}
-                        ::-webkit-scrollbar-thumb:horizontal {background-color: #3a5261; -webkit-border-radius: 1px;}
+                        ::-webkit-scrollbar-thumb:horizontal {background-color: #56baed; -webkit-border-radius: 1px;}
                          
                         .fas{
-                            color:#3a5261;
+                            color:#56baed;
                         }
                         .btn-primary{
-                            background-color:#3a5261;
+                            background-color:#56baed;
                             border:none;
                         }
                         
                         .btn-primary:hover{
                             background-color:#DBDFE2;
-                            color: #3a5261;
+                            color: #56baed;
                             transition: .5s;
                         }
                         
@@ -142,15 +142,15 @@ class Pagina {
                             background: none;
                             border-radius: 0px;
                             border: none;
-                            color:#3a5261;
+                            color:#56baed;
                         }
                         
                         .btn-secondary:hover,.btn-secondary:active{
-                            border-bottom: 1px solid #3a5261;
+                            border-bottom: 1px solid #56baed;
                             background: none;
-                            color:#3a5261;
+                            color:#56baed;
                             /*color: white;
-                            background-color:#3a5261;*/
+                            background-color:#56baed;*/
                         }
 
                         
@@ -172,7 +172,7 @@ class Pagina {
                          .divisor{
                                 width: 1px;
                                 margin: 12px 15px;
-                                background: #3a5261;
+                                background: #56baed;
                         }  
 
                         </style>

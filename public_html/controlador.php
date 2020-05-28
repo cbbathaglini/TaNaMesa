@@ -94,6 +94,40 @@ switch ($_GET['action']):
         require_once '../acoes/PerfilRecurso/listar_perfilRecurso.php';
         break;
 
+    /*
+     *  INGREDIENTE
+     */
+    case 'cadastrar_ingrediente':
+    case 'editar_ingrediente':
+        require_once '../acoes/Ingrediente/cadastro_ingrediente.php';
+        break;
+    case 'listar_ingrediente':
+    case 'remover_ingrediente':
+        require_once '../acoes/Ingrediente/listar_ingrediente.php';
+        break;
+
+
+    /*
+     *  PRATO
+     */
+    case 'cadastrar_prato':
+    case 'editar_prato':
+        require_once '../acoes/Prato/cadastro_prato.php';
+        break;
+    case 'listar_prato':
+    case 'remover_prato':
+        require_once '../acoes/Prato/listar_prato.php';
+        break;
+
+
+    /*
+     * QRCode
+     */
+    case 'gerar_QRCode':
+        require_once '../acoes/QRCode/gerar_QRCode.php';
+        break;
+
+
 
     default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador geral.');
 endswitch;

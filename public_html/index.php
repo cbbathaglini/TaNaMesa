@@ -2,8 +2,8 @@
 session_start();
 require_once __DIR__.'/../classes/Pagina/Pagina.php';
 require_once __DIR__.'/../classes/Sessao/Sessao.php';
+
 try {
-//Sessao::getInstance()->logar('00274715','12345678');
     if (isset($_POST['btn_logar'], $_POST['txtCPF'], $_POST['txtSenha'])) {
         Sessao::getInstance()->logar($_POST['txtCPF'], $_POST['txtSenha']);
     }
@@ -11,23 +11,36 @@ try {
     die($e);
 }
 
-session_destroy();
-?>
-
-<?php
-
-    Pagina::abrir_head("Login");
-    Pagina::getInstance()->adicionar_css("style");
+    session_destroy();
+    Pagina::abrir_head("Login - Tá Na Mesa");
+    Pagina::getInstance()->adicionar_css("style_login");
+    Pagina::fechar_head();
+    Pagina::abrir_body();
+    Pagina::getInstance()->mostrar_excecoes();
     //Pagina::getInstance()->adicionar_javascript();
 
-    ?>
-    <img src="img/header.png" class="HeaderImg">
-    </head>
-    <BODY>
+
+
+echo '<div class="wrapper fadeInDown">
+        <div id="formContent">
+            <!-- Tabs Titles -->
+
+            <!-- Icon -->
+            <i class="fas fa-user fa-4x icon_user"></i>
+            <!--<i class="fas fa-utensils icon_user"></i>-->
+            <!-- Login Form -->
+            <form method="post">
+                <input type="text" id="login" class="fadeIn second" name="txtCPF" placeholder="CPF">
+                <input type="text" id="password" class="fadeIn third" name="txtSenha" placeholder="senha">
+                <input type="submit" class="fadeIn fourth" value="Login" name="btn_logar">
+            </form>
+
+        </div>
+    </div>';
    
 
 
-    <main>
+    /*<main>
       <div class="form-box" style="margin-top: 10px;">
           <section class="section-default">
               <form method="POST">
@@ -38,8 +51,6 @@ session_destroy();
               </form>
           </section>
         </div>
-    </main>
+    </main>*/
 
-<?php
-    Pagina::getInstance()->mostrar_excecoes();
     Pagina::getInstance()->fechar_corpo();

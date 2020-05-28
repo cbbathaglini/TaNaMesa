@@ -6,7 +6,7 @@
 
 require_once __DIR__ . '/../Excecao/Excecao.php';
 require_once __DIR__ . '/MesaBD.php';
-
+require_once  __DIR__.'/../Situacao/Situacao.php';
 
 class MesaRN
 {

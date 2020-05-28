@@ -49,7 +49,7 @@ try{
             }
 
             break;
-        default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador em cadastro_placa.php');
+        default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador em cadastro_mesa.php');
     }
 
 

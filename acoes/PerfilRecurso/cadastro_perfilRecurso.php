@@ -5,7 +5,7 @@
 
 session_start();
 try{
-    require_once '../classes/Sessao/Sessao.php';
+    require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
 
     require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
     require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
@@ -74,11 +74,12 @@ try{
             break;
 
         case 'editar_perfilUsuario_recurso':
-            die("fazer editar_perfilUsuario_recurso");
-            ///////////////////////////////// FAZER ------------------------------------------
+
             $objPerfilUsuario->setIdPerfilUsuario($_GET['idPerfilUsuario']);
             $objPerfilUsuario = $objPerfilUsuarioRN->consultar($objPerfilUsuario);
             PerfilUsuarioINT::montar_select_perfil($select_perfilUsu, $objPerfilUsuarioRN, $objPerfilUsuario,null,null);
+
+            die();
 
             $recursos_selecionados = $_GET['idRecurso'];
             RecursoINT::montar_select_multiplo_recurso($select_recurso, $objRecursoRN, $objRecurso, $recursos_selecionados);
@@ -109,13 +110,8 @@ try{
 
                         $objRel_perfilUsuario_recurso->setIdPerfilUsuario($objPerfilUsuario->getIdPerfilUsuario());
                         $objRel_perfilUsuario_recurso->setIdRecurso($_POST['sel_recursos'][$i]);
-                        $arrUP = $objRel_perfilUsuario_recurso_RN->validar_cadastro($objRel_perfilUsuario_recurso);
-                        if (empty($arrUP)) {
-                            $objRel_perfilUsuario_recurso_RN->cadastrar($objRel_perfilUsuario_recurso);
-                            $alert = Alert::alert_success("O relacionamento perfil usuário e seu recurso foi cadastrado");
-                        } else {
-                            $alert = Alert::alert_warning("O relacionamento perfil usuário e seu recurso já tinha sido cadastrado");
-                        }
+                        $objRel_perfilUsuario_recurso_RN->cadastrar($objRel_perfilUsuario_recurso);
+                        $alert = Alert::alert_success("O relacionamento perfil usuário e seu recurso foi cadastrado");
                         $recursos_selecionados .= $_POST['sel_recursos'][$i] . ";";
                     }
 
