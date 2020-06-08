@@ -34,6 +34,7 @@ class IngredienteRN
 
     }
 
+    /*
     private function validar_ja_existe_ingrediente(Ingrediente $objIngrediente,Excecao $objExcecao){
         $objIngredienteRN = new IngredienteRN();
         $tamRecurso = count($objIngredienteRN->listar($objIngrediente,1));
@@ -48,51 +49,39 @@ class IngredienteRN
             $objExcecao->adicionar_validacao('Existe ao menos um prato associado a este ingrediente. Logo, ele não pode ser excluído',null,'alert-danger');
         }
     }
+    */
 
 
     public function cadastrar(Ingrediente $objIngrediente) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
-
             $this->validarIngrediente($objIngrediente,$objExcecao);
-            $this->validar_ja_existe_ingrediente($objIngrediente,$objExcecao);
+            //$this->validar_ja_existe_ingrediente($objIngrediente,$objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objIngredienteBD = new IngredienteBD();
-            $objIngrediente = $objIngredienteBD->cadastrar($objIngrediente,$objBanco);
-
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
+            $objIngrediente = $objIngredienteBD->cadastrar($objIngrediente);
             return $objIngrediente;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando o ingrediente.', $e);
         }
     }
 
     public function alterar(Ingrediente $objIngrediente) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
+
 
             $this->validarIngrediente($objIngrediente,$objExcecao);
-            $this->validar_ja_existe_ingrediente($objIngrediente,$objExcecao);
+            //$this->validar_ja_existe_ingrediente($objIngrediente,$objExcecao);
             $this->validarIdIngrediente($objIngrediente,$objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objIngredienteBD = new IngredienteBD();
-            $objIngrediente = $objIngredienteBD->alterar($objIngrediente,$objBanco);
+            $objIngrediente = $objIngredienteBD->alterar($objIngrediente);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $objIngrediente;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando o ingrediente.', $e);
         }
     }
@@ -101,18 +90,11 @@ class IngredienteRN
         $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
-            $objExcecao->lancar_validacoes();
             $objIngredienteBD = new IngredienteBD();
-            $arr =  $objIngredienteBD->consultar($objIngrediente,$objBanco);
+            $ingrediente =  $objIngredienteBD->consultar($objIngrediente,$objBanco);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
-            return $arr;
+            return $ingrediente;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
-
             throw new Excecao('Erro consultando o ingrediente.',$e);
         }
     }
@@ -138,21 +120,14 @@ class IngredienteRN
     }
 
     public function listar(Ingrediente $objIngrediente,$numLimite=null) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objIngredienteBD = new IngredienteBD();
 
-            $arr = $objIngredienteBD->listar($objIngrediente,$numLimite,$objBanco);
-
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
+            $arr = $objIngredienteBD->listar($objIngrediente,$numLimite);
             return $arr;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o ingrediente.',$e);
         }
     }

@@ -66,129 +66,95 @@ class RecursoRN{
 
 
     public function cadastrar(Recurso $recurso) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
             
             $this->validarNome($recurso,$objExcecao);
             $this->validar_s_n_menu($recurso,$objExcecao);
-            $this->validar_ja_existe_recurso($recurso,$objExcecao);
+           // $this->validar_ja_existe_recurso($recurso,$objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objRecursoBD = new RecursoBD();
-            $recurso = $objRecursoBD->cadastrar($recurso,$objBanco);
+            $recurso = $objRecursoBD->cadastrar($recurso);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $recurso;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando o recurso.', $e);
         }
     }
 
     public function alterar(Recurso $recurso) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
-            
+
             $this->validarNome($recurso,$objExcecao);
             $this->validar_s_n_menu($recurso,$objExcecao);
             $this->validar_ja_existe_recurso($recurso,$objExcecao);
                         
             $objExcecao->lancar_validacoes();
             $objRecursoBD = new RecursoBD();
-             $recurso = $objRecursoBD->alterar($recurso,$objBanco);
+            $recurso = $objRecursoBD->alterar($recurso);
 
-             $objBanco->confirmarTransacao();
-             $objBanco->fecharConexao();
              return $recurso;
          } catch (Throwable $e) {
-             $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando o recurso.', $e);
         }
     }
 
     public function consultar(Recurso $recurso) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objRecursoBD = new RecursoBD();
-            $arr =  $objRecursoBD->consultar($recurso,$objBanco);
+            $arr =  $objRecursoBD->consultar($recurso);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
- 
             throw new Excecao('Erro consultando o recurso.',$e);
         }
     }
 
     public function remover(Recurso $recurso) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
 
-            $this->validar_existe_usuario_com_o_recurso($recurso,$objExcecao);
             $objExcecao->lancar_validacoes();
             $objRecursoBD = new RecursoBD();
-            $arr =  $objRecursoBD->remover($recurso,$objBanco);
-             $objBanco->confirmarTransacao();
-             $objBanco->fecharConexao();
+            $arr =  $objRecursoBD->remover($recurso);
+
              return $arr;
          } catch (Throwable $e) {
-             $objBanco->cancelarTransacao();
+
             throw new Excecao('Erro removendo o recurso.', $e);
         }
     }
 
     public function listar(Recurso $recurso,$numLimite=null) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objRecursoBD = new RecursoBD();
             
-            $arr = $objRecursoBD->listar($recurso,$numLimite,$objBanco);
+            $arr = $objRecursoBD->listar($recurso,$numLimite);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o recurso.',$e);
         }
     }
 
     public function existe_usuario_com_o_recurso(Recurso $recurso) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objRecursoBD = new RecursoBD();
 
-            $arr = $objRecursoBD->existe_usuario_com_o_recurso($recurso,$objBanco);
+            $arr = $objRecursoBD->existe_usuario_com_o_recurso($recurso);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro verificando se existe um usuário com o recurso RN.',$e);
         }
     }

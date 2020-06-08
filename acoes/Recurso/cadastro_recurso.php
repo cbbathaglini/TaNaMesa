@@ -20,32 +20,28 @@ try{
 
     switch($_GET['action']){
         case 'cadastrar_recurso':
-            if(isset($_POST['salvar_recurso'])){
+            if(isset($_POST['btn_salvar'])) {
                 $objRecurso->setNome($_POST['txtNome']);
-                $objRecurso->setSNMenu( strtolower($_POST['txtSN']));
+                $objRecurso->setLink($_POST['txtLink']);
+                $objRecurso->setSNMenu(strtolower($_POST['txtSN']));
                 $objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($_POST['txtNome'])));
 
-                $objRecurso  = $objRecursoRN->cadastrar($objRecurso);
-                $alert.= Alert::alert_success("O recurso -".$objRecurso->getNome()."- foi cadastrado");
 
-                
-            }else{
-                $objRecurso->setIdRecurso('');
-                $objRecurso->setNome('');
-                $objRecurso->setSNMenu('');
-                $objRecurso->setIndexRecurso('');
+                $objRecurso = $objRecursoRN->cadastrar($objRecurso);
+                $alert .= Alert::alert_success("O recurso -" . $objRecurso->getNome() . "- foi cadastrado");
             }
         break;
         
         case 'editar_recurso':
-            if(!isset($_POST['salvar_recurso'])){ //enquanto não enviou o formulário com as alterações
+            if(!isset($_POST['btn_salvar'])){ //enquanto não enviou o formulário com as alterações
                 $objRecurso->setIdRecurso($_GET['idRecurso']);
                 $objRecurso = $objRecursoRN->consultar($objRecurso);
             }
             
-             if(isset($_POST['salvar_recurso'])){ //se enviou o formulário com as alterações
+             if(isset($_POST['btn_salvar'])){ //se enviou o formulário com as alterações
                 $objRecurso->setIdRecurso($_GET['idRecurso']);
                 $objRecurso->setNome($_POST['txtNome']);
+                 $objRecurso->setLink($_POST['txtLink']);
                 $objRecurso->setSNMenu( strtolower($_POST['txtSN']));
                 $objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($_POST['txtNome'])));
                 $objRecursoRN->alterar($objRecurso);
@@ -75,24 +71,27 @@ echo $alert.'
 <DIV class="conteudo_grande">
 <form method="POST">
     <div class="form-row">
-        <div class="col-md-5 mb-3">
-            <label for="label_nome">Digite o nome:</label>
+        <div class="col-md-4 mb-3">
+            <label for="label_nome">Informe  o nome:</label>
             <input type="text" class="form-control" id="idNomeRecurso" placeholder="Nome" 
                    onblur="validaNome()" name="txtNome"  value="'.Pagina::formatar_html($objRecurso->getNome()).'">
-            <div id ="feedback_nome"></div>
-
+         </div>
+         <div class="col-md-4 mb-3">
+            <label for="label_nome">Informe o link:</label>
+            <input type="text" class="form-control"  placeholder="link" 
+                 name="txtLink"  value="'.Pagina::formatar_html($objRecurso->getLink()).'">
         </div>
         
-        <div class="col-md-5 mb-3">
+        <div class="col-md-4 mb-3">
             <label for="label_s_n_menu">Digite S/N para o menu:</label>
             <input type="text" class="form-control" id="idSNRecurso" placeholder="S/N" 
                    onblur="validaSNmenu()" name="txtSN"  value="'.Pagina::formatar_html($objRecurso->getSNMenu()).'">
-            <div id ="feedback_s_n_menu"></div>
-
         </div>
+    </div>
         
-        <div class="col-md-2 mb-3">
-            <button class="btn btn-primary" type="submit" style="margin-top: 31px;width: 100%;margin-left: 0px;" name="salvar_recurso">Salvar</button>
+    <div class="form-row">
+        <div class="col-md-12 mb-3">
+            <button class="btn btn-primary" type="submit" style="margin-top: 0px;width: 30%;margin-left: 35%;" name="btn_salvar">Salvar</button>
         </div>
     </div>  
     

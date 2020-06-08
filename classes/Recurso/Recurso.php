@@ -7,11 +7,29 @@ class Recurso{
     private $idRecurso;
     private $nome;
     private $index_recurso;
+    private $link;
     private $s_n_menu;
     
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLink()
+    {
+        return $this->link;
+    }
+
+    /**
+     * @param mixed $link
+     */
+    public function setLink($link): void
+    {
+        $this->link = $link;
+    }
+
 
     /**
      * @return mixed

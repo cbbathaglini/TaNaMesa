@@ -2,177 +2,196 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
+require_once __DIR__.'/../../vendor/autoload.php';
+use Google\Cloud\Firestore\FirestoreClient;
+class PratoBD{
+    protected $db;
+    protected $name;
 
-class PratoBD
-{
-    public function cadastrar(Prato $objPrato, Banco $objBanco) {
-        try{
 
-            $INSERT = 'INSERT INTO tb_prato (nome,index_nome,informacoes,preco,categoriaPrato) VALUES (?,?,?,?,?)';
-
-            $arrayBind = array();
-            $arrayBind[] = array('s',$objPrato->getNome());
-            $arrayBind[] = array('s',$objPrato->getIndexNome());
-            $arrayBind[] = array('s',$objPrato->getInformacoes());
-            $arrayBind[] = array('d',$objPrato->getPreco());
-            $arrayBind[] = array('s',$objPrato->getCategoriaPrato());
-
-            $objBanco->executarSQL($INSERT,$arrayBind);
-            $objPrato->setIdPrato($objBanco->obterUltimoID());
-            return $objPrato;
-        } catch (Throwable $ex) {
-            throw new Excecao("Erro cadastrando prato paciente no BD.",$ex);
-        }
-
+    public function __construct(){
+        $this->db = new FirestoreClient([
+            'projectId' => 'ta-na-mesa-mobile'
+        ]);
+        $this->name = 'pratos';
     }
 
-    public function alterar(Prato $objPrato, Banco $objBanco) {
-        try{
-            $UPDATE = 'UPDATE tb_prato SET '
-                . ' nome = ?,'
-                . ' index_nome = ?,'
-                . ' informacoes = ?,'
-                . ' preco = ?,'
-                . ' categoriaPrato = ?'
-                . '  where idPrato = ?';
+    public function cadastrar(Prato $objPrato){
+        try {
 
-
-            $arrayBind = array();
-            $arrayBind[] = array('s',$objPrato->getNome());
-            $arrayBind[] = array('s',$objPrato->getIndexNome());
-            $arrayBind[] = array('s',$objPrato->getInformacoes());
-            $arrayBind[] = array('d',$objPrato->getPreco());
-            $arrayBind[] = array('s',$objPrato->getCategoriaPrato());
-
-            $arrayBind[] = array('i',$objPrato->getIdPrato());
-
-            $objBanco->executarSQL($UPDATE,$arrayBind);
+            $objPrato->setIdPrato(($this->ultimoId()+1));
+            $arr = $this->retornar_array($objPrato);
+            if($this->ultimoId() == 0){
+                //criar tabela
+                $this->novaColecao($this->name,$objPrato->getIdPrato(),$arr);
+            }else {
+                $this->db->collection($this->name)->document($objPrato->getIdPrato())->create($arr);
+            }
             return $objPrato;
-        } catch (Throwable $ex) {
-            throw new Excecao("Erro alterando prato no BD.",$ex);
-        }
 
+        }catch (Throwable $ex) {
+            throw new Excecao("Erro cadastrando o prato no BD.",$ex);
+        }
     }
 
-    public function listar(Prato $objPrato,$numLimite=null, Banco $objBanco) {
-        try{
 
-            $SELECT = "SELECT * FROM tb_prato";
+    public function alterar(Prato $objPrato){
+        try {
 
-            $WHERE = '';
-            $AND = '';
-            $arrayBind = array();
+            $arr = $this->retornar_array($objPrato);
+            $this->db->collection($this->name)->document($objPrato->getIdPrato())->set($arr);
+            return $objPrato;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro alterando o prato no BD.", $ex);
+        }
+    }
+
+    public function retornar_array($pratos_obj){
+        try {
+
+            if(is_array($pratos_obj)){
+                foreach ($pratos_obj as $prato){
+                    $arr[] = array(   'idPrato' => $prato->getIdPrato(),
+                        'categoriaPrato' =>$prato->getCategoriaPrato(),
+                        'lista_ingredientes' =>$prato->getListaIngredientes(),
+                        'prato' =>$prato->getNome(),
+                        'index_prato' =>$prato->getIndex_nome(),
+                        'preco' =>$prato->getPreco(),
+                        'informacoes' =>$prato->getInformacoes()
+                    );
+                }
+            }else{
+                $arr = array(   'idPrato' => $pratos_obj->getIdPrato(),
+                    'categoriaPrato' =>$pratos_obj->getCategoriaPrato(),
+                    'lista_ingredientes' =>$pratos_obj->getListaIngredientes(),
+                    'prato' =>$pratos_obj->getNome(),
+                    'index_prato' =>$pratos_obj->getIndex_nome(),
+                    'preco' =>$pratos_obj->getPreco(),
+                    'informacoes' =>$pratos_obj->getInformacoes()
+                );
+            }
+
+            return $arr;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando os atributos do recurso no BD.", $ex);
+        }
+    }
+
+    public function listar(Prato $objPrato, $numLimite = null){
+        try {
+            $arr = [];
+            $query = $this->db->collection($this->name);
 
             if($objPrato->getIdPrato() != null){
-                $WHERE .= $AND." idPrato = ?";
-                $AND = ' and ';
-                $arrayBind[] = array('i',$objPrato->getIdPrato());
-            }
-
-            if($objPrato->getCategoriaPrato() != null){
-                $WHERE .= $AND." categoriaPrato = ?";
-                $AND = ' and ';
-                $arrayBind[] = array('s',$objPrato->getCategoriaPrato());
-            }
-
-            if($objPrato->getInformacoes() != null){
-                $WHERE .= $AND." informacoes = ?";
-                $AND = ' and ';
-                $arrayBind[] = array('s',$objPrato->getInformacoes());
-            }
-
-            if($objPrato->getIndexNome() != null){
-                $WHERE .= $AND." index_nome = ?";
-                $AND = ' and ';
-                $arrayBind[] = array('i',$objPrato->getIndexNome());
+                $query = $query->where('idPrato','=',$objPrato->getIdPrato());
             }
 
             if($objPrato->getPreco() != null){
-                $WHERE .= $AND." preco = ?";
-                $AND = ' and ';
-                $arrayBind[] = array('d',$objPrato->getPreco());
+                $query = $query->where('preco','=',$objPrato->getPreco());
             }
 
             if($objPrato->getNome() != null){
-                $WHERE .= $AND." nome = ?";
-                $AND = ' and ';
-
-                $arrayBind[] = array('s',$objPrato->getNome());
+                $query = $query->where('index_prato','=',$objPrato->getNome());
             }
 
-
-            if($WHERE != ''){
-                $WHERE = ' where '.$WHERE;
-            }
-
-            $LIMIT = '';
             if($numLimite != null){
-                $LIMIT = ' LIMIT ?';
-                $arrayBind[] = array('i',$numLimite);
+                $query = $query->limit($numLimite);
             }
-
-            $arr = $objBanco->consultarSQL($SELECT.$WHERE.$LIMIT,$arrayBind);
-
-
-            $array_prato = array();
-            if(count($arr) > 0) {
-                foreach ($arr as $reg) {
+            $query = $query->orderBy('idRecurso');
+            $query = $query->documents()->rows();
+            if(!empty($query)){
+                foreach ($query as $item){
                     $prato = new Prato();
-                    $prato->setIdPrato($reg['idPrato']);
-                    $prato->setNome($reg['nome']);
-                    $prato->setIndexNome($reg['index_nome']);
-                    $prato->setCategoriaPrato($reg['categoriaPrato']);
-                    $prato->setPreco($reg['preco']);
-                    $prato->setInformacoes($reg['informacoes']);
-
-                    $array_prato[] = $prato;
+                    $prato->setIdPrato($item->data()['idPrato']);
+                    $prato->setNome($item->data()['prato']);
+                    $prato->setIndexNome($item->data()['index_prato']);
+                    $prato->setCategoriaPrato($item->data()['categoriaPrato']);
+                    $prato->setPreco($item->data()['preco']);
+                    $prato->setInformacoes($item->data()['informacoes']);
+                    $prato->setListaIngredientes($item->data()['lista_ingredientes']);
+                    $arr[]= $prato;
                 }
             }
-            return $array_prato;
-        } catch (Throwable $ex) {
-            throw new Excecao("Erro listando prato no BD.",$ex);
-        }
-
-    }
-
-    public function consultar(Prato $objPrato, Banco $objBanco) {
-
-        try{
-
-            $SELECT = 'SELECT * FROM tb_prato WHERE idPrato = ?';
-
-            $arrayBind = array();
-            $arrayBind[] = array('i',$objPrato->getIdPrato());
-
-            $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
-
-
-            $prato = new Prato();
-            $prato->setIdPrato($arr[0]['idPrato']);
-            $prato->setNome($arr[0]['nome']);
-            $prato->setIndexNome($arr[0]['index_nome']);
-            $prato->setCategoriaPrato($arr[0]['categoriaPrato']);
-            $prato->setPreco($arr[0]['preco']);
-            $prato->setInformacoes($arr[0]['informacoes']);
-
-            return $prato;
-        } catch (Throwable $ex) {
-            throw new Excecao("Erro consultando prato no BD.",$ex);
-        }
-
-    }
-
-    public function remover(Prato $objPrato, Banco $objBanco) {
-
-        try{
-
-            $DELETE = 'DELETE FROM tb_prato WHERE idPrato = ? ';
-            $arrayBind = array();
-            $arrayBind[] = array('i',$objPrato->getIdPrato());
-            $objBanco->executarSQL($DELETE, $arrayBind);
-
-        } catch (Throwable $ex) {
-            throw new Excecao("Erro removendo prato no BD.",$ex);
+            return $arr;
+        }catch (Throwable $ex) {
+            throw new Excecao("Erro listando os recursos no BD.",$ex);
         }
     }
+
+    public function consultar(Prato $objPrato){
+        try {
+
+            $query = $this->db->collection($this->name)->document($objPrato->getIdPrato())->snapshot()->data();
+
+            if(!empty($query)){
+                $recurso = new Recurso();
+                $recurso->setIdRecurso($query['idRecurso']);
+                $recurso->setIndexRecurso($query['index_recurso']);
+                $recurso->setNome($query['recurso']);
+                $recurso->setSNMenu($query['SNMenu']);
+                $recurso->setLink($query['link_recurso']);
+                return  $recurso;
+            }
+
+            return null;
+        }catch (Throwable $ex) {
+            throw new Excecao("Erro consultando o prato no BD.",$ex);
+        }
+    }
+
+    public function ultimoId(){
+        try {
+            $query = $this->db->collection($this->name)->documents()->rows();
+
+            if(!empty($query)) {
+                $maior  =  -1;
+                foreach ($query as $item) {
+                    if($maior < $item->data()['idRecurso']){
+                        $maior  =  $item->data()['idRecurso'];
+                        echo $maior;
+                    }
+
+                }
+            }
+            return $maior;
+        }catch (Throwable $ex) {
+            throw new Excecao("Erro cadastrando o prato no BD.",$ex);
+        }
+    }
+
+    public function remover(Prato $objPrato){
+        try {
+            $this->db->collection($this->name)->document($objPrato->getIdPrato())->delete();
+
+        }catch (Throwable $ex) {
+            throw new Excecao("Erro removendo o prato no BD.",$ex);
+        }
+    }
+
+    public function novaColecao(string $nameCollection, string $documentName,array $data = []){
+        try {
+
+            $this->db->collection($nameCollection)->document($documentName)->create($data);
+            return true;
+        }catch (Throwable $ex) {
+            throw new Excecao("Erro cadastrando o prato no BD.",$ex);
+        }
+    }
+
+
+    public function removerTabela(){
+        try {
+
+            $documents = $this->db->collection($this->name)->limit(1)->documents();
+            while (!$documents->isEmpty()){
+                foreach ($documents as $item){
+                    $item->reference()->delete();
+                }
+            }
+
+        }catch (Throwable $ex) {
+            throw new Excecao("Erro removendo a tabela recurso no BD.",$ex);
+        }
+    }
+
 }

@@ -19,9 +19,6 @@ try {
     require_once __DIR__ . '/../../classes/PerfilUsuario/PerfilUsuarioRN.php';
     require_once __DIR__ . '/../../classes/PerfilUsuario/PerfilUsuarioINT.php';
 
-    require_once __DIR__ . '/../../classes/Rel_usuario_perfilUsuario/Rel_usuario_perfilUsuario.php';
-    require_once __DIR__ . '/../../classes/Rel_usuario_perfilUsuario/Rel_usuario_perfilUsuario_RN.php';
-
     require_once __DIR__ . '/../../utils/Utils.php';
     require_once __DIR__ . '/../../utils/Alert.php';
 
@@ -38,17 +35,14 @@ try {
     $objUsuario = new Usuario();
     $objUsuarioRN = new UsuarioRN();
 
-    /* PERFIL DO USUÁRIO */
+    /* PERFIL USUÁRIO */
     $objPerfilUsuario = new PerfilUsuario();
     $objPerfilUsuarioRN = new PerfilUsuarioRN();
 
-    /* USUÁRIO + PERFIL DO USUÁRIO */
-    $objRel_usuario_perfilUsuario = new Rel_usuario_perfilUsuario();
-    $objRel_usuario_perfilUsuario_RN = new Rel_usuario_perfilUsuario_RN();
 
     UsuarioINT::montar_select_usuario($select_usuario, $objUsuarioRN, $objUsuario,null,true);
     PerfilUsuarioINT::montar_select_multiplos_perfis($select_perfilUsu, $objPerfilUsuarioRN, $objPerfilUsuario,$perfis_selecionados);
-    
+
     if(isset($_POST['sel_usuario'])) {
         $objUsuario->setIdUsuario($_POST['sel_usuario']);
         $objUsuario = $objUsuarioRN->consultar($objUsuario);
@@ -59,24 +53,28 @@ try {
         case 'cadastrar_usuario_perfilUsuario':
             if (isset($_POST['salvar_upr'])) {
                 if (isset($_POST['sel_perfil'])) {
-                    $objPerfilUsuario->setIdPerfilUsuario($_POST['sel_perfil']);
-                    $objPerfilUsuario = $objPerfilUsuarioRN->consultar($objPerfilUsuario);
+
+                    $objUsuario->setIdUsuario($_POST['sel_usuario']);
+                    $objUsuario = $objUsuarioRN->consultar($objUsuario);
+
+                    $arr_perfis = explode(",",$objUsuario->getListaPerfis());
+                    if(empty($arr_perfis[0])){
+                        $arr_perfis = array();
+                    }
 
                     if (isset($_POST['sel_perfil'])) {
                         $i = 0;
                         for ($i = 0; $i < count($_POST['sel_perfil']); $i++) {
                             $perfis_selecionados .= $_POST['sel_perfil'][$i] . ";";
-                            $objRel_usuario_perfilUsuario = new Rel_usuario_perfilUsuario();
-                            $objRel_usuario_perfilUsuario->setIdUsuario($objUsuario->getIdUsuario());
-                            $objRel_usuario_perfilUsuario->setIdPerfilUsuario($_POST['sel_perfil'][$i]);
-                            $arr_usuario_perfil[] = $objRel_usuario_perfilUsuario;
+                            $arr_perfis[] = $_POST['sel_perfil'][$i];
+
                         }
-                        $objRel_usuario_perfilUsuario->setObjsRelacionamentos($arr_usuario_perfil);
-                        $objRel_usuario_perfilUsuario = $objRel_usuario_perfilUsuario_RN->cadastrar($objRel_usuario_perfilUsuario);
+                        $objUsuario->setListaPerfis($arr_perfis);
+
+                        $objUsuario = $objUsuarioRN->alterar($objUsuario);
                         $alert = Alert::alert_success("Foi CADASTRADA a relação do usuário com o perfil");
 
                     }
-                    
                 }
 
                 UsuarioINT::montar_select_usuario($select_usuario, $objUsuarioRN, $objUsuario,null,null);
@@ -86,7 +84,7 @@ try {
 
         case 'editar_usuario_perfilUsuario':
 
-            if (!isset($_POST['salvar_upr'])) { //enquanto não enviou o formulário com as alterações
+           /* if (!isset($_POST['salvar_upr'])) { //enquanto não enviou o formulário com as alterações
                
                 $objUsuario->setIdUsuario($_GET['idUsuario']);
                 $objUsuario = $objUsuarioRN->consultar($objUsuario);
@@ -145,7 +143,8 @@ try {
 
                 UsuarioINT::montar_select_usuario($select_usuario, $objUsuarioRN, $objUsuario,null,null);
                 PerfilUsuarioINT::montar_select_perfil($select_perfilUsu, $objPerfilUsuarioRN, $objPerfilUsuario,$perfis_selecionados);
-            }
+
+            }*/
 
 
             break;
@@ -164,7 +163,7 @@ Pagina::getInstance()->montar_menu_topo();
 //Pagina::montar_topo_listar('CADASTRAR RELACIONAMENTO DO USUÁRIO COM O SEU PERFIL',null,null, 'listar_usuario_perfilUsuario', 'USUÁRIO + PERFIL');
 Pagina::getInstance()->mostrar_excecoes();
 echo $alert.
-    '<div class="conteudo"   style="margin-top: -50px;">
+    '<div class="conteudo_grande"   style="margin-top: -40px;">
         <div class="formulario">
             <form method="POST">
                 <div class="form-row">

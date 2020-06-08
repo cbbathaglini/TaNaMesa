@@ -15,15 +15,10 @@ try{
     require_once __DIR__ . '/../../classes/Usuario/Usuario.php';
     require_once __DIR__ . '/../../classes/Usuario/UsuarioRN.php';
 
-    require_once __DIR__ . '/../../classes/Rel_usuario_perfilUsuario/Rel_usuario_perfilUsuario.php';
-    require_once __DIR__ . '/../../classes/Rel_usuario_perfilUsuario/Rel_usuario_perfilUsuario_RN.php';
 
     Sessao::getInstance()->validar();
     $html = '';
 
-     /* USUÁRIO + PERFIL DO USUÁRIO */
-    $objRel_usuario_perfilUsuario = new Rel_usuario_perfilUsuario();
-    $objRel_usuario_perfilUsuario_RN = new Rel_usuario_perfilUsuario_RN();
 
     /* PERFIL DO USUÁRIO */
     $objPerfilUsuario = new PerfilUsuario();
@@ -33,12 +28,18 @@ try{
     $objUsuario = new Usuario();
     $objUsuarioRN = new UsuarioRN();
     
-    $arr_usuarios_com_perfil = $objRel_usuario_perfilUsuario_RN->listar_usuario_com_perfil(new Rel_usuario_perfilUsuario());
+    $arrUsuarios = $objUsuarioRN->listar($objUsuario);
 
-    foreach ($arr_usuarios_com_perfil as $usuarioPerfil){
+    foreach ($arrUsuarios as $usuario){
         $strPerfis = '';
-        foreach ($usuarioPerfil->getObjPerfis() as $perfil){
-            $strPerfis .= $perfil->getPerfil().",";
+        $arrPerfis =  explode(",",$usuario->getListaPerfis());
+
+        $objPerfilUsuario = new PerfilUsuario();
+        $objPerfilUsuarioRN = new PerfilUsuarioRN();
+        foreach ($arrPerfis as $perfil){
+            $objPerfilUsuario->setIdPerfilUsuario($perfil);
+            $objPerfilUsuario = $objPerfilUsuarioRN->consultar($objPerfilUsuario);
+            $strPerfis .= $objPerfilUsuario->getPerfil().",";
         }
         if($strPerfis == ''){
             $strPerfis = ' - ';
@@ -46,15 +47,15 @@ try{
         $strPerfis = substr($strPerfis,0,-1);
 
         $html.='<tr>
-                    <th scope="row">'.Pagina::formatar_html($usuarioPerfil->getCPF()).'</th>';
+                    <th scope="row">'.Pagina::formatar_html($usuario->getCPF()).'</th>';
         $html .=    '<td>'.Pagina::formatar_html($strPerfis).'</td>';
 
 
         if(Sessao::getInstance()->verificar_permissao('editar_usuario_perfilUsuario')) {
-            $html .= '  <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_usuario_perfilUsuario&idUsuario=' . $usuarioPerfil->getIdUsuario()) . '"><i class="fas fa-edit "></i></a></td>';
+            $html .= '  <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_usuario_perfilUsuario&idUsuario=' . $usuario->getIdUsuario()) . '"><i class="fas fa-edit "></i></a></td>';
         }
         if(Sessao::getInstance()->verificar_permissao('remover_usuario_perfilUsuario')) {
-            $html .= '  <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_usuario_perfilUsuario&idUsuario=' . $usuarioPerfil->getIdUsuario()) . '"><i class="fas fa-trash-alt"></a></td>';
+            $html .= '  <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_usuario_perfilUsuario&idUsuario=' . $usuario->getIdUsuario()) . '"><i class="fas fa-trash-alt"></a></td>';
         }
         $html .= ' </tr>';
     }

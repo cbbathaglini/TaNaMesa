@@ -6,10 +6,13 @@ session_start();
     require_once __DIR__.'/../classes/Usuario/UsuarioRN.php';
 
 
+
 Sessao::getInstance()->validar();
+
 
 $objUsuario = new Usuario();
 $objUsuarioRN = new UsuarioRN();
+
 $objUsuario->setIdUsuario(Sessao::getInstance()->getCPF());
 $objUsuario = $objUsuarioRN->consultar($objUsuario);
 
@@ -89,14 +92,14 @@ echo'         <div class="row">';
 echo' </div>';
 
 echo'       <div class="row">';
-            if(Sessao::getInstance()->verificar_permissao('cadastrar_perfilUsuario_recurso')) {
+            if(Sessao::getInstance()->verificar_permissao('cadastrar_usuario_recurso')) {
                 echo '<div class="col-md-6">
-                         <a  class="btn btn-primary" STYLE="margin-top: 17px;width: 100%;" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_perfilUsuario_recurso') . '">CADASTRAR PERFIL USUÁRIO+RECURSO</a>          
+                         <a  class="btn btn-primary" STYLE="margin-top: 17px;width: 100%;" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_usuario_recurso') . '">CADASTRAR USUÁRIO+RECURSO</a>          
                       </div>';
             }
-            if(Sessao::getInstance()->verificar_permissao('listar_perfilUsuario_recurso')) {
+            if(Sessao::getInstance()->verificar_permissao('listar_usuario_recurso')) {
                     echo '  <div class="col-md-6">
-                                 <a  class="btn btn-primary" STYLE="margin-top: 17px;width: 100%;" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_perfilUsuario_recurso') . '">LISTAR PERFIL USUÁRIO+RECURSO</a>          
+                                 <a  class="btn btn-primary" STYLE="margin-top: 17px;width: 100%;" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_usuario_recurso') . '">LISTAR USUÁRIO+RECURSO</a>          
                             </div>';
                 }
 echo'        </div>';

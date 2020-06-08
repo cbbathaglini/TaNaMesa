@@ -35,6 +35,7 @@ try{
         $html.='<tr>
                     <th scope="row">'.Pagina::formatar_html($r->getIdRecurso()).'</th>
                         <td>'.Pagina::formatar_html($r->getNome()).'</td>
+                         <td>'.Pagina::formatar_html($r->getLink()).'</td>
                         <td>'.Pagina::formatar_html($r->getSNMenu()).'</td>';
 
         if(Sessao::getInstance()->verificar_permissao('editar_recurso')) {

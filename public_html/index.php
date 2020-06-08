@@ -1,15 +1,96 @@
 <?php 
 session_start();
 require_once __DIR__.'/../classes/Pagina/Pagina.php';
+
 require_once __DIR__.'/../classes/Sessao/Sessao.php';
 
+require_once __DIR__ . '/../classes/Firestore/Firestore.php';
+
+require_once __DIR__ . '/../classes/Usuario/Usuario.php';
+require_once __DIR__ . '/../classes/Usuario/UsuarioRN.php';
+
+require_once __DIR__ . '/../classes/Recurso/Recurso.php';
+require_once __DIR__ . '/../classes/Recurso/RecursoRN.php';
+
+
+
+//$fs = new Firestore('usuarios');
+/*
+$objUsuario = new Usuario();
+$objUsuarioRN = new UsuarioRN();
+
+
+$objRecurso = new Recurso();
+$objRecursoRN = new RecursoRN();
+
+$objUsuario->setIdUsuario(4);
+//$objUsuarioRN->remover($objUsuario);
+
+$objUsuario = $objUsuarioRN->consultar($objUsuario);
+
+
+$arr_recursos = explode(",",$objUsuario->getListaRecursos());
+
+$objRecurso->setLink('cadastrar_recurso');
+$arr = $objRecursoRN->listar($objRecurso);
+$arr_recursos[] = $arr[0]->getIdRecurso();
+
+
+$objRecurso->setLink('editar_recurso');
+$arr = $objRecursoRN->listar($objRecurso);
+$arr_recursos[] = $arr[0]->getIdRecurso();
+
+
+$objRecurso->setLink('listar_recurso');
+$arr = $objRecursoRN->listar($objRecurso);
+$arr_recursos[] = $arr[0]->getIdRecurso();
+
+print_r($arr_recursos);
+
+$objUsuario->setListaRecursos($arr_recursos);
+$objUsuario = $objUsuarioRN->alterar($objUsuario);
+print_r($objUsuario);
+
+die();
+
+//$arr_datas = array( "cpf" => '86251791004', 'senha' => '123456');
+//print_r($arr_datas);
+
+//$fs->getMultipleWhere($arr_datas);
+
+
+
+//$fs = new Firestore('usuarios');
+//$fs = new Firestore('usuarios');
+
+
+//print_r($fs->getDocument('PV8Ge1yzuBftQaUnJDQA'));
+
+//print_r($fs->getWhere('cpf','=','86251791004'));
+//print_r($fs->newDocument(3,['cpf' => '11111111111','senha'=> '111111']));
+
+//print_r($fs->newCollection('food', 'meet'));
+//print_r($fs->dropDocument('meet'));
+
+//print_r($fs->dropCollection('food'));
+
+//$fs->newCollection('log','1');
+
+//print_r($fs->list());
+
+//print_r($fs->update('3',['cpf' => '21287690887','senha' => "111111"]));
+
+*/
+
 try {
+    //Sessao::getInstance()->logar('86251791004', '123456');
     if (isset($_POST['btn_logar'], $_POST['txtCPF'], $_POST['txtSenha'])) {
         Sessao::getInstance()->logar($_POST['txtCPF'], $_POST['txtSenha']);
     }
 }catch (Throwable $e){
     die($e);
 }
+
 
     session_destroy();
     Pagina::abrir_head("Login - Tá Na Mesa");
@@ -53,4 +134,4 @@ echo '<div class="wrapper fadeInDown">
         </div>
     </main>*/
 
-    Pagina::getInstance()->fechar_corpo();
+   // Pagina::getInstance()->fechar_corpo();

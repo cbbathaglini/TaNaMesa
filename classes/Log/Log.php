@@ -41,7 +41,5 @@ class Log{
         $this->dataHora = $dataHora;
     }
 
-
-    
     
 }

@@ -60,7 +60,7 @@ class Pagina {
                 $log->setTexto($e->__toString()."\n".$e->getTraceAsString());
                 date_default_timezone_set('America/Sao_Paulo');
                 $log->setDataHora(date("Y-m-d H:i:s"));
-                print_r($log);
+                //print_r($log);
                 $logRN = new LogRN();
                 $logRN->cadastrar($log);
                 //die("aqui");

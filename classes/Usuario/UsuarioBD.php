@@ -2,168 +2,199 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once __DIR__ . '/../Banco/Banco.php';
-class UsuarioBD{
-    
-     
-
-    public function cadastrar(Usuario $objUsuario, Banco $objBanco) {
-        try{
-
-            $INSERT = 'INSERT INTO tb_usuario (CPF,senha) VALUES (?,?)';
-
-            $arrayBind = array();
-            $arrayBind[] = array('s',$objUsuario->getCPF());
-            $arrayBind[] = array('s',$objUsuario->getSenha());
+require_once __DIR__.'/../../vendor/autoload.php';
+use Google\Cloud\Firestore\FirestoreClient;
+class UsuarioBD
+{
+    protected $db;
+    protected $name;
 
 
-            $objBanco->executarSQL($INSERT,$arrayBind);
-            $objUsuario->setIdUsuario($objBanco->obterUltimoID());
-            return $objUsuario;
-        } catch (Throwable $ex) {
-            throw new Excecao("Erro cadastrando usuário no UsuarioBD.",$ex);
-        }
-        
+    public function __construct()
+    {
+        $this->db = new FirestoreClient([
+            'projectId' => 'ta-na-mesa-mobile'
+        ]);
+        $this->name = 'usuarios';
     }
-    
-    public function alterar(Usuario $objUsuario, Banco $objBanco) {
-        try{
-            $UPDATE = 'UPDATE tb_usuario SET '
-                    . ' CPF = ?,'
-                    . ' senha = ?'
-                . '  where idUsuario = ?';
-        
-                
-            $arrayBind = array();
-            $arrayBind[] = array('s',$objUsuario->getCPF());
-            $arrayBind[] = array('s',$objUsuario->getSenha());
-            $arrayBind[] = array('i',$objUsuario->getIdUsuario());
 
-            $objBanco->executarSQL($UPDATE,$arrayBind);
-            return $objUsuario;
-        } catch (Throwable $ex) {
-            throw new Excecao("Erro alterando usuário no UsuarioBD.",$ex);
-        }
-       
-    }
-    
-     public function listar(Usuario $objUsuario,$numLimite = null, Banco $objBanco) {
-         try{
+    public function cadastrar(Usuario $objUsuario)
+    {
+        try {
 
-                $SELECT = "SELECT * FROM tb_usuario";
-                $WHERE = '';
-                $AND = '';
+            $objUsuario->setIdUsuario(($this->quantidadeObjetos() + 1));
+            $arr = array('idUsuario' => $objUsuario->getIdUsuario(),
+                'nome' => $objUsuario->getNome(),
+                'senha' => $objUsuario->getSenha(),
+                'CPF' => $objUsuario->getCPF(),
+                'lista_perfis' =>  $objUsuario->getListaPerfis(),
+                'lista_recursos' => $objUsuario->getListaRecursos()
+            );
 
-                $arrayBind = array();
-                if($objUsuario->getCPF() != null){
-                    $WHERE .= $AND." CPF = ?";
-                    $AND = ' and ';
-
-                    $arrayBind[] = array('s',$objUsuario->getCPF());
-                }
-
-                if($WHERE != ''){
-                    $WHERE = ' where '.$WHERE;
-                }
-
-                 $LIMIT = '';
-                 if($numLimite != null){
-                     $LIMIT = ' LIMIT ?';
-                     $arrayBind[] = array('i',$numLimite);
-                 }
-
-                 $arr = $objBanco->consultarSQL($SELECT.$WHERE.$LIMIT,$arrayBind);
-
-                $array_usuario = array();
-                if(count($arr) > 0) {
-                    foreach ($arr as $reg) {
-                        $objUsuario = new Usuario();
-                        $objUsuario->setIdUsuario($reg['idUsuario']);
-                        $objUsuario->setCPF($reg['CPF']);
-                        $objUsuario->setSenha($reg['senha']);
-
-                        $array_usuario[] = $objUsuario;
-                    }
-                }
-
-            return $array_usuario;
-        } catch (Throwable $ex) {
-            throw new Excecao("Erro listando usuário no UsuarioBD.",$ex);
-        }
-       
-    }
-    
-    public function consultar(Usuario $objUsuario, Banco $objBanco) {
-
-        try{
-            $SELECT = 'SELECT * FROM tb_usuario WHERE idUsuario = ?';
-
-            $arrayBind = array();
-            $arrayBind[] = array('i',$objUsuario->getIdUsuario());
-
-            $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
-            
-            //print_r($arr);
-            $usuario = new Usuario();
-            $usuario->setIdUsuario($arr[0]['idUsuario']);
-            $usuario->setCPF($arr[0]['CPF']);
-            $usuario->setSenha($arr[0]['senha']);
-
-            return $usuario;
-        } catch (Throwable $ex) {
-       
-            throw new Excecao("Erro consultando usuário no UsuarioBD.",$ex);
-        }
-
-    }
-    
-    public function remover(Usuario $objUsuario, Banco $objBanco) {
-
-        try{
-            
-            $DELETE = 'DELETE FROM tb_usuario WHERE idUsuario = ? ';  
-            $arrayBind = array();
-            $arrayBind[] = array('i',$objUsuario->getIdUsuario());
-            $objBanco->executarSQL($DELETE, $arrayBind);
-            
-        } catch (Throwable $ex) {
-            throw new Excecao("Erro removendo usuário no UsuarioBD.",$ex);
-        }
-    }
-    
-    
-    public function validar_cadastro(Usuario $objUsuario, Banco $objBanco) {
-
-       try{
-
-            $SELECT = 'SELECT idUsuario,CPF,senha FROM tb_usuario WHERE CPF = ? AND senha = ? ';
-
-            $arrayBind = array();
-            $arrayBind[] = array('s',$objUsuario->getCPF());
-            $arrayBind[] = array('s',$objUsuario->getSenha());
-
-            $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
-
-            $array_usuario = array();
-            foreach ($arr as $reg){
-                $objUsuario = new Usuario();
-                $objUsuario->setIdUsuario($reg['idUsuario']);
-                $objUsuario->setCPF($reg['CPF']);
-                $objUsuario->setSenha($reg['senha']);
-
-                $array_usuario[] = $objUsuario;
+            if ($this->quantidadeObjetos() == 0) {
+                //criar tabela
+                $this->novaColecao($this->name, $objUsuario->getIdUsuario(), $arr);
+            } else {
+                $this->db->collection($this->name)->document($objUsuario->getIdUsuario())->create($arr);
             }
-            return $array_usuario;
+            return $objUsuario;
 
-            
         } catch (Throwable $ex) {
-       
-            throw new Excecao("Erro validando cadastro do usuário no UsuarioBD.",$ex);
+            throw new Excecao("Erro cadastrando o usuário no BD.", $ex);
         }
-
     }
-    
-    
 
-    
+    public function alterar(Usuario $objUsuario)
+    {
+        try {
+            $arr = array();
+
+            if(count($objUsuario->getListaRecursos()) > 0) {
+                $idsRecursos = '';
+                foreach (array_unique($objUsuario->getListaRecursos()) as $recurso){
+                    $idsRecursos .= $recurso.",";
+                }
+            }
+
+            if(count($objUsuario->getListaPerfis()) > 0) {
+                $idsPerfis = '';
+                foreach (array_unique($objUsuario->getListaPerfis()) as $perfil){
+                    $idsPerfis .= $perfil.",";
+                }
+            }
+
+            $idsPerfis = substr($idsPerfis,0,-1);
+            $idsRecursos = substr($idsRecursos,0,-1);
+
+
+            $arr = array('idUsuario' => $objUsuario->getIdUsuario(),
+                'nome' => $objUsuario->getNome(),
+                'senha' => $objUsuario->getSenha(),
+                'CPF' => $objUsuario->getCPF(),
+                'lista_perfis' =>  $idsPerfis,
+                'lista_recursos' => $idsRecursos
+            );
+
+            $this->db->collection($this->name)->document($objUsuario->getIdUsuario())->set($arr);
+            return $objUsuario;
+        }  catch (Throwable $ex) {
+            throw new Excecao("Erro alterando o usuário no BD.", $ex);
+        }
+    }
+
+    public function listar(Usuario $objUsuario, $numLimite = null)
+    {
+        try {
+            $arr = [];
+            $query = $this->db->collection($this->name);
+
+            if ($objUsuario->getIdUsuario() != null) {
+                $query = $query->where('idUsuario', '=', $objUsuario->getIdUsuario());
+            }
+
+            if ($objUsuario->getNome() != null) {
+                $query = $query->where('nome', '=', $objUsuario->getNome());
+            }
+
+            if ($objUsuario->getCPF() != null) {
+                $query = $query->where('CPF', '=', $objUsuario->getCPF());
+            }
+
+            if ($objUsuario->getSenha() != null) {
+                $query = $query->where('senha', '=', $objUsuario->getSenha());
+            }
+
+            if ($numLimite != null) {
+                $query = $query->limit($numLimite);
+            }
+            $query = $query->documents()->rows();
+            if (!empty($query)) {
+                foreach ($query as $item) {
+                    $usuario = new Usuario();
+                    $usuario->setIdUsuario($item->data()['idUsuario']);
+                    $usuario->setSenha($item->data()['senha']);
+                    $usuario->setCPF($item->data()['CPF']);
+                    $usuario->setNome($item->data()['nome']);
+                    $usuario->setListaPerfis($item->data()['lista_perfis']);
+                    $usuario->setListaRecursos($item->data()['lista_recursos']);
+
+                    $arr[] = $usuario;
+                }
+            }
+            return $arr;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando os usuários no BD.", $ex);
+        }
+    }
+
+    public function consultar(Usuario $objUsuario)
+    {
+        try {
+
+            $query = $this->db->collection($this->name)->document($objUsuario->getIdUsuario())->snapshot()->data();
+
+            if (!empty($query)) {
+                $usuario = new Usuario();
+                $usuario->setIdUsuario($query['idUsuario']);
+                $usuario->setSenha($query['senha']);
+                $usuario->setCPF($query['CPF']);
+                $usuario->setNome($query['nome']);
+                $usuario->setListaPerfis($query['lista_perfis']);
+                $usuario->setListaRecursos($query['lista_recursos']);
+                return $usuario;
+            }
+
+            return null;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro consultando o usuário no BD.", $ex);
+        }
+    }
+
+    public function quantidadeObjetos()
+    {
+        try {
+            $query = $this->db->collection($this->name)->documents()->rows();
+            return count($query);
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro cadastrando o usuário no BD.", $ex);
+        }
+    }
+
+    public function remover(Usuario $objUsuario)
+    {
+        try {
+            $this->db->collection($this->name)->document($objUsuario->getIdUsuario())->delete();
+
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro removendo o usuário no BD.", $ex);
+        }
+    }
+
+    public function novaColecao(string $nameCollection, string $documentName, array $data = [])
+    {
+        try {
+
+            $this->db->collection($nameCollection)->document($documentName)->create($data);
+            return true;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro cadastrando o usuário no BD.", $ex);
+        }
+    }
+
+
+    public function removerTabela()
+    {
+        try {
+
+            $documents = $this->db->collection($this->name)->limit(1)->documents();
+            while (!$documents->isEmpty()) {
+                foreach ($documents as $item) {
+                    $item->reference()->delete();
+                }
+            }
+
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro removendo a tabela usuário no BD.", $ex);
+        }
+    }
 }

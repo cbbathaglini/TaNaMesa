@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../Excecao/Excecao.php';
 
+
 require_once __DIR__ . '/../Usuario/Usuario.php';
 require_once __DIR__ . '/../Usuario/UsuarioRN.php';
 
@@ -18,19 +19,32 @@ require_once __DIR__ . '/../Rel_perfilUsuario_recurso/Rel_perfilUsuario_recurso_
 class Sessao {
 
     private static $instance;
+    private $bolAutorizar;
 
-    public static function getInstance() {
+
+    public static function getInstance($bolAutorizar = true) {
         if (self::$instance == null) {
-            self::$instance = new Sessao();
+            self::$instance = new Sessao($bolAutorizar);
         }
         return self::$instance;
     }
+
+    /**
+     * Sessao constructor.
+     * @param $bolAutorizar
+     */
+    public function __construct($bolAutorizar)
+    {
+        $this->bolAutorizar = $bolAutorizar;
+    }
+
 
     public function logar($CPF, $senha) {
 
         try {
 
             unset($_SESSION['TANAMESA']);
+
             if ($CPF != null && $CPF != '' && $senha != '' && $senha != null) {
 
                 $objUsuario = new Usuario();
@@ -38,11 +52,12 @@ class Sessao {
 
                 $objUsuario->setCPF($CPF);
                 $objUsuario->setSenha($senha);
-                $objUsuarioRN->validar_cadastro($objUsuario);
+                $usuario = $objUsuarioRN->logar($objUsuario);
 
-                $arr_valida = $objUsuarioRN->validar_cadastro($objUsuario);
 
-                if (count($arr_valida) == 0 && empty($arr_valida)) {
+                //$arr_valida = $objUsuarioRN->validar_cadastro($objUsuario);
+
+                if (is_null($usuario)) {
                     $objExcecao = new Excecao();
                     $objExcecao->adicionar_validacao("Usuário não encontrado.");
                     die("Usuário não encontrado.");
@@ -51,49 +66,43 @@ class Sessao {
                 }
 
 
+
                 $arr_usuario = $objUsuarioRN->listar($objUsuario);
+                /*
+                    echo "<pre>";
+                    print_r($arr_usuario);
+                    echo "</pre>";
+                */
 
-                $objRel_usuario_perfilUsuario = new Rel_usuario_perfilUsuario();
-                $objRel_usuario_perfilUsuario_RN = new Rel_usuario_perfilUsuario_RN();
-                $objRel_usuario_perfilUsuario->setIdUsuario($arr_usuario[0]->getIdUsuario());
-                $perfis_usuario = $objRel_usuario_perfilUsuario_RN->listar($objRel_usuario_perfilUsuario);
-                //print_r($perfis_usuario);
-                
 
-                if (empty($perfis_usuario) && $perfis_usuario == null) {
+                $arr_perfis = explode(",",$arr_usuario[0]->getListaPerfis());
+                $arr_recursos = explode(",",$arr_usuario[0]->getListaRecursos());
+
+                $objRecurso = new Recurso();
+                $objRecursoRN = new RecursoRN();
+                foreach ($arr_recursos as $recurso){
+                    $objRecurso->setIdRecurso($recurso);
+                    $objRecurso= $objRecursoRN->consultar($objRecurso);
+                    $arrRecurso[] = $objRecurso->getLink();
+                }
+
+                if (empty($arr_perfis) && $arr_perfis == null) {
                     $objExcecao = new Excecao();
                     $objExcecao->adicionar_validacao("Usuário não tem permissões no sistema.");
                     die("Usuário não tem permissões no sistema.");
                 }
 
-                //print_r($perfis_usuario);
-
-                $objRel_perfilUsuario_recurso = new Rel_perfilUsuario_recurso();
-                $objRel_perfilUsuario_recurso_RN = new Rel_perfilUsuario_recurso_RN();
-
-                foreach ($perfis_usuario as $perfis) {
-                    $objRel_perfilUsuario_recurso->setIdPerfilUsuario($perfis->getIdPerfilUsuario());
-                    $recursos = $objRel_perfilUsuario_recurso_RN->listar_recursos($objRel_perfilUsuario_recurso);
-                }
-
-                if (empty($recursos) && $recursos == null) {
+                if (empty($arrRecurso) && $arrRecurso == null) {
                     $objExcecao = new Excecao();
                     $objExcecao->adicionar_validacao("Usuário não tem nenhum recurso no sistema.");
                 }
 
-                $objRecurso = new Recurso();
-                $objRecursoRN = new RecursoRN();
-                foreach ($recursos as $r) {
-                    $objRecurso->setIdRecurso($r->getIdRecurso());
-                    $objRecurso = $objRecursoRN->consultar($objRecurso);
-                    $arr_recursos[] = $objRecurso->getNome();
-                }
 
                 //print_r($arr_recursos);
                 $_SESSION['TANAMESA'] = array();
                 $_SESSION['TANAMESA']['ID_USUARIO'] = $arr_usuario[0]->getIdUsuario();
                 $_SESSION['TANAMESA']['CPF'] = $arr_usuario[0]->getCPF();
-                $_SESSION['TANAMESA']['RECURSOS'] = $arr_recursos;
+                $_SESSION['TANAMESA']['RECURSOS'] = $arrRecurso;
                 $_SESSION['TANAMESA']['CHAVE'] = hash('sha256', random_bytes(50));
 
                 header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=principal'));
@@ -117,6 +126,7 @@ class Sessao {
     }
 
     public function validar() {
+
         if (!isset($_SESSION['TANAMESA']['ID_USUARIO']) || $_SESSION['TANAMESA']['ID_USUARIO'] == null) {
             //LOGIN
             //header('Location: controlador.php?action=listar_perfilPaciente');
@@ -144,9 +154,10 @@ class Sessao {
     }
 
     public function getIdUsuario() {
-      
-           return $_SESSION['TANAMESA']['ID_USUARIO'];
-      
+      if(isset($_SESSION['TANAMESA']['ID_USUARIO'])) {
+          return $_SESSION['TANAMESA']['ID_USUARIO'];
+      }
+      return null;
     }
 
     public function getCPF() {
@@ -185,7 +196,9 @@ class Sessao {
     }
 
     public function verificar_permissao($strRecurso) {
-
+        if(!$this->bolAutorizar){
+            return true;
+        }
         if (in_array($strRecurso, $_SESSION['TANAMESA']['RECURSOS'])) {
             return true;
         }

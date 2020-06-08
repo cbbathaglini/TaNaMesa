@@ -4,12 +4,11 @@
  */
 require_once __DIR__ . '/../Banco/Banco.php';
 class Rel_usuario_perfilUsuario_BD{
-    
-     
+
 
     public function cadastrar(Rel_usuario_perfilUsuario $objRel_usuario_perfilUsuario, Banco $objBanco) {
         try{
-           
+
             $INSERT = 'INSERT INTO tb_usuario_has_tb_perfil_usuario (idPerfilUsuario,idUsuario) VALUES (?,?)';
 
             $arrayBind = array();
@@ -22,34 +21,34 @@ class Rel_usuario_perfilUsuario_BD{
         } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando o relacionamento do usuário com o seu perfil no BD.",$ex);
         }
-        
+
     }
-    
+
     public function alterar(Rel_usuario_perfilUsuario $objRel_usuario_perfilUsuario, Banco $objBanco) {
         try{
             $UPDATE = 'UPDATE tb_usuario_has_tb_perfil_usuario SET '
-                    . ' idPerfilUsuario = ?,'
-                    . ' idUsuario = ?'
+                . ' idPerfilUsuario = ?,'
+                . ' idUsuario = ?'
                 . '  where idUsuarioPerfilUsuario = ?';
-        
-                
+
+
             $arrayBind = array();
             $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdPerfilUsuario());
             $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdUsuario());
             $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdRelUsuarioPerfilUsuario());
-            
+
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
 
         } catch (Throwable $ex) {
             throw new Excecao("Erro alterandoo o relacionamento do usuário com o seu perfil no BD.",$ex);
         }
-       
+
     }
-    
-     public function listar(Rel_usuario_perfilUsuario $objRel_usuario_perfilUsuario,$numLimite=null, Banco $objBanco) {
-         try{
-      
+
+    public function listar(Rel_usuario_perfilUsuario $objRel_usuario_perfilUsuario,$numLimite=null, Banco $objBanco) {
+        try{
+
             $SELECT = "SELECT * FROM tb_usuario_has_tb_perfil_usuario";
 
             $WHERE = '';
@@ -57,29 +56,29 @@ class Rel_usuario_perfilUsuario_BD{
             $arrayBind = array();
             if($objRel_usuario_perfilUsuario->getIdUsuario() != null){
                 $WHERE .= $AND." idUsuario = ?";
-                $AND = ' and '; 
+                $AND = ' and ';
                 $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdUsuario());
             }
 
-             if($objRel_usuario_perfilUsuario->getIdPerfilUsuario() != null){
-                 $WHERE .= $AND." idPerfilUsuario = ?";
-                 $AND = ' and ';
-                 $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdPerfilUsuario());
-             }
-            
+            if($objRel_usuario_perfilUsuario->getIdPerfilUsuario() != null){
+                $WHERE .= $AND." idPerfilUsuario = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdPerfilUsuario());
+            }
+
 
             if($WHERE != ''){
                 $WHERE = ' where '.$WHERE;
             }
 
-             $LIMIT = '';
-             if($numLimite != null){
-                 $LIMIT = ' LIMIT ?';
-                 $arrayBind[] = array('i',$numLimite);
-             }
+            $LIMIT = '';
+            if($numLimite != null){
+                $LIMIT = ' LIMIT ?';
+                $arrayBind[] = array('i',$numLimite);
+            }
 
-             $arr = $objBanco->consultarSQL($SELECT.$WHERE.$LIMIT,$arrayBind);
-            
+            $arr = $objBanco->consultarSQL($SELECT.$WHERE.$LIMIT,$arrayBind);
+
             $array_usuario = array();
             foreach ($arr as $reg){
                 $objRel_usuario_perfilUsuario = new Rel_usuario_perfilUsuario();
@@ -93,9 +92,9 @@ class Rel_usuario_perfilUsuario_BD{
         } catch (Throwable $ex) {
             throw new Excecao("Erro listando o relacionamento do usuário com o seu perfil no BD.",$ex);
         }
-       
+
     }
-    
+
     public function consultar(Rel_usuario_perfilUsuario $objRel_usuario_perfilUsuario, Banco $objBanco) {
 
         try{
@@ -114,22 +113,22 @@ class Rel_usuario_perfilUsuario_BD{
 
             return $usuario_perfil;
         } catch (Throwable $ex) {
-       
+
             throw new Excecao("Erro consultando o relacionamento do usuário com o seu perfil no BD.",$ex);
         }
 
     }
-    
+
     public function remover(Rel_usuario_perfilUsuario $objRel_usuario_perfilUsuario, Banco $objBanco) {
 
         try{
-            
+
             $DELETE = 'DELETE FROM tb_usuario_has_tb_perfil_usuario WHERE idUsuario = ? AND idPerfilUsuario = ?';
             $arrayBind = array();
             $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdUsuario());
             $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdPerfilUsuario());
             $objBanco->executarSQL($DELETE, $arrayBind);
-            
+
         } catch (Throwable $ex) {
             throw new Excecao("Erro removendo o relacionamento do usuário com o seu perfil no BD.",$ex);
         }
@@ -177,6 +176,5 @@ class Rel_usuario_perfilUsuario_BD{
         }
 
     }
-   
 
 }

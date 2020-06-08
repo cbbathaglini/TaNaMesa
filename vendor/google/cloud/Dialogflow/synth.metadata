@@ -1,0 +1,37 @@
+{
+  "sources": [
+    {
+      "git": {
+        "name": ".",
+        "remote": "https://github.com/googleapis/google-cloud-php.git",
+        "sha": "fef66e879b8d1980c12958612a41f284097916f5"
+      }
+    },
+    {
+      "git": {
+        "name": "googleapis",
+        "remote": "https://github.com/googleapis/googleapis.git",
+        "sha": "cd3ce2651c3921670217e664303976cdf76e9fe2",
+        "internalRef": "312123588"
+      }
+    },
+    {
+      "git": {
+        "name": "synthtool",
+        "remote": "https://github.com/googleapis/synthtool.git",
+        "sha": "7136daa5687f2a5bdcbba2cb25457f56fdf85d59"
+      }
+    }
+  ],
+  "destinations": [
+    {
+      "client": {
+        "source": "googleapis",
+        "apiName": "dialogflow",
+        "apiVersion": "v2",
+        "language": "php",
+        "generator": "bazel"
+      }
+    }
+  ]
+}

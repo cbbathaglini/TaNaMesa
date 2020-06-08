@@ -51,130 +51,108 @@ class UsuarioRN{
        }
 
     }
+
+    private function validarLogin(Usuario $usuario,Excecao $objExcecao){
+
+        $objUsuarioRN = new UsuarioRN();
+        $numUsuario = count($objUsuarioRN->listar($usuario,1));
+        if($numUsuario > 0){
+            $objExcecao->adicionar_validacao('O usuário já existe',null,'alert-danger');
+        }
+    }
      
 
     public function cadastrar(Usuario $usuario) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
-            
+
             $this->validarCPF($usuario,$objExcecao);
             $this->validarSenha($usuario,$objExcecao);
-            $this->validarJaExisteUsuario($usuario,$objExcecao);
-            
+            //$this->validarJaExisteUsuario($usuario,$objExcecao);
+
             $objExcecao->lancar_validacoes();
             $objUsuarioBD = new UsuarioBD();
-            $objUsuario = $objUsuarioBD->cadastrar($usuario,$objBanco);
+            $objUsuario = $objUsuarioBD->cadastrar($usuario);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $objUsuario;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando o usuário.', $e);
         }
     }
 
     public function alterar(Usuario $usuario) {
-        $objBanco = new Banco();
          try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
 
             $this->validarCPF($usuario,$objExcecao);
             $this->validarSenha($usuario,$objExcecao);
-            $this->validarJaExisteUsuario($usuario,$objExcecao);
+            //$this->validarJaExisteUsuario($usuario,$objExcecao);
                         
             $objExcecao->lancar_validacoes();
-            $objUsuarioBD = new UsuarioBD();
-            $objUsuario = $objUsuarioBD->alterar($usuario,$objBanco);
 
-             $objBanco->confirmarTransacao();
-             $objBanco->fecharConexao();
+            $objUsuarioBD = new UsuarioBD();
+            $objUsuario = $objUsuarioBD->alterar($usuario);
+
              return $objUsuario;
         } catch (Throwable $e) {
-             $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando o usuário.', $e);
         }
     }
 
     public function consultar(Usuario $usuario) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
 
             $objExcecao->lancar_validacoes();
             $objUsuarioBD = new UsuarioBD();
-            $arr =  $objUsuarioBD->consultar($usuario,$objBanco);
+            $arr =  $objUsuarioBD->consultar($usuario);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o usuário.',$e);
         }
     }
 
     public function remover(Usuario $usuario) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
 
             $objExcecao->lancar_validacoes();
             $objUsuarioBD = new UsuarioBD();
-            $arr =  $objUsuarioBD->remover($usuario,$objBanco);
+            $arr =  $objUsuarioBD->remover($usuario);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro removendo o usuário.', $e);
         }
     }
 
     public function listar(Usuario $usuario,$numLimite = null) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
 
             $objExcecao->lancar_validacoes();
             $objUsuarioBD = new UsuarioBD();
             
-            $arr = $objUsuarioBD->listar($usuario,$numLimite,$objBanco);
+            $arr = $objUsuarioBD->listar($usuario,$numLimite);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o usuário.',$e);
         }
     }
 
 
-    public function validar_cadastro(Usuario $usuario) {
+    public function logar(Usuario $usuario) {
         try {
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao();
-            $objExcecao->lancar_validacoes();
-            $objUsuarioBD = new UsuarioBD();
-            $arr = $objUsuarioBD->validar_cadastro($usuario,$objBanco);
 
-            $objBanco->fecharConexao();
-            return $arr;
-        } catch (Exception $e) {
+            $this->validarCPF($usuario,$objExcecao);
+            $this->validarSenha($usuario,$objExcecao);
+            $this->validarLogin($usuario,$objExcecao);
+
+            return $usuario;
+        } catch (Throwable $e) {
             throw new Excecao('Erro validando cadastro do usuário.', $e);
         }
     }

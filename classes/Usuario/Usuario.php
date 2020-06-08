@@ -4,10 +4,12 @@
  */
 class Usuario{
     private $idUsuario;
+    private $nome;
     private $CPF;
     private $senha;
 
-    private $objPerfis;
+    private $lista_perfis;
+    private $lista_recursos;
 
     function __construct() {
         
@@ -16,18 +18,52 @@ class Usuario{
     /**
      * @return mixed
      */
-    public function getObjPerfis()
+    public function getListaPerfis()
     {
-        return $this->objPerfis;
+        return $this->lista_perfis;
     }
 
     /**
-     * @param mixed $objPerfis
+     * @param mixed $lista_perfis
      */
-    public function setObjPerfis($objPerfis)
+    public function setListaPerfis($lista_perfis): void
     {
-        $this->objPerfis = $objPerfis;
+        $this->lista_perfis = $lista_perfis;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getListaRecursos()
+    {
+        return $this->lista_recursos;
+    }
+
+    /**
+     * @param mixed $lista_recursos
+     */
+    public function setListaRecursos($lista_recursos): void
+    {
+        $this->lista_recursos = $lista_recursos;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getNome()
+    {
+        return $this->nome;
+    }
+
+    /**
+     * @param mixed $nome
+     */
+    public function setNome($nome): void
+    {
+        $this->nome = $nome;
+    }
+
 
 
     function getIdUsuario() {

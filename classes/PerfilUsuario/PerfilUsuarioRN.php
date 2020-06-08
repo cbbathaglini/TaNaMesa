@@ -14,10 +14,10 @@ class PerfilUsuarioRN{
         $strPerfilUsuario = trim($perfilUsuario->getPerfil());
         
         if ($strPerfilUsuario == '') {
-            $objExcecao->adicionar_validacao('O perfil do usuário não foi informado','idPerfilUsuario');
+            $objExcecao->adicionar_validacao('O perfil do usuário não foi informado',NULL,'alert-danger');
         }else{
             if (strlen($strPerfilUsuario) > 100) {
-                $objExcecao->adicionar_validacao('O perfil do usuário possui mais que 100 caracteres.','idPerfilUsuario');
+                $objExcecao->adicionar_validacao('O perfil do usuário possui mais que 100 caracteres.',NULL,'alert-danger');
             }
 
         }
@@ -42,137 +42,100 @@ class PerfilUsuarioRN{
             $objExcecao->adicionar_validacao("O perfil de usuário informado já existe",NULL,'alert-danger');
         }
     }
-     
 
     public function cadastrar(PerfilUsuario $perfilUsuario) {
-        $objBanco = new Banco();
         try {
 
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
 
-            $this->validarJaExistePerfilUsuario($perfilUsuario,$objExcecao);
             $this->validarPerfil($perfilUsuario,$objExcecao); 
             $objExcecao->lancar_validacoes();
-            $objPerfilUsuarioBD = new PerfilUsuarioBD();
-            $perfilUsuario  = $objPerfilUsuarioBD->cadastrar($perfilUsuario,$objBanco);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
+            $objPerfilUsuarioBD = new PerfilUsuarioBD();
+            $perfilUsuario  = $objPerfilUsuarioBD->cadastrar($perfilUsuario);
+
             return $perfilUsuario;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando o perfil do usuário.', $e);
         }
     }
 
     public function alterar(PerfilUsuario $perfilUsuario) {
-        $objBanco = new Banco();
         try {
 
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
 
-            $this->validarJaExistePerfilUsuario($perfilUsuario,$objExcecao);
             $this->validarPerfil($perfilUsuario,$objExcecao);   
                         
             $objExcecao->lancar_validacoes();
             $objPerfilUsuarioBD = new PerfilUsuarioBD();
-            $perfilUsuario = $objPerfilUsuarioBD->alterar($perfilUsuario,$objBanco);
+            $perfilUsuario = $objPerfilUsuarioBD->alterar($perfilUsuario);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $perfilUsuario;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando o perfil do usuário.', $e);
         }
     }
 
     public function consultar(PerfilUsuario $perfilUsuario) {
-        $objBanco = new Banco();
         try {
 
+
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objPerfilUsuarioBD = new PerfilUsuarioBD();
-            $arr =  $objPerfilUsuarioBD->consultar($perfilUsuario,$objBanco);
+            $arr =  $objPerfilUsuarioBD->consultar($perfilUsuario);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o perfil do usuário.',$e);
         }
     }
 
     public function remover(PerfilUsuario $perfilUsuario) {
-        $objBanco = new Banco();
         try {
 
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objPerfilUsuarioBD = new PerfilUsuarioBD();
 
             $this->validarRemocao($perfilUsuario, $objExcecao);
             $objExcecao->lancar_validacoes();
 
-            $arr =  $objPerfilUsuarioBD->remover($perfilUsuario,$objBanco);
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
+            $arr =  $objPerfilUsuarioBD->remover($perfilUsuario);
             return $arr;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro removendo o perfil do usuário.', $e);
         }
     }
 
     public function listar(PerfilUsuario $perfilUsuario,$numLimite=null) {
-        $objBanco = new Banco();
         try {
 
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objPerfilUsuarioBD = new PerfilUsuarioBD();
-            
-            $arr = $objPerfilUsuarioBD->listar($perfilUsuario,$numLimite,$objBanco);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
+            $arr = $objPerfilUsuarioBD->listar($perfilUsuario,$numLimite);
+
             return $arr;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o perfil do usuário.',$e);
         }
     }
 
 
     public function existe_usuario_com_perfil(PerfilUsuario $perfilUsuario) {
-        $objBanco = new Banco();
         try {
 
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objPerfilUsuarioBD = new PerfilUsuarioBD();
 
-            $bool = $objPerfilUsuarioBD->existe_usuario_com_perfil($perfilUsuario,$objBanco);
+            $bool = $objPerfilUsuarioBD->existe_usuario_com_perfil($perfilUsuario);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $bool;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o perfil do usuário.',$e);
         }
     }

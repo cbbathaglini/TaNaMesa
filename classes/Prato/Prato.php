@@ -3,7 +3,6 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-
 class Prato
 {
     private $idPrato;
@@ -11,7 +10,25 @@ class Prato
     private $preco;
     private $nome;
     private $index_nome;
+    private $lista_ingredientes;
     private $informacoes;
+
+    /**
+     * @return mixed
+     */
+    public function getListaIngredientes()
+    {
+        return $this->lista_ingredientes;
+    }
+
+    /**
+     * @param mixed $lista_ingredientes
+     */
+    public function setListaIngredientes($lista_ingredientes): void
+    {
+        $this->lista_ingredientes = $lista_ingredientes;
+    }
+
 
     /**
      * @return mixed

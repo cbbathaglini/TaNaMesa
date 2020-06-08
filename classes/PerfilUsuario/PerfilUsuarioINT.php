@@ -15,7 +15,6 @@ class PerfilUsuarioINT
     static function montar_select_multiplos_perfis(&$select_perfilUsu, $objPerfilUsuarioRN, $objPerfilUsuario,&$perfis_selecionados) {
 
         /* PERFIS DO USUÁRIO */
-
         $arr_perfis = $objPerfilUsuarioRN->listar(new PerfilUsuario());
 
         $select_perfilUsu = '<select  class="form-control selectpicker" multiple data-live-search="true"   name="sel_perfil[]">'

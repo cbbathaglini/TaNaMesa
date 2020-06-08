@@ -11,7 +11,16 @@ require_once __DIR__ . '/LogBD.php';
 class LogRN{
     
 
-            
+    public static function  gravar($texto){
+        $log = new Log();
+        $log->setIdUsuario(Sessao::getInstance()->getIdUsuario());
+        $log->setTexto($texto);
+        date_default_timezone_set('America/Sao_Paulo');
+        $log->setDataHora(date("Y-m-d H:i:s"));
+        $logRN = new LogRN();
+        $logRN->cadastrar($log);
+    }
+
     public function cadastrar(Log $log) {
         try {
             
@@ -28,6 +37,8 @@ class LogRN{
             throw new Excecao('Erro cadastrando o Log de erro.', $e);
         }
     }
+
+
 
     public function alterar(Log $log) {
          try {
