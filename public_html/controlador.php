@@ -48,13 +48,13 @@ switch ($_GET['action']):
     /*
      *  USUÁRIO + RECURSO
      */
-    case 'cadastrar_usuario_recurso':
-    case 'editar_usuario_recurso':
-        require_once '../acoes/UsuarioRecurso/cadastro_usuarioRecurso.php';
+    case 'cadastrar_perfilUsuario_recurso':
+    case 'editar_perfilUsuario_recurso':
+        require_once '../acoes/PerfilUsuarioRecurso/cadastro_perfilUsuario_recurso.php';
         break;
-    case 'listar_usuario_recurso':
-    case 'remover_usuario_recurso':
-        require_once '../acoes/UsuarioRecurso/listar_usuarioRecurso.php';
+    case 'listar_perfilUsuario_recurso':
+    case 'remover_perfilUsuario_recurso':
+        require_once '../acoes/PerfilUsuarioRecurso/listar_perfilUsuario_recurso.php';
         break;
 
 

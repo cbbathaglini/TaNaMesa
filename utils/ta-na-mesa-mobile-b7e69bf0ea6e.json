@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "ta-na-mesa-mobile",
+  "private_key_id": "b7e69bf0ea6eef2ecdc6f105eb973580ba67079a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC1zXAfp9/QaAMu\nvC45szq9rgG/LA3s/kXIoBW366B9znuGepm/IbsCrylV5nBSFEdqCVg+sXu9h8Uh\nFjrfo3z/OTBFdvz/QdFr2VaMDezObNgrGbeywwKaZ4KYOr7Ziaqif5ewMdqKjGlf\noGX7BOehUQAwZ8AvToXSKEgZ1DwBycDGh5V+qDAEZ17kJ9OlhHJCkgM8ZEcKOtBd\n8ix+cJC9oX7KgaNLQNtqpScrmr/pG1d5egW0s5M7I1U01khvB66As3+dsUFYOMJI\nE83p7Trg0zFwwhgU63tHOP2GUXoOj+4BzZfnYVX0nr+gtJAk3WuhdFBXTq9V5sVe\nLUuAv465AgMBAAECggEAAV+G3EZZU2qls4GqW7c1117sFnSPul2FS2miIFyAPtMD\nbdWZOa9YiUGnb0WpTYVnsK5XY0nV5G2VGJXhZfUHKapV6gBnEsp9eXIPzEkCo+CA\nlXrBP3FnoKDthJbVADGg/081ZxhJTUiYNyev/YBg+3/wH215LyJJsnepa8CFn4HS\nTu1aM0AKU2gXaCRVyCCr3HLaP7Rzz6sE+44xSEufGBDFxv+yIWAzSs2L3w6UO/G2\nNPhjNz81g+KHIT2+uJ+R009+t86flD5Xf+DYgVjMV6R7lF9Me1x9PQ9V7nAnPLYy\nbEznzQQ8BEOAluA/t/QmhphKKeUxfimI1cVMTmn7TQKBgQD5QER+b0LKMoqedmaK\naDEVb5CQx9LVDeF+MMT+GWuQSSGtB6jTk90IC34JFRtBu/Iz8iwd+35SL7zF3MCv\nF7L+ZXiHvH+hBQj8akGN7zvH9sKrP7hXsGoox47HNvoPJBWYP0mJCHkECWtCpWQ3\nXaZihl8OQMghlbaTm2If7l5I/wKBgQC6uaM32Pf6BFRQmVS4MTJE+OhDGrwahXyr\nWZALfeS8WazlA8QOxjeFRu3hREsbpKfEiIxi/9dAepH+p8slTd8Oz468P6jkqRP6\ngRGp5l3T6ieumx8H8CgO+305A0YAcslkgCXhZmNjwxxKntLiPbcL0sZBeaNQimNl\nUfs6M5awRwKBgF37LJhbzVw+OGRNkpZnePJzMZhVsBpjdH3HV8/Tt+ocmRUMCU1V\nuIbbBnfYPIHJoyaRDq9zb4r/svcMKJ8cmYIwsoTDv3/wTRYX3oXtCaZ5VaeKjDCM\nNUsRC7Xz9c+VtIrGeiywRCkQgCAOCr6RkjYeImNWa9+1+rSnZxVRJL3zAoGBAIe+\nCmzAG02zNgQ943vfr9a6SEb4OYTiQ8ZhXrkr9UwDuQ/n0/CVoqkN7kLUHfHjml7i\nkYQqzzW9pULGgoUE/kJLG024zbQlQjPa/pdPtCgpUl25wS5JJSX3J4p52brbt5KL\nIn6gq2JL5dZNbasxCE/dE2ln3xTe9fEjTwp5lHNjAoGAKAD49YuhJcOH3hdGJVp2\nI54RtN1GVjx2Lf2V6AU+5aKnDjRqVvLkHpLv9dCLIsZzn0acwP67ZA3PsDV21nkW\nh0pgGZzs6ALVH6RBDoktMH8zz7fpyDtO76QUkZGlnW+DXSX9WFiJDuugBmkcNrqS\nFLpX0d/ni0uAGUgfzjpczX0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "ta-na-mesa-mobile@appspot.gserviceaccount.com",
+  "client_id": "106606759645155961563",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ta-na-mesa-mobile%40appspot.gserviceaccount.com"
+}

@@ -1,0 +1,115 @@
+$objRecurso->setNome("editar recurso");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('editar_recurso');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("listar recurso");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('listar_recurso');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("remover recurso");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('remover_recurso');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+
+$objRecurso->setNome("cadastrar usuário");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('cadastrar_usuario');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("listar usuário");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('listar_usuario');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("editar usuário");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('editar_usuario');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("remover usuário");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('remover_usuario');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("cadastrar relação usuário com seu perfil");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('cadastrar_usuario_perfilUsuario');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("editar relação usuário com seu perfil");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('editar_usuario_perfilUsuario');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("listar relação usuário com seu perfil");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('listar_usuario_perfilUsuario');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("remover relação usuário com seu perfil");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('remover_usuario_perfilUsuario');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("cadastrar perfil usuário");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('cadastrar_perfil_usuario');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("editar perfil usuário");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('editar_perfil_usuario');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("listar perfil usuário");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('listar_perfil_usuario');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("remover perfil usuário");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('remover_perfil_usuario');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("tela principal");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('principal');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("login");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('login');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+$objRecurso->setNome("sair");
+$objRecurso->setIndexRecurso(strtoupper($objUtils->tirarAcentos($objRecurso->getNome())));
+$objRecurso->setLink('sair');
+$objRecurso->setSNMenu('s');
+$objRecurso = $objRecursoRN->cadastrar($objRecurso);
+
+
+
+$objPerfilUsuario->setPerfil('administrador');
+$objPerfilUsuario->setIndex_perfil(strtoupper($objUtils->tirarAcentos($objPerfilUsuario->getPerfil())));
+$objPerfilUsuario->setListaRecursos($arr_ids);
+$objPerfilUsuario = $objPerfilUsuarioRN->cadastrar($objPerfilUsuario);

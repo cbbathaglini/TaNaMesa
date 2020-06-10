@@ -52,14 +52,7 @@ class UsuarioRN{
 
     }
 
-    private function validarLogin(Usuario $usuario,Excecao $objExcecao){
 
-        $objUsuarioRN = new UsuarioRN();
-        $numUsuario = count($objUsuarioRN->listar($usuario,1));
-        if($numUsuario > 0){
-            $objExcecao->adicionar_validacao('O usuário já existe',null,'alert-danger');
-        }
-    }
      
 
     public function cadastrar(Usuario $usuario) {
@@ -149,9 +142,11 @@ class UsuarioRN{
 
             $this->validarCPF($usuario,$objExcecao);
             $this->validarSenha($usuario,$objExcecao);
-            $this->validarLogin($usuario,$objExcecao);
 
-            return $usuario;
+            $objUsuarioBD = new UsuarioBD();
+
+            $arr = $objUsuarioBD->logar($usuario);
+            return $arr;
         } catch (Throwable $e) {
             throw new Excecao('Erro validando cadastro do usuário.', $e);
         }

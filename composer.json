@@ -1,5 +1,6 @@
 {
     "require": {
-        "google/cloud": "^0.133.0"
+        "google/cloud": "^0.133.0",
+        "kreait/firebase-php": "5.0"
     }
 }

@@ -64,6 +64,12 @@ class RecursoRN{
         }
     }
 
+    private function validarIdRecurso(Recurso $recurso,Excecao $objExcecao){
+        if($recurso->getIdRecurso() == null && $recurso->getIdRecurso() < 0){
+            $objExcecao->adicionar_validacao('O identificador do recurso não foi informado',null,'alert-danger');
+        }
+    }
+
 
     public function cadastrar(Recurso $recurso) {
         try {
@@ -90,7 +96,8 @@ class RecursoRN{
             $this->validarNome($recurso,$objExcecao);
             $this->validar_s_n_menu($recurso,$objExcecao);
             $this->validar_ja_existe_recurso($recurso,$objExcecao);
-                        
+            $this->validarIdRecurso($recurso,$objExcecao);
+
             $objExcecao->lancar_validacoes();
             $objRecursoBD = new RecursoBD();
             $recurso = $objRecursoBD->alterar($recurso);
@@ -105,6 +112,7 @@ class RecursoRN{
         try {
             $objExcecao = new Excecao();
 
+            $this->validarIdRecurso($recurso,$objExcecao);
             $objExcecao->lancar_validacoes();
             $objRecursoBD = new RecursoBD();
             $arr =  $objRecursoBD->consultar($recurso);
@@ -130,13 +138,28 @@ class RecursoRN{
         }
     }
 
-    public function listar(Recurso $recurso,$numLimite=null) {
+    public function listar_ids(Recurso $recurso,$numLimite=null) {
         try {
             $objExcecao = new Excecao();
 
             $objExcecao->lancar_validacoes();
             $objRecursoBD = new RecursoBD();
             
+            $arr = $objRecursoBD->listar_ids($recurso,$numLimite);
+
+            return $arr;
+        } catch (Throwable $e) {
+            throw new Excecao('Erro listando o recurso.',$e);
+        }
+    }
+
+    public function listar(Recurso $recurso,$numLimite=null) {
+        try {
+            $objExcecao = new Excecao();
+
+            $objExcecao->lancar_validacoes();
+            $objRecursoBD = new RecursoBD();
+
             $arr = $objRecursoBD->listar($recurso,$numLimite);
 
             return $arr;

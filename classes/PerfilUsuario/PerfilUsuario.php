@@ -8,11 +8,29 @@ class PerfilUsuario{
     private $idPerfilUsuario;
     private $perfil;
     private $index_perfil;
+    private $lista_recursos;
     
     function __construct() {
         
     }
-    
+
+    /**
+     * @return mixed
+     */
+    public function getListaRecursos()
+    {
+        return $this->lista_recursos;
+    }
+
+    /**
+     * @param mixed $lista_recursos
+     */
+    public function setListaRecursos($lista_recursos): void
+    {
+        $this->lista_recursos = $lista_recursos;
+    }
+
+
     function getIdPerfilUsuario() {
         return $this->idPerfilUsuario;
     }

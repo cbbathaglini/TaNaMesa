@@ -14,11 +14,17 @@ class ComposerStaticInit009a104811bdaab4847028cf7a377f11
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '27592325262b385204a263c2ab632d6e' => __DIR__ . '/..' . '/kreait/clock/src/Clock.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
         'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'l' => 
+        array (
+            'libphonenumber\\' => 15,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Php72\\' => 23,
@@ -28,11 +34,13 @@ class ComposerStaticInit009a104811bdaab4847028cf7a377f11
         ),
         'R' => 
         array (
+            'Riverline\\MultiPartParser\\' => 26,
             'Ramsey\\Uuid\\' => 12,
             'Ramsey\\Collection\\' => 18,
         ),
         'P' => 
         array (
+            'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Cache\\' => 10,
@@ -40,6 +48,20 @@ class ComposerStaticInit009a104811bdaab4847028cf7a377f11
         'M' => 
         array (
             'Monolog\\' => 8,
+        ),
+        'L' => 
+        array (
+            'Lcobucci\\JWT\\' => 13,
+        ),
+        'K' => 
+        array (
+            'Kreait\\Firebase\\JWT\\' => 20,
+            'Kreait\\Firebase\\' => 16,
+            'Kreait\\Clock\\' => 13,
+        ),
+        'J' => 
+        array (
+            'JmesPath\\' => 9,
         ),
         'G' => 
         array (
@@ -101,6 +123,7 @@ class ComposerStaticInit009a104811bdaab4847028cf7a377f11
             'Google\\Auth\\' => 12,
             'Google\\ApiCore\\' => 15,
             'Google\\' => 7,
+            'Giggsey\\Locale\\' => 15,
             'GPBMetadata\\Google\\Spanner\\' => 27,
             'GPBMetadata\\Google\\Pubsub\\' => 26,
             'GPBMetadata\\Google\\Protobuf\\' => 28,
@@ -152,6 +175,8 @@ class ComposerStaticInit009a104811bdaab4847028cf7a377f11
         'F' => 
         array (
             'Firebase\\JWT\\' => 13,
+            'Firebase\\Auth\\Token\\' => 20,
+            'Fig\\Http\\Message\\' => 17,
         ),
         'B' => 
         array (
@@ -160,6 +185,10 @@ class ComposerStaticInit009a104811bdaab4847028cf7a377f11
     );
 
     public static $prefixDirsPsr4 = array (
+        'libphonenumber\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src',
+        ),
         'Symfony\\Polyfill\\Php72\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php72',
@@ -176,6 +205,10 @@ class ComposerStaticInit009a104811bdaab4847028cf7a377f11
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
+        'Riverline\\MultiPartParser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/riverline/multipart-parser/src',
+        ),
         'Ramsey\\Uuid\\' => 
         array (
             0 => __DIR__ . '/..' . '/ramsey/uuid/src',
@@ -183,6 +216,10 @@ class ComposerStaticInit009a104811bdaab4847028cf7a377f11
         'Ramsey\\Collection\\' => 
         array (
             0 => __DIR__ . '/..' . '/ramsey/collection/src',
+        ),
+        'Psr\\SimpleCache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
         ),
         'Psr\\Log\\' => 
         array (
@@ -199,6 +236,26 @@ class ComposerStaticInit009a104811bdaab4847028cf7a377f11
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'Lcobucci\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/lcobucci/jwt/src',
+        ),
+        'Kreait\\Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kreait/firebase-tokens/src/JWT',
+        ),
+        'Kreait\\Firebase\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase',
+        ),
+        'Kreait\\Clock\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kreait/clock/src/Clock',
+        ),
+        'JmesPath\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mtdowling/jmespath.php/src',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -433,6 +490,10 @@ class ComposerStaticInit009a104811bdaab4847028cf7a377f11
         array (
             0 => __DIR__ . '/..' . '/google/common-protos/src',
         ),
+        'Giggsey\\Locale\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/giggsey/locale/src',
+        ),
         'GPBMetadata\\Google\\Spanner\\' => 
         array (
             0 => __DIR__ . '/..' . '/google/cloud/Spanner/metadata',
@@ -626,6 +687,14 @@ class ComposerStaticInit009a104811bdaab4847028cf7a377f11
         'Firebase\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
+        ),
+        'Firebase\\Auth\\Token\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kreait/firebase-tokens/src/Firebase/Auth/Token',
+        ),
+        'Fig\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fig/http-message-util/src',
         ),
         'Brick\\Math\\' => 
         array (

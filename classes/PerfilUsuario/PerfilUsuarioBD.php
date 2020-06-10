@@ -1,175 +1,129 @@
 <?php
-/* 
- *  Author: Carine Bertagnolli Bathaglini
- */
+require_once __DIR__.'/../../classes/Banco/BancoFirebase.php';
 require_once __DIR__.'/../../vendor/autoload.php';
-use Google\Cloud\Firestore\FirestoreClient;
-class PerfilUsuarioBD{
-    protected $db;
-    protected $name;
-
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\ServiceAccount;
+class PerfilUsuarioBD {
+    protected $database;
+    protected $dbname = 'app';
+    protected $child = 'perfilUsuario';
 
     public function __construct(){
-        $this->db = new FirestoreClient([
-            'projectId' => 'ta-na-mesa-mobile'
-        ]);
-        $this->name = 'perfilUsuario';
+        $acc = ServiceAccount::fromJsonFile(__DIR__ . '/../../utils/ta-na-mesa-mobile-b7e69bf0ea6e.json');
+        $firebase = (new Factory)->withServiceAccount($acc)->createDatabase();
+        $this->database = $firebase;
     }
-
-    public function cadastrar(PerfilUsuario $objPerfilUsuario){
+    public function consultar(PerfilUsuario $objPerfilUsuario){
         try {
 
+            $filho = $this->database->getReference($this->dbname)->getChild($this->child)->getChild($objPerfilUsuario->getIdPerfilUsuario())->getValue();
+            if(!is_null($filho)) {
+                $perfilUsuario = new PerfilUsuario();
+                $perfilUsuario->setIdPerfilUsuario($filho['idPerfilUsuario']);
+                $perfilUsuario->setPerfil($filho['perfil']);
+                $perfilUsuario->setIndex_perfil($filho['index_perfil']);
+                $perfilUsuario->setListaRecursos($filho['lista_recursos']);
 
-            $objPerfilUsuario->setIdPerfilUsuario(($this->quantidadeObjetos()+1));
-            $arr = $this->retornar_array($objPerfilUsuario);
-
-            if($this->quantidadeObjetos() == 0){
-                //criar tabela
-                $this->novaColecao($this->name,$objPerfilUsuario->getIdPerfilUsuario(),$arr);
-            }else {
-                $this->db->collection($this->name)->document($objPerfilUsuario->getIdPerfilUsuario())->create($arr);
+                return $perfilUsuario;
             }
-            return $objPerfilUsuario;
-
-        }catch (Throwable $ex) {
-            throw new Excecao("Erro cadastrando o perfil do usuário no BD.",$ex);
+            return null;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando os perfis de usuário no BD.", $ex);
         }
-    }
 
+    }
 
     public function alterar(PerfilUsuario $objPerfilUsuario){
         try {
 
-            $arr = $this->retornar_array($objPerfilUsuario);
-            $this->db->collection($this->name)->document($objPerfilUsuario->getIdPerfilUsuario())->set($arr);
+            $arr =  array( 'idPerfilUsuario' => $objPerfilUsuario->getIdPerfilUsuario(),
+                'perfil' =>  $objPerfilUsuario->getPerfil(),
+                'index_perfil' =>  $objPerfilUsuario->getIndex_perfil(),
+                'lista_recursos' =>  $objPerfilUsuario->getListaRecursos());
+
+
+            $this->database->getReference($this->dbname)->getChild($this->child)->getChild($objPerfilUsuario->getIdPerfilUsuario())->set($arr);
+
             return $objPerfilUsuario;
         } catch (Throwable $ex) {
-            throw new Excecao("Erro alterando o perfil do usuário no BD.", $ex);
+            throw new Excecao("Erro alterando os perfis de usuário no BD.", $ex);
         }
+
     }
-
-    public function listar(PerfilUsuario $objPerfilUsuario, $numLimite = null){
+    public function cadastrar(PerfilUsuario $objPerfilUsuario) {
         try {
+            if (empty($objPerfilUsuario) || !isset($objPerfilUsuario)) { return FALSE; }
 
-            $arr = [];
-            $query = $this->db->collection($this->name);
+            $ultimoId = $this->getLastId();
+            $objPerfilUsuario->setIdPerfilUsuario($ultimoId+1);
+            $arr =  array( 'idPerfilUsuario' => $objPerfilUsuario->getIdPerfilUsuario(),
+                'perfil' =>  $objPerfilUsuario->getPerfil(),
+                'index_perfil' =>  $objPerfilUsuario->getIndex_perfil(),
+                'lista_recursos' =>  $objPerfilUsuario->getListaRecursos());
 
-            if($objPerfilUsuario->getIdPerfilUsuario() != null){
-                $query = $query->where('idPerfilUsuario','=',$objPerfilUsuario->getIdPerfilUsuario());
-            }
+            $this->database->getReference($this->dbname)->getChild($this->child)->getChild($objPerfilUsuario->getIdPerfilUsuario())->set($arr);
 
-            if($objPerfilUsuario->getIndex_perfil() != null){
-                $query = $query->where('index_perfil','=',$objPerfilUsuario->getIndex_perfil());
-            }
-
-            if($objPerfilUsuario->getPerfil() != null){
-                $query = $query->where('perfil','=',$objPerfilUsuario->getPerfil());
-            }
-
-            if($numLimite != null){
-                $query = $query->limit($numLimite);
-            }
-            $query = $query->documents()->rows();
-
-            if(!empty($query)){
-                foreach ($query as $item){
-                    $perfilUsuario = new PerfilUsuario();
-                    $perfilUsuario->setIdPerfilUsuario($item->data()['idPerfilUsuario']);
-                    $perfilUsuario->setIndex_perfil($item->data()['index_perfil']);
-                    $perfilUsuario->setPerfil($item->data()['perfil']);
-                    $arr[]= $perfilUsuario;
-                }
-            }
-
-            return $arr;
-        }catch (Throwable $ex) {
-            throw new Excecao("Erro listando os perfis de usuário no BD.",$ex);
-        }
-    }
-
-    public function retornar_array($perfisUsuario_obj){
-        try {
-
-            if(is_array($perfisUsuario_obj)){
-                foreach ($perfisUsuario_obj as $perfilUsuario){
-                    $arr[] = array(   'idPerfilUsuario' => $perfilUsuario->getIdPerfilUsuario(),
-                        'index_perfil' =>$perfilUsuario->getIndex_perfil(),
-                        'perfil' =>$perfilUsuario->getPerfil()
-                    );
-                }
-            }else{
-                $arr = array(   'idPerfilUsuario' => $perfisUsuario_obj->getIdPerfilUsuario(),
-                    'index_perfil' =>$perfisUsuario_obj->getIndex_perfil(),
-                    'perfil' =>$perfisUsuario_obj->getPerfil()
-                );
-            }
-
-            return $arr;
+            return $objPerfilUsuario;
         } catch (Throwable $ex) {
-            throw new Excecao("Erro listando os atributos do perfil usuário no BD.", $ex);
+            throw new Excecao("Erro cadastrando os perfis de usuário no BD.", $ex);
         }
     }
 
-    public function consultar(PerfilUsuario $objPerfilUsuario){
+    public function listar(PerfilUsuario $objPerfilUsuario)
+    {
         try {
-
-            $query = $this->db->collection($this->name)->document($objPerfilUsuario->getIdPerfilUsuario())->snapshot()->data();
-            if(!empty($query)){
-                $perfilUsuario = new PerfilUsuario();
-                $perfilUsuario->setIdPerfilUsuario($query['idPerfilUsuario']);
-                $perfilUsuario->setIndex_perfil($query['index_perfil']);
-                $perfilUsuario->setPerfil($query['perfil']);
-                return  $perfilUsuario;
+            if (empty($objPerfilUsuario) || !isset($objPerfilUsuario)) {
+                return FALSE;
             }
 
-            return null;
-        }catch (Throwable $ex) {
-            throw new Excecao("Erro consultando o perfil do usuário no BD.",$ex);
-        }
-    }
+            $arr = $this->database->getReference($this->dbname)->getChild($this->child)->getValue();
 
-    public function quantidadeObjetos(){
-        try {
-            $query = $this->db->collection($this->name)->documents()->rows();
-            return count($query);
-        }catch (Throwable $ex) {
-            throw new Excecao("Erro cadastrando o perfil do usuário no BD.",$ex);
-        }
-    }
-
-    public function remover(PerfilUsuario $objPerfilUsuario){
-        try {
-            $this->db->collection($this->name)->document($objPerfilUsuario->setIdPerfilUsuario())->delete();
-
-        }catch (Throwable $ex) {
-            throw new Excecao("Erro removendo o perfil do usuário no BD.",$ex);
-        }
-    }
-
-    public function novaColecao(string $nameCollection, string $documentName,array $data = []){
-        try {
-
-            $this->db->collection($nameCollection)->document($documentName)->create($data);
-            return true;
-        }catch (Throwable $ex) {
-            throw new Excecao("Erro cadastrando o perfil do usuário no BD.",$ex);
-        }
-    }
-
-
-    public function removerTabela(){
-        try {
-
-            $documents = $this->db->collection($this->name)->limit(1)->documents();
-            while (!$documents->isEmpty()){
-                foreach ($documents as $item){
-                    $item->reference()->delete();
+             $arrPerfis =  array();
+            foreach ($arr as $id) {
+                if (!is_null($id)) {
+                    $perfilUsuario = new PerfilUsuario();
+                    $perfilUsuario->setIdPerfilUsuario($id['idPerfilUsuario']);
+                    $perfilUsuario->setPerfil($id['perfil']);
+                    $perfilUsuario->setIndex_perfil($id['index_perfil']);
+                    $perfilUsuario->setListaRecursos($id['lista_recursos']);
+                    $arrPerfis[] = $perfilUsuario;
                 }
             }
-
-        }catch (Throwable $ex) {
-            throw new Excecao("Erro removendo a tabela perfil do usuário no BD.",$ex);
+            return $arrPerfis;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando os perfis de usuário no BD.", $ex);
         }
     }
 
+    public function getLastId() {
+        try {
+            $arr = $this->database->getReference($this->dbname)->getChild($this->child)->getValue();
+            $maior = -1;
+
+            foreach ($arr as $id){
+                if($maior < $id['idPerfilUsuario']){
+                    $maior = $id['idPerfilUsuario'];
+                }
+            }
+            return $maior;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro pegando o último id dos perfis de usuário no BD.", $ex);
+        }
+    }
+
+    public function remover(PerfilUsuario $objPerfilUsuario) {
+        try{
+            if (empty($objPerfilUsuario) || !isset($objPerfilUsuario)) { return FALSE; }
+            if ($this->database->getReference($this->dbname)->getChild($this->child)->getChild($objPerfilUsuario->getIdPerfilUsuario())){
+                //print_r($this->database->getReference($this->dbname)->getChild($this->child)->getChild($objPrato->getIdPrato())->getValue());
+                $this->database->getReference($this->dbname)->getChild($this->child)->getChild($objPerfilUsuario->getIdPerfilUsuario())->remove();
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro removendo o perfil do usuário no BD.", $ex);
+        }
+    }
 }
+?>

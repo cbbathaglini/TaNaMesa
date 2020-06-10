@@ -9,11 +9,9 @@ require_once __DIR__ . '/../Usuario/UsuarioRN.php';
 require_once __DIR__ . '/../Recurso/Recurso.php';
 require_once __DIR__ . '/../Recurso/RecursoRN.php';
 
-require_once __DIR__ . '/../Rel_usuario_perfilUsuario/Rel_usuario_perfilUsuario.php';
-require_once __DIR__ . '/../Rel_usuario_perfilUsuario/Rel_usuario_perfilUsuario_RN.php';
+require_once __DIR__ . '/../PerfilUsuario/PerfilUsuario.php';
+require_once __DIR__ . '/../PerfilUsuario/PerfilUsuarioRN.php';
 
-require_once __DIR__ . '/../Rel_perfilUsuario_recurso/Rel_perfilUsuario_recurso.php';
-require_once __DIR__ . '/../Rel_perfilUsuario_recurso/Rel_perfilUsuario_recurso_RN.php';
 
 
 class Sessao {
@@ -65,34 +63,39 @@ class Sessao {
                     //die();
                 }
 
-
-
-                $arr_usuario = $objUsuarioRN->listar($objUsuario);
                 /*
                     echo "<pre>";
-                    print_r($arr_usuario);
+                    print_r($usuario);
                     echo "</pre>";
                 */
 
-
-                $arr_perfis = explode(",",$arr_usuario[0]->getListaPerfis());
-                $arr_recursos = explode(",",$arr_usuario[0]->getListaRecursos());
+                $objPerfilUsuario = new PerfilUsuario();
+                $objPerfilUsuarioRN = new PerfilUsuarioRN();
+                $objPerfilUsuario->setIdPerfilUsuario($usuario->getListaPerfis()[0]);
+                $objPerfilUsuario = $objPerfilUsuarioRN->consultar($objPerfilUsuario);
+                /*
+                echo "<pre>";
+                print_r($objPerfilUsuario);
+                echo "</pre>";
+                */
 
                 $objRecurso = new Recurso();
                 $objRecursoRN = new RecursoRN();
-                foreach ($arr_recursos as $recurso){
-                    $objRecurso->setIdRecurso($recurso);
-                    $objRecurso= $objRecursoRN->consultar($objRecurso);
-                    $arrRecurso[] = $objRecurso->getLink();
+
+                foreach ($objPerfilUsuario->getListaRecursos() as $r){
+                    $objRecurso->setIdRecurso($r);
+                    $objRecurso = $objRecursoRN->consultar($objRecurso);
+                    $arr_recursos[] = $objRecurso->getLink();
+
                 }
 
-                if (empty($arr_perfis) && $arr_perfis == null) {
+                if (empty($objPerfilUsuario->getListaRecursos()) && $objPerfilUsuario->getListaRecursos() == null) {
                     $objExcecao = new Excecao();
                     $objExcecao->adicionar_validacao("Usuário não tem permissões no sistema.");
                     die("Usuário não tem permissões no sistema.");
                 }
 
-                if (empty($arrRecurso) && $arrRecurso == null) {
+                if (empty($arr_recursos) && $arr_recursos == null) {
                     $objExcecao = new Excecao();
                     $objExcecao->adicionar_validacao("Usuário não tem nenhum recurso no sistema.");
                 }
@@ -100,9 +103,9 @@ class Sessao {
 
                 //print_r($arr_recursos);
                 $_SESSION['TANAMESA'] = array();
-                $_SESSION['TANAMESA']['ID_USUARIO'] = $arr_usuario[0]->getIdUsuario();
-                $_SESSION['TANAMESA']['CPF'] = $arr_usuario[0]->getCPF();
-                $_SESSION['TANAMESA']['RECURSOS'] = $arrRecurso;
+                $_SESSION['TANAMESA']['ID_USUARIO'] = $usuario->getIdUsuario();
+                $_SESSION['TANAMESA']['CPF'] = $usuario->getCPF();
+                $_SESSION['TANAMESA']['RECURSOS'] = $arr_recursos;
                 $_SESSION['TANAMESA']['CHAVE'] = hash('sha256', random_bytes(50));
 
                 header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=principal'));

@@ -7,9 +7,8 @@ class Usuario{
     private $nome;
     private $CPF;
     private $senha;
-
     private $lista_perfis;
-    private $lista_recursos;
+
 
     function __construct() {
         
@@ -31,21 +30,6 @@ class Usuario{
         $this->lista_perfis = $lista_perfis;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getListaRecursos()
-    {
-        return $this->lista_recursos;
-    }
-
-    /**
-     * @param mixed $lista_recursos
-     */
-    public function setListaRecursos($lista_recursos): void
-    {
-        $this->lista_recursos = $lista_recursos;
-    }
 
 
     /**

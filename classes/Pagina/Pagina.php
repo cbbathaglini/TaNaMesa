@@ -4,6 +4,7 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 require_once __DIR__ . '/../Sessao/Sessao.php';
+require_once __DIR__ . '/../Banco/Configuracao.php';
 require_once __DIR__ . '/../Log/Log.php';
 require_once __DIR__ . '/../Log/LogRN.php';
 require_once __DIR__ .'/../../utils/Alert.php';
@@ -39,13 +40,17 @@ class Pagina {
     
     public function adicionar_css($strArquivo){
         $strVersao ='';
-        if(Configuracao::getInstance()->getValor('producao')){
-            $strVersao =Configuracao::getInstance()->getValor('versao');
-        }else{
-           $strVersao = rand(); 
-        }
+        try {
+            if (Configuracao::getInstance()->getValor('producao')) {
+                $strVersao = Configuracao::getInstance()->getValor('versao');
+            } else {
+                $strVersao = rand();
+            }
 
-        echo '<link rel="stylesheet" type="text/css" href="css/'.$strArquivo.'.css?'.$strVersao.'">';
+            echo '<link rel="stylesheet" type="text/css" href="css/' . $strArquivo . '.css?' . $strVersao . '">';
+        }catch (Throwable $e){
+            die($e);
+        }
     }
     
     public function processar_excecao($e) {
@@ -251,7 +256,7 @@ class Pagina {
     }
 
     public static function  abrir_body(){
-        echo '<body>';
+        echo '<body class="sb-nav-fixed">';
     }
 
     public static function fechar_body(){

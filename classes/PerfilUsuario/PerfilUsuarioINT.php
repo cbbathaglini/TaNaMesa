@@ -7,7 +7,7 @@ class PerfilUsuarioINT
     public static function getInstance()
     {
         if (self::$instance == null) {
-            self::$instance = new Interf();
+            self::$instance = new PerfilUsuarioINT();
         }
         return self::$instance;
     }

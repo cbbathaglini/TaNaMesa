@@ -84,116 +84,84 @@ class PratoRN
 
 
     public function cadastrar(Prato $objPrato) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
 
-            $this->validarNome($objPrato,$objExcecao);
-            $this->validarCategoriaPrato($objPrato,$objExcecao);
-            $this->validarInformacoes($objPrato,$objExcecao);
-            $this->validarPreco($objPrato,$objExcecao);
-            $this->validar_ja_existe_prato($objPrato,$objExcecao);
+            //$this->validarNome($objPrato,$objExcecao);
+            //$this->validarCategoriaPrato($objPrato,$objExcecao);
+            //$this->validarInformacoes($objPrato,$objExcecao);
+            ///$this->validarPreco($objPrato,$objExcecao);
+            //$this->validar_ja_existe_prato($objPrato,$objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objPratoBD = new PratoBD();
-            $objPrato = $objPratoBD->cadastrar($objPrato,$objBanco);
+            $objPrato = $objPratoBD->cadastrar($objPrato);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $objPrato;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando o prato.', $e);
         }
     }
 
     public function alterar(Prato $objPrato) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
 
-            $this->validarNome($objPrato,$objExcecao);
-            $this->validarCategoriaPrato($objPrato,$objExcecao);
-            $this->validarInformacoes($objPrato,$objExcecao);
-            $this->validarPreco($objPrato,$objExcecao);
-            $this->validar_ja_existe_prato($objPrato,$objExcecao);
-            $this->validarIdPrato($objPrato,$objExcecao);
+            //$this->validarNome($objPrato,$objExcecao);
+           // $this->validarCategoriaPrato($objPrato,$objExcecao);
+           //$this->validarInformacoes($objPrato,$objExcecao);
+            //$this->validarPreco($objPrato,$objExcecao);
+            //$this->validar_ja_existe_prato($objPrato,$objExcecao);
+            //$this->validarIdPrato($objPrato,$objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objPratoBD = new PratoBD();
-            $objPrato = $objPratoBD->alterar($objPrato,$objBanco);
+            $objPrato = $objPratoBD->alterar($objPrato);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $objPrato;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando o prato.', $e);
         }
     }
 
     public function consultar(Prato $objPrato) {
-        $objBanco = new Banco();
+
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
-
             $objExcecao->lancar_validacoes();
 
             $objPratoBD = new PratoBD();
-            $arr =  $objPratoBD->consultar($objPrato,$objBanco);
+            $arr =  $objPratoBD->consultar($objPrato);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
-
             throw new Excecao('Erro consultando o prato.',$e);
         }
     }
 
     public function remover(Prato $objPrato) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
 
-            $this->validar_existe_usuario_com_o_recurso($objPrato,$objExcecao);
             $objExcecao->lancar_validacoes();
             $objPratoBD = new PratoBD();
-            $arr =  $objPratoBD->remover($objPrato,$objBanco);
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
+            $arr =  $objPratoBD->remover($objPrato);
             return $arr;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro removendo o prato.', $e);
         }
     }
 
     public function listar(Prato $objPrato,$numLimite=null) {
-        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objPratoBD = new PratoBD();
 
-            $arr = $objPratoBD->listar($objPrato,$numLimite,$objBanco);
+            $arr = $objPratoBD->listar($objPrato,$numLimite);
 
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o prato.',$e);
         }
     }
