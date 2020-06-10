@@ -39,6 +39,13 @@
    
 }
 
+table{
+    text-align: center;
+}
+
+.links_cards ,.links_cards:hover{
+    text-decoration: none;
+}
 
 .conteudo_grande{
     /*background-color: black;*/

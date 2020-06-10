@@ -18,6 +18,7 @@ try{
 
     Sessao::getInstance()->validar();
     $html = '';
+    $alert = '';
 
 
     /* PERFIL DO USUÁRIO */
@@ -31,24 +32,12 @@ try{
     $arrUsuarios = $objUsuarioRN->listar($objUsuario);
 
     foreach ($arrUsuarios as $usuario){
-        $strPerfis = '';
-        $arrPerfis =  explode(",",$usuario->getListaPerfis());
 
-        $objPerfilUsuario = new PerfilUsuario();
-        $objPerfilUsuarioRN = new PerfilUsuarioRN();
-        foreach ($arrPerfis as $perfil){
-            $objPerfilUsuario->setIdPerfilUsuario($perfil);
-            $objPerfilUsuario = $objPerfilUsuarioRN->consultar($objPerfilUsuario);
-            $strPerfis .= $objPerfilUsuario->getPerfil().",";
-        }
-        if($strPerfis == ''){
-            $strPerfis = ' - ';
-        }
-        $strPerfis = substr($strPerfis,0,-1);
+
 
         $html.='<tr>
                     <th scope="row">'.Pagina::formatar_html($usuario->getCPF()).'</th>';
-        $html .=    '<td>'.Pagina::formatar_html($strPerfis).'</td>';
+        $html .=    '<td>'.Pagina::formatar_html(PerfilUsuarioRN::mostrarDescricaoTipoUsuario($usuario->getListaPerfis()[0])).'</td>';
 
 
         if(Sessao::getInstance()->verificar_permissao('editar_usuario_perfilUsuario')) {
@@ -65,14 +54,24 @@ try{
      Pagina::getInstance()->processar_excecao($ex);
 }
 
-Pagina::getInstance()->abrir_head("Listar Usuários");
-Pagina::getInstance()->adicionar_css("precadastros");
+Pagina::getInstance()->abrir_head("Listar relacionamento usuário com seus perfis");
 Pagina::getInstance()->fechar_head();
+Pagina::abrir_body();
 Pagina::getInstance()->montar_menu_topo();
-//Pagina::montar_topo_listar('LISTAR RELACIONAMENTO DO USUÁRIO COM SEU PERFIL',null,null, 'cadastrar_usuario_perfilUsuario', 'NOVO USUÁRIO + PERFIL');
-
 Pagina::getInstance()->mostrar_excecoes();
+Pagina::abrir_lateral();
+
+echo $alert;
 echo '
+
+    <div class="container-fluid">
+    <h1 class="mt-4">Usuário + Perfil Usuário</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">Dashboard</a></li>
+            <li class="breadcrumb-item active">Cadastrar Usuário + Perfil Usuário</a></li>
+            <li class="breadcrumb-item"><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_usuario_perfilUsuario').'">Listar Usuário + Perfil Usuário</li>
+        </ol>
+    </div>
     <div class="conteudo_listar">'.
         '<div class="conteudo_tabela">
             <table class="table table-hover">
@@ -93,4 +92,7 @@ echo '              </tr>
     </div>';
 
 
-Pagina::getInstance()->fechar_corpo();
+Pagina::fechar_lateral();
+Pagina::footer();
+Pagina::fechar_body();
+Pagina::fechar_html();

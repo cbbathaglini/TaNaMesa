@@ -15,8 +15,8 @@ require_once __DIR__ . '/../classes/Usuario/UsuarioRN.php';
 require_once __DIR__ . '/../classes/Recurso/Recurso.php';
 require_once __DIR__ . '/../classes/Recurso/RecursoRN.php';
 
-require_once __DIR__ . '/../classes/Prato/Prato.php';
-require_once __DIR__ . '/../classes/Prato/PratoRN.php';
+require_once __DIR__ . '/../classes/Produto/Produto.php';
+require_once __DIR__ . '/../classes/Produto/ProdutoRN.php';
 
 require_once __DIR__ . '/../classes/PerfilUsuario/PerfilUsuario.php';
 require_once __DIR__ . '/../classes/PerfilUsuario/PerfilUsuarioRN.php';
@@ -36,8 +36,8 @@ $objRecursoRN = new RecursoRN();
 $objUsuario->setCPF('86251791004');
 $objUsuarioRN->logar($objUsuario);*/
 /*
-$objPrato = new Prato();
-$objPratoRN = new PratoRN();
+$objPrato = new Produto();
+$objPratoRN = new ProdutoRN();
 $objPrato->setIdPrato(2);
 $objPrato->setPreco('30.9');
 $objPrato->setNome('ffffff');

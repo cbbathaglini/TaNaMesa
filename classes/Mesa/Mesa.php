@@ -6,9 +6,12 @@
 class Mesa
 {
     private $idMesa;
-    private $numero;
-    private $situacao;
-    private $numLugares;
+    private $disponivel;
+    private $idFuncionario;
+    private $boolPrecisaFunc;
+    private $totalPedido;
+    private $lista_produtos;
+    private $esperandoPedido;
 
     /**
      * Mesa constructor.
@@ -21,35 +24,84 @@ class Mesa
     /**
      * @return mixed
      */
-    public function getNumero()
+    public function getEsperandoPedido()
     {
-        return $this->numero;
+        return $this->esperandoPedido;
     }
 
     /**
-     * @param mixed $numero
+     * @param mixed $esperandoPedido
      */
-    public function setNumero($numero)
+    public function setEsperandoPedido($esperandoPedido): void
     {
-        $this->numero = $numero;
+        $this->esperandoPedido = $esperandoPedido;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getIdFuncionario()
+    {
+        return $this->idFuncionario;
+    }
+
+    /**
+     * @param mixed $idFuncionario
+     */
+    public function setIdFuncionario($idFuncionario): void
+    {
+        $this->idFuncionario = $idFuncionario;
     }
 
     /**
      * @return mixed
      */
-    public function getNumLugares()
+    public function getBoolPrecisaFunc()
     {
-        return $this->numLugares;
+        return $this->boolPrecisaFunc;
     }
 
     /**
-     * @param mixed $numLugares
+     * @param mixed $boolPrecisaFunc
      */
-    public function setNumLugares($numLugares)
+    public function setBoolPrecisaFunc($boolPrecisaFunc): void
     {
-        $this->numLugares = $numLugares;
+        $this->boolPrecisaFunc = $boolPrecisaFunc;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTotalPedido()
+    {
+        return $this->totalPedido;
+    }
+
+    /**
+     * @param mixed $totalPedido
+     */
+    public function setTotalPedido($totalPedido): void
+    {
+        $this->totalPedido = $totalPedido;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getListaProdutos()
+    {
+        return $this->lista_produtos;
+    }
+
+    /**
+     * @param mixed $lista_produtos
+     */
+    public function setListaProdutos($lista_produtos): void
+    {
+        $this->lista_produtos = $lista_produtos;
+    }
 
 
     /**
@@ -71,18 +123,19 @@ class Mesa
     /**
      * @return mixed
      */
-    public function getSituacao()
+    public function getDisponivel()
     {
-        return $this->situacao;
+        return $this->disponivel;
     }
 
     /**
-     * @param mixed $situacao
+     * @param mixed $disponivel
      */
-    public function setSituacao($situacao)
+    public function setDisponivel($disponivel): void
     {
-        $this->situacao = $situacao;
+        $this->disponivel = $disponivel;
     }
+
 
 
 }

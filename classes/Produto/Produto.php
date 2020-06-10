@@ -3,13 +3,14 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-class Prato
+class Produto
 {
-    private $idPrato;
-    private $categoriaPrato;
+    private $idProduto;
+    private $categoriaProduto;
     private $preco;
     private $nome;
     private $index_nome;
+
     private $lista_ingredientes;
     private $informacoes;
 
@@ -22,45 +23,37 @@ class Prato
     }
 
     /**
-     * @param mixed $lista_ingredientes
-     */
-    public function setListaIngredientes($lista_ingredientes): void
-    {
-        $this->lista_ingredientes = $lista_ingredientes;
-    }
-
-
-    /**
      * @return mixed
      */
-    public function getIdPrato()
+    public function getIdProduto()
     {
-        return $this->idPrato;
+        return $this->idProduto;
     }
 
     /**
-     * @param mixed $idPrato
+     * @param mixed $idProduto
      */
-    public function setIdPrato($idPrato)
+    public function setIdProduto($idProduto)
     {
-        $this->idPrato = $idPrato;
+        $this->idProduto = $idProduto;
     }
 
     /**
      * @return mixed
      */
-    public function getCategoriaPrato()
+    public function getCategoriaProduto()
     {
-        return $this->categoriaPrato;
+        return $this->categoriaProduto;
     }
 
     /**
-     * @param mixed $categoriaPrato
+     * @param mixed $categoriaProduto
      */
-    public function setCategoriaPrato($categoriaPrato)
+    public function setCategoriaProduto($categoriaProduto)
     {
-        $this->categoriaPrato = $categoriaPrato;
+        $this->categoriaProduto = $categoriaProduto;
     }
+
 
 
 

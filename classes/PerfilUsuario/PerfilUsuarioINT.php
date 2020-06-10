@@ -55,11 +55,11 @@ class PerfilUsuarioINT
             $disabled = ' disabled ';
         }
 
-        $arr_perfis = $objPerfilUsuarioRN->listar(new PerfilUsuario());
+        $arr_perfis = $objPerfilUsuarioRN->listar($objPerfilUsuario);
         if (isset($_GET['idPerfilUsuario'])) {
             $disabled = ' disabled ';
         }
-        $select_perfilUsu = '<select ' . $disabled . '  class="form-control selectpicker"  
+        $select_perfilUsu = '<select ' . $disabled . '  class="form-control "  
     data-live-search="true"   name="sel_perfil">'
             . '<option value="0" ></option>';
 

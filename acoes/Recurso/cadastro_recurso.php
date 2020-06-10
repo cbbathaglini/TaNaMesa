@@ -60,13 +60,27 @@ try{
 }
 
 Pagina::getInstance()->abrir_head("Cadastrar Recurso");
-Pagina::getInstance()->adicionar_css("precadastros");
-Pagina::getInstance()->adicionar_javascript("recurso");
 Pagina::getInstance()->fechar_head();
+Pagina::abrir_body();
 Pagina::getInstance()->montar_menu_topo();
-//Pagina::montar_topo_listar("CADASTRAR RECURSO",null,null,"listar_recurso","LISTAR RECURSOS");
 Pagina::getInstance()->mostrar_excecoes();
+Pagina::abrir_lateral();
+
 echo $alert.'
+ <div class="container-fluid">
+   <div class="container-fluid">
+    <h1 class="mt-4">Recurso</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">Dashboard</a></li>';
+                 echo '     <li class="breadcrumb-item active">Cadastrar Recurso</li>';
+                    if (Sessao::getInstance()->verificar_permissao('listar_recurso')) {
+                        echo '    <li class="breadcrumb-item"><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_recurso') . '">Listar Recurso</a></li>';
+                    }
+      echo  '</ol>
+    </div>';
+
+
+   echo '
 
 <DIV class="conteudo_grande">
 <form method="POST">
@@ -98,7 +112,9 @@ echo $alert.'
 </form>
 </DIV>';
 
+Pagina::fechar_lateral();
+Pagina::footer();
+Pagina::fechar_body();
+Pagina::fechar_html();
 
-
-Pagina::getInstance()->fechar_corpo();
 

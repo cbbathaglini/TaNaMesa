@@ -56,16 +56,25 @@ try {
 }
 
 Pagina::abrir_head("Cadastrar Usuário");
-Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::getInstance()->adicionar_javascript("usuario");
 Pagina::getInstance()->fechar_head();
+Pagina::abrir_body();
 Pagina::getInstance()->montar_menu_topo();
 Pagina::getInstance()->mostrar_excecoes();
+Pagina::abrir_lateral();
+
 
 echo  $alert;
 echo '
-
-<div class="conteudo">
+                <div class="container-fluid">
+                    <h1 class="mt-4">Usuário</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">Dashboard</a></li>
+                            <li class="breadcrumb-item active"> Cadastrar Usuário</li>
+                            <li class="breadcrumb-item"><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_usuario').'">Listar Usuário</a></li>
+                        </ol>
+                    </div>
+<div class="conteudo_grande">
     <form method="POST">
         <div class="form-row">
             <div class="col-md-6 mb-3">
@@ -83,9 +92,9 @@ echo '
         <button class="btn btn-primary" type="submit" name="salvar_usuario">Salvar</button>
     </form>
 </div>';
-
-
-Pagina::getInstance()->fechar_corpo();
-
+Pagina::fechar_lateral();
+Pagina::footer();
+Pagina::fechar_body();
+Pagina::fechar_html();
 
 

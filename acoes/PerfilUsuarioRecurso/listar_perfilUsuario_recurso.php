@@ -23,6 +23,7 @@ try{
 
     $alert = "";
     $select_perfil = '';
+    $alert = '';
 
 
     /* PERFIL USUÁRIO */
@@ -67,16 +68,24 @@ try{
      Pagina::getInstance()->processar_excecao($ex);
 }
 
-Pagina::getInstance()->abrir_head("Listar Usuários");
-Pagina::getInstance()->adicionar_css("precadastros");
+Pagina::getInstance()->abrir_head("Listar ");
 Pagina::getInstance()->fechar_head();
+Pagina::abrir_body();
 Pagina::getInstance()->montar_menu_topo();
-//Pagina::montar_topo_listar('LISTAR RELACIONAMENTO DO USUÁRIO COM SEU PERFIL',null,null, 'cadastrar_usuario_perfilUsuario', 'NOVO USUÁRIO + PERFIL');
-
 Pagina::getInstance()->mostrar_excecoes();
+Pagina::abrir_lateral();
+echo $alert;
 echo '
-    <div class="conteudo_listar">'.
-        '<div class="conteudo_tabela">
+
+  <div class="container-fluid">
+    <h1 class="mt-4">Perfil Usuário + Recurso</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">Dashboard</a></li>
+            <li class="breadcrumb-item active">Cadastrar Perfil Usuário + Recurso</a></li>
+            <li class="breadcrumb-item"><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_perfilUsuario_recurso').'">Listar Perfil Usuário + Recurso</li>
+        </ol>
+    </div>
+    <div class="conteudo_grande">
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -91,7 +100,6 @@ echo '              </tr>
                     .$html.
                 '</tbody>
             </table>
-        </div>
     </div>';
 
 

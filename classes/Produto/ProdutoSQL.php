@@ -1,9 +1,9 @@
 <?php
 
 
-class PratoSQL
+class ProdutoSQL
 {
-    public function cadastrar(Prato $objPrato, Banco $objBanco) {
+    public function cadastrar(Produto $objPrato, Banco $objBanco) {
         try{
 
             $INSERT = 'INSERT INTO tb_prato (nome,index_nome,informacoes,preco,categoriaPrato) VALUES (?,?,?,?,?)';
@@ -24,7 +24,7 @@ class PratoSQL
 
     }
 
-    public function alterar(Prato $objPrato, Banco $objBanco) {
+    public function alterar(Produto $objPrato, Banco $objBanco) {
         try{
             $UPDATE = 'UPDATE tb_prato SET '
                 . ' nome = ?,'
@@ -52,7 +52,7 @@ class PratoSQL
 
     }
 
-    public function listar(Prato $objPrato,$numLimite=null, Banco $objBanco) {
+    public function listar(Produto $objPrato, $numLimite=null, Banco $objBanco) {
         try{
 
             $SELECT = "SELECT * FROM tb_prato";
@@ -115,7 +115,7 @@ class PratoSQL
             $array_prato = array();
             if(count($arr) > 0) {
                 foreach ($arr as $reg) {
-                    $prato = new Prato();
+                    $prato = new Produto();
                     $prato->setIdPrato($reg['idPrato']);
                     $prato->setNome($reg['nome']);
                     $prato->setIndexNome($reg['index_nome']);
@@ -133,7 +133,7 @@ class PratoSQL
 
     }
 
-    public function consultar(Prato $objPrato, Banco $objBanco) {
+    public function consultar(Produto $objPrato, Banco $objBanco) {
 
         try{
 
@@ -145,7 +145,7 @@ class PratoSQL
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
 
 
-            $prato = new Prato();
+            $prato = new Produto();
             $prato->setIdPrato($arr[0]['idPrato']);
             $prato->setNome($arr[0]['nome']);
             $prato->setIndexNome($arr[0]['index_nome']);
@@ -160,7 +160,7 @@ class PratoSQL
 
     }
 
-    public function remover(Prato $objPrato, Banco $objBanco) {
+    public function remover(Produto $objPrato, Banco $objBanco) {
 
         try{
 

@@ -131,13 +131,24 @@ try {
 
 
 Pagina::abrir_head("Cadastrar relacionamento usuário com seus perfis");
-Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::getInstance()->fechar_head();
+Pagina::abrir_body();
 Pagina::getInstance()->montar_menu_topo();
-//Pagina::montar_topo_listar('CADASTRAR RELACIONAMENTO DO USUÁRIO COM O SEU PERFIL',null,null, 'listar_usuario_perfilUsuario', 'USUÁRIO + PERFIL');
 Pagina::getInstance()->mostrar_excecoes();
+Pagina::abrir_lateral();
 echo $alert.
-    '<div class="conteudo_grande"   style="margin-top: -40px;">
+    '
+      <div class="container-fluid">
+    <h1 class="mt-4">Perfil Usuário + Recurso</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">Dashboard</a></li>';
+    if(Sessao::getInstance()->verificar_permissao('cadastrar_perfilUsuario_recurso')) {
+        echo '    <li class="breadcrumb-item"><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_perfilUsuario_recurso') . '">Cadastrar Perfil Usuário + Recurso</a></li>';
+    }
+        echo '    <li class="breadcrumb-item active">Listar Perfil Usuário + Recurso</li>';
+   echo '     </ol>
+    </div>
+        <div class="conteudo_grande"   style="margin-top: -40px;">
         <div class="formulario">
             <form method="POST">
                 <div class="form-row">
@@ -154,7 +165,10 @@ echo $alert.
                 </div>
             </form>
         </div>  
-    </div>'; 
+    </div>';
 
 
-Pagina::getInstance()->fechar_corpo();
+Pagina::fechar_lateral();
+Pagina::footer();
+Pagina::fechar_body();
+Pagina::fechar_html();

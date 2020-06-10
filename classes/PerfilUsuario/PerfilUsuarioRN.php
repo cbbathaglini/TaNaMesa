@@ -6,9 +6,49 @@
 
 require_once __DIR__ . '/../Excecao/Excecao.php';
 require_once __DIR__ . '/PerfilUsuarioBD.php';
-
+require_once  __DIR__.'/../Situacao/Situacao.php';
 class PerfilUsuarioRN{
-    
+
+    public static $PU_ADMINISTRADOR = 'A';
+    public static $PU_GARCOM = 'G';
+    public static $PU_GERENTE = 'E';
+
+    public static function listarValoresTipoUsuario(){
+        try {
+
+            $arrObjTStaMesa = array();
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$PU_ADMINISTRADOR);
+            $objSituacao->setStrDescricao('ADMINISTRADOR');
+            $arrObjTStaMesa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$PU_GARCOM);
+            $objSituacao->setStrDescricao('GARÇOM');
+            $arrObjTStaMesa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$PU_GERENTE);
+            $objSituacao->setStrDescricao('GERENTE');
+            $arrObjTStaMesa[] = $objSituacao;
+
+            return $arrObjTStaMesa;
+
+        }catch(Throwable $e){
+            throw new Excecao('Erro listando situações da mesa',$e);
+        }
+    }
+
+    public static function mostrarDescricaoTipoUsuario($caractere){
+        foreach (self::listarValoresTipoUsuario() as $sta){
+            if($sta->getStrTipo() == $caractere){
+                return $sta->getStrDescricao();
+            }
+        }
+        return null;
+    }
+
 
     private function validarPerfil(PerfilUsuario $perfilUsuario,Excecao $objExcecao){
         $strPerfilUsuario = trim($perfilUsuario->getPerfil());

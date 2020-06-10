@@ -73,21 +73,24 @@ class Sessao {
                 $objPerfilUsuarioRN = new PerfilUsuarioRN();
                 $objPerfilUsuario->setIdPerfilUsuario($usuario->getListaPerfis()[0]);
                 $objPerfilUsuario = $objPerfilUsuarioRN->consultar($objPerfilUsuario);
-                /*
-                echo "<pre>";
+
+                /*echo "<pre>";
                 print_r($objPerfilUsuario);
-                echo "</pre>";
-                */
+                echo "</pre>";*/
+
 
                 $objRecurso = new Recurso();
                 $objRecursoRN = new RecursoRN();
 
                 foreach ($objPerfilUsuario->getListaRecursos() as $r){
-                    $objRecurso->setIdRecurso($r);
-                    $objRecurso = $objRecursoRN->consultar($objRecurso);
-                    $arr_recursos[] = $objRecurso->getLink();
+                    if($r != null) {
+                        $objRecurso->setIdRecurso($r);
+                        $objRecurso = $objRecursoRN->consultar($objRecurso);
+                        $arr_recursos[] = $objRecurso->getLink();
+                    }
 
                 }
+
 
                 if (empty($objPerfilUsuario->getListaRecursos()) && $objPerfilUsuario->getListaRecursos() == null) {
                     $objExcecao = new Excecao();
@@ -104,6 +107,7 @@ class Sessao {
                 //print_r($arr_recursos);
                 $_SESSION['TANAMESA'] = array();
                 $_SESSION['TANAMESA']['ID_USUARIO'] = $usuario->getIdUsuario();
+                $_SESSION['TANAMESA']['PERFIL'] = $objPerfilUsuario->getIndex_perfil();
                 $_SESSION['TANAMESA']['CPF'] = $usuario->getCPF();
                 $_SESSION['TANAMESA']['RECURSOS'] = $arr_recursos;
                 $_SESSION['TANAMESA']['CHAVE'] = hash('sha256', random_bytes(50));
@@ -112,6 +116,7 @@ class Sessao {
                 die();
             }
         } catch (Exception $ex) {
+            echo $ex;
             if (!Configuracao::getInstance()->getValor("producao")) {
                 echo "<pre>" . $ex . "</pre>";
             }

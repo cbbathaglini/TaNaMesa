@@ -51,15 +51,22 @@ try{
 }
 
 Pagina::getInstance()->abrir_head("Listar Perfis de Usuários");
-Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::getInstance()->fechar_head();
+Pagina::abrir_body();
 Pagina::getInstance()->montar_menu_topo();
-//Pagina::montar_topo_listar('LISTAR PERFIS DOS USUÁRIOS', null,null,'cadastrar_perfilUsuario', 'NOVO PERFIL DE USUÁRIO');
 Pagina::getInstance()->mostrar_excecoes();
+Pagina::abrir_lateral();
 echo $alert.'
-    <div class="conteudo_listar" style="width:50%;margin-left: 25%;">
-        <div class="conteudo_tabela">
-            <table class="table table-hover" >
+<div class="container-fluid">
+    <h1 class="mt-4">Perfil Usuário</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_perfil_usuario').'">Cadastrar Perfil Usuário</a></li>
+            <li class="breadcrumb-item active">Listar Perfil Usuário</li>
+        </ol>
+    </div>
+    <div class="conteudo_grande" style="margin-top: -20px;" >
+            <table class="table table-hover"  >
                 <thead>
                     <tr>
                         <th scope="col">#ID</th>
@@ -71,11 +78,12 @@ echo '             </tr>
                 <tbody>'
                      .$html.
                 '</tbody>
-            </table>
-        </div>
+            </table> 
     </div>';
 
 
-Pagina::getInstance()->fechar_corpo(); 
-
+Pagina::fechar_lateral();
+Pagina::footer();
+Pagina::fechar_body();
+Pagina::fechar_html();
 

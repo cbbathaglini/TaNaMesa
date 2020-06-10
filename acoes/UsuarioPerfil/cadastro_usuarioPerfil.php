@@ -17,7 +17,6 @@ try {
 
     require_once __DIR__ . '/../../classes/PerfilUsuario/PerfilUsuario.php';
     require_once __DIR__ . '/../../classes/PerfilUsuario/PerfilUsuarioRN.php';
-    require_once __DIR__ . '/../../classes/PerfilUsuario/PerfilUsuarioINT.php';
 
     require_once __DIR__ . '/../../utils/Utils.php';
     require_once __DIR__ . '/../../utils/Alert.php';
@@ -41,44 +40,29 @@ try {
 
 
     UsuarioINT::montar_select_usuario($select_usuario, $objUsuarioRN, $objUsuario,null,true);
-    PerfilUsuarioINT::montar_select_multiplos_perfis($select_perfilUsu, $objPerfilUsuarioRN, $objPerfilUsuario,$perfis_selecionados);
 
-    if(isset($_POST['sel_usuario'])) {
-        $objUsuario->setIdUsuario($_POST['sel_usuario']);
-        $objUsuario = $objUsuarioRN->consultar($objUsuario);
-        UsuarioINT::montar_select_usuario($select_usuario, $objUsuarioRN, $objUsuario,null,null);
-    }
+    $arr_perfis = $objPerfilUsuarioRN->listar($objPerfilUsuario);
+
     switch ($_GET['action']) {
        
         case 'cadastrar_usuario_perfilUsuario':
             if (isset($_POST['salvar_upr'])) {
-                if (isset($_POST['sel_perfil'])) {
 
-                    $objUsuario->setIdUsuario($_POST['sel_usuario']);
-                    $objUsuario = $objUsuarioRN->consultar($objUsuario);
+                $objUsuario->setIdUsuario($_POST['sel_usuario']);
+                $objUsuario = $objUsuarioRN->consultar($objUsuario);
 
-                    $arr_perfis = explode(",",$objUsuario->getListaPerfis());
-                    if(empty($arr_perfis[0])){
-                        $arr_perfis = array();
-                    }
-
-                    if (isset($_POST['sel_perfil'])) {
-                        $i = 0;
-                        for ($i = 0; $i < count($_POST['sel_perfil']); $i++) {
-                            $perfis_selecionados .= $_POST['sel_perfil'][$i] . ";";
-                            $arr_perfis[] = $_POST['sel_perfil'][$i];
-
-                        }
-                        $objUsuario->setListaPerfis($arr_perfis);
-
-                        $objUsuario = $objUsuarioRN->alterar($objUsuario);
-                        $alert = Alert::alert_success("Foi CADASTRADA a relação do usuário com o perfil");
-
+                foreach ($arr_perfis as $perfil){
+                    if(!is_null($_POST['id'.$perfil->getIdPerfilUsuario()])){
+                        $arr[] = intval($_POST['id'.$perfil->getIdPerfilUsuario()]);
                     }
                 }
 
-                UsuarioINT::montar_select_usuario($select_usuario, $objUsuarioRN, $objUsuario,null,null);
-                PerfilUsuarioINT::montar_select_multiplos_perfis($select_perfilUsu, $objPerfilUsuarioRN, $objPerfilUsuario,$perfis_selecionados);
+                $arr = array_unique($arr);
+                $objUsuario->setListaPerfis($arr);
+
+                $objUsuario = $objUsuarioRN->alterar($objUsuario);
+                $alert = Alert::alert_success("Foi CADASTRADA a relação do usuário com o perfil");
+
             }
             break;
 
@@ -150,6 +134,39 @@ try {
             break;
         default : die('Ação [' . $_GET['action'] . '] não reconhecida pelo controlador em cadastro_usuario_perfilUsuario.php');
     }
+
+    UsuarioINT::montar_select_usuario($select_usuario, $objUsuarioRN, $objUsuario,null,null);
+    $cont = 0;
+    $checks ='<div class="form-row">';
+    foreach ($arr_perfis as $perfil){
+             $checked = '';
+            if (!is_null($_POST['id' . $perfil->getIdPerfilUsuario()])) {
+                $checked = ' checked ';
+            }
+
+            /**if(in_array($recurso->getIdRecurso(),$objPerfilUsuario->getListaRecursos())){
+             * $checked = ' checked ';
+             * }**/
+
+            $checks .= '
+                    <div class="col-3">
+                        <div class="form-check">
+                          <input class="form-check-input" ' . $checked . ' type="checkbox" name="id' . $perfil->getIdPerfilUsuario() . '" value="' . $perfil->getIdPerfilUsuario() . '" id="defaultCheck1">
+                          <label class="form-check-label" for="defaultCheck1">' .
+                PerfilUsuarioRN::mostrarDescricaoTipoUsuario($perfil->getIndex_perfil())
+                . '</label>
+                       </div>
+                    </div>
+                ';
+            $cont++;
+            if ($cont == 4) {
+                $cont = 0;
+                $checks .= '</div>';
+                $checks .= '<div class="form-row">';
+            }
+
+    }
+    $checks .= '</div>';
 } catch (Throwable $ex) {
     Pagina::getInstance()->processar_excecao($ex);
 }
@@ -157,30 +174,38 @@ try {
 
 
 Pagina::abrir_head("Cadastrar relacionamento usuário com seus perfis");
-Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::getInstance()->fechar_head();
+Pagina::abrir_body();
 Pagina::getInstance()->montar_menu_topo();
-//Pagina::montar_topo_listar('CADASTRAR RELACIONAMENTO DO USUÁRIO COM O SEU PERFIL',null,null, 'listar_usuario_perfilUsuario', 'USUÁRIO + PERFIL');
 Pagina::getInstance()->mostrar_excecoes();
+Pagina::abrir_lateral();
 echo $alert.
-    '<div class="conteudo_grande"   style="margin-top: -40px;">
+    '
+       <div class="container-fluid">
+    <h1 class="mt-4">Usuário + Perfil Usuário</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_usuario_perfilUsuario').'">Cadastrar Usuário + Perfil Usuário</a></li>
+            <li class="breadcrumb-item active">Listar Usuário + Perfil Usuário</li>
+        </ol>
+    </div>
+<div class="conteudo_grande"   style="margin-top: -40px;">
         <div class="formulario">
             <form method="POST">
                 <div class="form-row">
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <label for="label_usuarios">Selecione o usuário:</label>'.
                         $select_usuario
                     .'</div>
-
-                    <div class="col-md-8">
-                        <label for="label_perfis">Selecione o perfil deste usuário:</label><br>'.
-                        $select_perfilUsu
-                    .'</div>
                 </div>
+                '.$checks.'
+
                 <button class="btn btn-primary" type="submit" name="salvar_upr">Salvar</button> 
             </form>
         </div>  
-    </div>'; 
+    </div>';
 
-
-Pagina::getInstance()->fechar_corpo();
+Pagina::fechar_lateral();
+Pagina::footer();
+Pagina::fechar_body();
+Pagina::fechar_html();

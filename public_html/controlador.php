@@ -21,6 +21,11 @@ switch ($_GET['action']):
         header('Location: controlador.php?action=login');
         break;
 
+
+    case 'ver_pedidos_dia':
+        require_once '../acoes/Pedido/ver_pedidos_dia.php';
+        break;
+
     /*
      * MESA
      */
@@ -109,6 +114,7 @@ switch ($_GET['action']):
     /*
      *  INGREDIENTE
      */
+    /*
     case 'cadastrar_ingrediente':
     case 'editar_ingrediente':
         require_once '../acoes/Ingrediente/cadastro_ingrediente.php';
@@ -117,18 +123,31 @@ switch ($_GET['action']):
     case 'remover_ingrediente':
         require_once '../acoes/Ingrediente/listar_ingrediente.php';
         break;
+    */
+
+    /*
+    *  CATEGORIA PRODUTO
+    */
+    case 'cadastrar_categoria_produto':
+    case 'editar_categoria_produto':
+        require_once '../acoes/CategoriaProduto/cadastro_categoriaProduto.php';
+        break;
+    case 'listar_categoria_produto':
+    case 'remover_categoria_produto':
+        require_once '../acoes/CategoriaProduto/listar_categoriaProduto.php';
+        break;
 
 
     /*
-     *  PRATO
+     *  PRODUTO
      */
-    case 'cadastrar_prato':
-    case 'editar_prato':
-        require_once '../acoes/Prato/cadastro_prato.php';
+    case 'cadastrar_produto':
+    case 'editar_produto':
+        require_once '../acoes/Produto/cadastro_produto.php';
         break;
-    case 'listar_prato':
-    case 'remover_prato':
-        require_once '../acoes/Prato/listar_prato.php';
+    case 'listar_produto':
+    case 'remover_produto':
+        require_once '../acoes/Produto/listar_produto.php';
         break;
 
 

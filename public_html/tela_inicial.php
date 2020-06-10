@@ -1,28 +1,183 @@
 <?php
 session_start();
+
     require_once '../classes/Sessao/Sessao.php';
     require_once __DIR__ . '/../classes/Pagina/Pagina.php';
+
     require_once __DIR__.'/../classes/Usuario/Usuario.php';
     require_once __DIR__.'/../classes/Usuario/UsuarioRN.php';
 
-Sessao::getInstance()->validar();
+    require_once __DIR__.'/../classes/Mesa/Mesa.php';
+    require_once __DIR__.'/../classes/Mesa/MesaRN.php';
 
+Sessao::getInstance()->validar();
+date_default_timezone_set('America/Sao_Paulo');
 $objUsuario = new Usuario();
 $objUsuarioRN = new UsuarioRN();
+
+$objMesa = new Mesa();
+$objMesaRN = new MesaRN();
+
+$html_mesas = '';
+$mesas = $objMesaRN->listar($objMesa);
+foreach ($mesas as $mesa){
+    if(in_array(Sessao::getInstance()->getIdUsuario(),$mesa->getIdFuncionario()) && $mesa->getIdFuncionario() != null) {
+        if ($mesa->getDisponivel() && $mesa->getEsperandoPedido()) {
+            $html_mesas .= '<div class="col-xl-3 col-md-6">
+                                <div class="card bg-warning text-white mb-4">
+                                    <div class="card-body"> Mesa ' . $mesa->getIdMesa() . ' (AGUARDANDO)</div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <a class="small text-white stretched-link" href="#">Ver Pedido</a>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>';
+        }
+
+        if ($mesa->getDisponivel() && !$mesa->getEsperandoPedido()) {
+            $html_mesas .= '<div class="col-xl-3 col-md-6">
+                                <div class="card bg-success text-white mb-4">
+                                    <div class="card-body"> Mesa ' . $mesa->getIdMesa() . ' (DISPONÍVEL)</div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <a class="small text-white stretched-link links_cards" href="#"> Nenhum pedido  </a>
+                                        <div class="small text-white"></div>
+                                    </div>
+                                </div>
+                            </div>';
+        }
+
+        if (!$mesa->getDisponivel()) {
+            $html_mesas .= '<div class="col-xl-3 col-md-6">
+                                <div class="card bg-danger text-white mb-4">
+                                    <div class="card-body"> Mesa ' . $mesa->getIdMesa() . ' (OCUPADA)</div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <a class="small text-white stretched-link" href="#">Ver Pedido</a>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>';
+        }
+    }
+}
+
 
 //$objUsuario->setIdUsuario(Sessao::getInstance()->getCPF());
 //$objUsuario = $objUsuarioRN->consultar($objUsuario);
 
 Pagina::abrir_head("TÁ NA MESA");
-Pagina::getInstance()->montar_menu_topo();
-Pagina::getInstance()->adicionar_css("precadastros");
+//Pagina::getInstance()->adicionar_javascript("chart_area_pedidos");
+?>
+    <!-- chart dos pedidos por dia -->
+    <script type="text/javascript">
+        //setInterval(verificarAmostras, 3000);
+        //function verificarAmostras(){
+        $.ajax({
+            url: "<?=Sessao::getInstance()->assinar_link('controlador.php?action=ver_pedidos_dia') ?>",
+            success: function (result) {
+                //alert(result);
+                //Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+                //Chart.defaults.global.defaultFontColor = '#292b2c';
+
+
+                // Area Chart Example
+                var ctx = document.getElementById("myAreaChart");
+                var myLineChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ["Mar 1", "Mar 2", "Mar 3", "Mar 4", "Mar 5", "Mar 6", "Mar 7", "Mar 8", "Mar 9", "Mar 10", "Mar 11", "Mar 12", "Mar 13"],
+                        datasets: [{
+                            label: "Pedidos",
+                            lineTension: 0.3,
+                            backgroundColor: "rgba(2,117,216,0.2)",
+                            borderColor: "rgba(2,117,216,1)",
+                            pointRadius: 5,
+                            pointBackgroundColor: "rgba(2,117,216,1)",
+                            pointBorderColor: "rgba(255,255,255,0.8)",
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                            pointHitRadius: 50,
+                            pointBorderWidth: 2,
+                            data:result,
+                        }],
+                    },
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                    unit: 'date'
+                                },
+                                gridLines: {
+                                    display: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 7
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: 200,
+                                    maxTicksLimit: 5
+                                },
+                                gridLines: {
+                                    color: "rgba(0, 0, 0, .125)",
+                                }
+                            }],
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                });
+
+            }});
+        //}
+        //alert(<?php echo $res;?>);
+
+    </script>
+<?php
 Pagina::fechar_head();
-
 Pagina::abrir_body();
+Pagina::getInstance()->montar_menu_topo();
+
+Pagina::abrir_lateral();
+
+echo '    
+                    <div class="container-fluid">
+                        <h1 class="mt-4">Dashboard</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">Dashboard</li>
+                        </ol>
+                       
+                        <div class="row" >
+                            '.$html_mesas.'
+
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header"><i class="fas fa-chart-area mr-1"></i>Pedidos por dia <small style="color: grey;">*Últimos 7 dias</small></div>
+                                    <div class="card-body"><canvas id="myAreaChart" width="100%"  height="40"></canvas></div>
+                                    <div class="card-footer small text-muted">Atualizado hoje às '.date("H:i:s").'</div>
+                                </div>
+                                
+                            </div>
+                           <!-- <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header"><i class="fas fa-chart-bar mr-1"></i>Bar Chart Example</div>
+                                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                                </div>
+                            </div>-->
+                        </div>
+                    </div>';
 
 
+
+
+/*
 echo
-    '<div class="conjunto_itens">
+    '<div class="conjunto_itens">';
+
         <div class="row">';
             if(Sessao::getInstance()->verificar_permissao('cadastrar_mesa')) {
                 echo '   <div class="col-md-6">
@@ -74,6 +229,8 @@ echo'         <div class="row">';
                         </div>';
             }
 echo'         </div>';
+
+
         
 echo'         <div class="row">';
             if(Sessao::getInstance()->verificar_permissao('cadastrar_usuario_perfilUsuario')) {
@@ -138,6 +295,14 @@ echo'        </div>';
 
 echo'    </div>';
 
+*/
+
+Pagina::fechar_lateral();
+Pagina::footer();
+?>
+    <!--<script src="js/chart_area_pedidos.js"></script>-->
+<?php
 Pagina::fechar_body();
+Pagina::fechar_html();
 
 
