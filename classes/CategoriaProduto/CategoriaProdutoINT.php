@@ -31,7 +31,7 @@ class CategoriaProdutoINT
 
         $select_categorias = '<select ' . $disabled . ' class="form-control" '.$onchange
             . ' data-live-search="true" name="sel_categoria_produto">'
-            . '<option data-tokens="" value="-1">Selecione uma categoria de prato</option>';
+            . '<option data-tokens="" value="-1">Selecione uma categoria de produto</option>';
 
         foreach ($arr_categorias as $u) {
             $selected = '';

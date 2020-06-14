@@ -68,7 +68,7 @@ class Alert{
     }
     
     public static function alert_danger($mensagem){
-        return '<div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert_id" >
+        return '<div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert_id" style="margin-top: 4px;" >
                 <strong>Erro!</strong> '.$mensagem.'.
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>

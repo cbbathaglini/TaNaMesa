@@ -114,7 +114,7 @@ class ProdutoRN
             //$this->validar_ja_existe_produto($objProduto,$objExcecao);
             //$this->validarIdproduto($objProduto,$objExcecao);
 
-            $objExcecao->lancar_validacoes();
+            //$objExcecao->lancar_validacoes();
             $objProdutoBD = new ProdutoBD();
             $objProduto = $objProdutoBD->alterar($objProduto);
 

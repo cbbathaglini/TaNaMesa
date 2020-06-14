@@ -26,6 +26,7 @@ class ProdutoBD {
                 $produto->setNome($filho['nome']);
                 $produto->setIndexNome($filho['index_produto']);
                 $produto->setPreco($filho['preco']);
+                $produto->setCaminhoImgSistWEB($filho['caminho_img_sistWEB']);
 
                 return $produto;
             }
@@ -39,11 +40,13 @@ class ProdutoBD {
     public function alterar($objProduto){
         try {
 
+
             $arr =  array( 'idProduto' => $objProduto->getIdProduto(),
                 'nome' =>  $objProduto->getNome(),
                 'preco' =>  $objProduto->getPreco(),
                 'index_produto' =>  $objProduto->getIndexNome(),
-                'categoria_produto' =>  $objProduto->getCategoriaPrato(),
+                'categoria_produto' =>  $objProduto->getCategoriaProduto(),
+                'caminho_img_sistWEB' =>  $objProduto->getCaminhoImgSistWEB()
             );
 
 
@@ -66,6 +69,7 @@ class ProdutoBD {
                             'preco' =>  $objProduto->getPreco(),
                         'index_produto' =>  $objProduto->getIndexNome(),
                 'categoria_produto' =>  $objProduto->getCategoriaProduto(),
+                'caminho_img_sistWEB' =>  $objProduto->getCaminhoImgSistWEB()
                 );
 
 
@@ -100,6 +104,7 @@ class ProdutoBD {
                     $produto->setIndexNome($id['index_produto']);
                     $produto->setNome($id['nome']);
                     $produto->setPreco($id['preco']);
+                    $produto->setCaminhoImgSistWEB($id['caminho_img_sistWEB']);
                     $arrProdutos[] = $produto;
                 }
             }

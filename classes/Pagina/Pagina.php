@@ -147,11 +147,11 @@ class Pagina {
                        
                         
                         /* Barra de rolagem */
-                        ::-webkit-scrollbar {width:9px;height:auto;background: #fff;border-bottom:none;}
+                        /*::-webkit-scrollbar {width:9px;height:auto;background: #fff;border-bottom:none;}
                         ::-webkit-scrollbar-button:vertical {height:2px;display:block;} 
                         ::-webkit-scrollbar-thumb:vertical {background-color: #56baed; -webkit-border-radius: 1px;}
                         ::-webkit-scrollbar-button:horizontal {height:2px;display:block;}
-                        ::-webkit-scrollbar-thumb:horizontal {background-color: #56baed; -webkit-border-radius: 1px;}
+                        ::-webkit-scrollbar-thumb:horizontal {background-color: #56baed; -webkit-border-radius: 1px;}*/
                          
                         .fas{
                             color:#56baed;
@@ -384,6 +384,26 @@ class Pagina {
             }
             if (Sessao::getInstance()->verificar_permissao('listar_produto')) {
                 echo ' <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_produto') . '">Listar Produto</a>';
+            }
+
+            echo '
+                                            </nav>  
+                                        </div>';
+        }
+
+        if(Sessao::getInstance()->verificar_permissao('cadastrar_produto') || Sessao::getInstance()->verificar_permissao('listar_produto')) {
+            echo '  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePedido" aria-expanded="false" aria-controls="collapsePedido" >
+                                <div class="sb-nav-link-icon"><i class="fas fa-utensils"></i></div>
+                                         Pedido
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div></a>';
+
+            echo ' <div class="collapse" id="collapsePedido" aria-labelledby="headingPedido" data-parent="#sidenavAccordion">
+                                                <nav class="sb-sidenav-menu-nested nav">';
+            if (Sessao::getInstance()->verificar_permissao('realizar_pedido')) {
+                echo '<a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_pedido') . '"> Realizar Pedido</a>';
+            }
+            if (Sessao::getInstance()->verificar_permissao('listar_pedido')) {
+                echo ' <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_pedido') . '">Listar Pedido</a>';
             }
 
             echo '

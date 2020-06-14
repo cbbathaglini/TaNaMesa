@@ -150,6 +150,18 @@ switch ($_GET['action']):
         require_once '../acoes/Produto/listar_produto.php';
         break;
 
+    /*
+    *  PEDIDO
+    */
+    case 'realizar_pedido':
+    case 'editar_pedido':
+        require_once '../acoes/Pedido/realizar_pedido.php';
+        break;
+    case 'listar_pedido':
+    case 'remover_pedido':
+        require_once '../acoes/Produto/listar_pedido.php';
+        break;
+
 
     /*
      * QRCode

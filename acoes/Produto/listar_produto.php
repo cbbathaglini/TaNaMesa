@@ -43,11 +43,16 @@ try{
     $arrProdutos = $objProdutoRN->listar($objProduto);
 
     foreach ($arrProdutos as $p){
-
+       if($p->getCategoriaProduto() == 2 || $p->getCategoriaProduto() == 1 || $p->getCategoriaProduto() == 8){ //massas,frangos e massas
+           $style = ' width="100px" height="80px" ';
+       }else{
+           $style = ' width="50px" height="80px" ';
+       }
         $objCategoriaProduto->setIdCategoriaProduto($p->getCategoriaProduto());
         $objCategoriaProduto = $objCategoriaProdutoRN->consultar($objCategoriaProduto);
         $html.='<tr>
                         <th scope="row">'.Pagina::formatar_html($p->getIdProduto()).'</th>
+                         <td><img '.$style.'  src="'.$p->getCaminhoImgSistWEB().'" ></td>
                          <td>'.Pagina::formatar_html($p->getNome()).'</td>
                         <td>'.Pagina::formatar_html($objCategoriaProduto->getDescricao()).'</td>
                         <td>'.Pagina::formatar_html($p->getPreco()).'</td>';
@@ -93,9 +98,10 @@ echo '  </ol>
                 <thead>
                     <tr>
                         <th scope="col">#ID</th>
-                        <th scope="col">NÚMERO</th>
-                        <th scope="col">NÚMERO DE LUGARES</th>
-                        <th scope="col">SITUAÇÃO</th>
+                        <th scope="col">FOTO PRODUTO</th>
+                        <th scope="col">NOME</th>
+                        <th scope="col">CATEGORIA</th>
+                        <th scope="col">PREÇO</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>

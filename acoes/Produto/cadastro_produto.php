@@ -41,6 +41,8 @@ try{
                 $objProduto->setNome($_POST['txtNome']);
                 $objProduto->setIndexNome(strtoupper($objUtils->tirarAcentos($_POST['txtNome'])));
                 $objProduto->setCategoriaProduto($_POST['sel_categoria_produto']);
+                $objProduto->setCaminhoImgSistWEB($_POST['txtURLFoto']);
+
 
                 $objProdutoRN->cadastrar($objProduto);
 
@@ -52,12 +54,17 @@ try{
 
             $objProduto->setIdProduto($_GET['idProduto']);
             $objProduto = $objProdutoRN->consultar($objProduto);
+            $objCategoriaProduto->setIdCategoriaProduto($objProduto->getCategoriaProduto());
+            $objCategoriaProduto = $objCategoriaProdutoRN->consultar($objCategoriaProduto);
+            CategoriaProdutoINT::montar_select_categorias_produtos($select_categorias, $objCategoriaProduto,$objCategoriaProdutoRN,null,null);
 
-            if(isset($_POST['btn_salvar_Prato'])){
+            if(isset($_POST['btn_salvar_produto'])){
+                $objProduto->setIdProduto($_GET['idProduto']);
                 $objProduto->setPreco($_POST['numPreco']);
                 $objProduto->setNome($_POST['txtNome']);
                 $objProduto->setIndexNome(strtoupper($objUtils->tirarAcentos($_POST['txtNome'])));
                 $objProduto->setCategoriaProduto($_POST['sel_categoria_produto']);
+                $objProduto->setCaminhoImgSistWEB($_POST['txtURLFoto']);
 
                 $objProdutoRN->alterar($objProduto);
 
@@ -97,7 +104,7 @@ echo $alert.'
     <div class="form-row">
         <div class="col-md-4 mb-3">
             <label for="label_numero_Prato">Informe o nome do produto:</label>
-            <input type="text" class="form-control" placeholder="prato" 
+            <input type="text" class="form-control" placeholder="produto" 
                    onblur="" name="txtNome"  value="'.Pagina::formatar_html($objProduto->getNome()).'">
         </div>
         <div class="col-md-4 mb-3">
@@ -110,7 +117,13 @@ echo $alert.'
                    name="numPreco"  value="'.Pagina::formatar_html($objProduto->getPreco()).'">
         </div>
     </div>
-    
+    <div class="form-row">
+     <div class="col-md-12 mb-3">
+            <label for="label_numLugares">Informe o caminho da foto:</label>
+            <input type="text" class="form-control" placeholder="caminho foto" step="any"
+                   name="txtURLFoto"  value="'.Pagina::formatar_html($objProduto->getCaminhoImgSistWEB()).'">
+        </div>
+    </div>
     <div class="form-row">
         <div class="col-md-12 mb-3">
             <button class="btn btn-primary" type="submit" style="width: 30%; margin-left: 35%;" name="btn_salvar_produto">SALVAR</button>

@@ -69,7 +69,7 @@ echo $alert.'
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item"><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">Dashboard</a></li>
             <li class="breadcrumb-item active">Cadastrar Categoria do Produto</li>
-            <li class="breadcrumb-item"><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_categoria_produto').'">Listar Categoria do Produto</li>
+            <li class="breadcrumb-item"><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_categoria_produto').'">Listar Categoria do Produto</a></li>
         </ol>
     </div>
 <div class="conteudo_grande" >

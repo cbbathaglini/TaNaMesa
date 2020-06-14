@@ -38,6 +38,7 @@ try{
                 $objMesa->setDisponivel(true);
                 $objMesa->setBoolPrecisaFunc(false);
                 $objMesa->setEsperandoPedido(false);
+                $objMesa->setIdPedido(null);
 
                 foreach ($arr_usuarios as $usuario){
                     if(!is_null($_POST['id'.$usuario->getIdUsuario()])){
@@ -55,21 +56,25 @@ try{
             break;
 
         case 'editar_mesa':
-            /*if(!isset($_POST['btn_salvar_mesa'])){
-                $objMesa->setIdMesa($_GET['idMesa']);
-                $objMesa = $objMesaRN->consultar($objMesa);
 
-            }
+            $objMesa->setIdMesa($_GET['idMesa']);
+            $objMesa = $objMesaRN->consultar($objMesa);
+
 
             if(isset($_POST['btn_salvar_mesa'])){
-                $objMesa->setIdMesa($_GET['idMesa']);
-                $objMesa->setNumero($_POST['numMesa']);
-                $objMesa->setNumLugares($_POST['numQntLugares']);
-                $objMesa->setSituacao(MesaRN::$STA_LIBERADA);
+                foreach ($arr_usuarios as $usuario){
+                    if(!is_null($_POST['id'.$usuario->getIdUsuario()])){
+                        $arr[] = intval($_POST['id'.$usuario->getIdUsuario()]);
+                    }
+                }
+
+                $arr = array_unique($arr);
+
+                $objMesa->setIdFuncionario($arr);
                 $objMesaRN->alterar($objMesa);
 
-                $alert = Alert::alert_success("Mesa de número ".$objMesa->getNumero()." <strong>alterada</strong> com sucesso");
-            }*/
+                $alert = Alert::alert_success("Mesa de número ".$objMesa->getIdMesa()." <strong>alterada</strong> com sucesso");
+            }
 
             break;
         default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador em cadastro_mesa.php');

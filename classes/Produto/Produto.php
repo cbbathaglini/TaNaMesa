@@ -6,6 +6,7 @@
 class Produto
 {
     private $idProduto;
+    private $caminho_img_sistWEB;
     private $categoriaProduto;
     private $preco;
     private $nome;
@@ -13,6 +14,25 @@ class Produto
 
     private $lista_ingredientes;
     private $informacoes;
+
+    /**
+     * @return mixed
+     */
+    public function getCaminhoImgSistWEB()
+    {
+        return $this->caminho_img_sistWEB;
+    }
+
+    /**
+     * @param mixed $caminho_img_sistWEB
+     */
+    public function setCaminhoImgSistWEB($caminho_img_sistWEB)
+    {
+        $this->caminho_img_sistWEB = $caminho_img_sistWEB;
+    }
+
+
+
 
     /**
      * @return mixed

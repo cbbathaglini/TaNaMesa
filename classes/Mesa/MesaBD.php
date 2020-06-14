@@ -24,6 +24,7 @@ class MesaBD {
                 $mesa->setIdFuncionario($filho['lista_funcionarios']);
                 $mesa->setEsperandoPedido($filho['waitingOrder']);
                 $mesa->setBoolPrecisaFunc($filho['needingWaiter']);
+                $mesa->setIdPedido($filho['idPedido']);
                 return $mesa;
             }
             return null;
@@ -40,7 +41,8 @@ class MesaBD {
                 'available' =>  $objMesa->getDisponivel(),
                 'needingWaiter' =>  $objMesa->getBoolPrecisaFunc(),
                 'waitingOrder' =>  $objMesa->getEsperandoPedido(),
-                'lista_funcionarios' => $objMesa->getIdFuncionario());
+                'lista_funcionarios' => $objMesa->getIdFuncionario(),
+                'idPedido' =>  $objMesa->getIdPedido());
 
 
             $this->database->getReference($this->dbname)->getChild($this->child)->getChild($objMesa->getIdMesa())->set($arr);
@@ -61,7 +63,9 @@ class MesaBD {
                 'available' =>  $objMesa->getDisponivel(),
                 'needingWaiter' =>  $objMesa->getBoolPrecisaFunc(),
                 'waitingOrder' =>  $objMesa->getEsperandoPedido(),
-                'lista_funcionarios' =>  $objMesa->getIdFuncionario());
+                'lista_funcionarios' =>  $objMesa->getIdFuncionario(),
+                'idPedido' =>  $objMesa->getIdPedido()
+                );
 
             $this->database->getReference($this->dbname)->getChild($this->child)->getChild($objMesa->getIdMesa())->set($arr);
 
@@ -89,6 +93,7 @@ class MesaBD {
                     $mesa->setBoolPrecisaFunc($id['needingWaiter']);
                     $mesa->setIdFuncionario($id['lista_funcionarios']);
                     $mesa->setEsperandoPedido($id['waitingOrder']);
+                    $mesa->setIdPedido($id['idPedido']);
                     $arrMesas[] = $mesa;
                 }
             }

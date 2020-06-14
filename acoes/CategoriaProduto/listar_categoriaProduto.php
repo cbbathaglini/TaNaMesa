@@ -25,9 +25,9 @@ try{
     switch ($_GET['action']){
         case 'remover_categoria_produto':
             try{
-               // $objPrato->setIdPrato($_GET['idPrato']);
-               // $objPratoRN->remover($objPrato);
-              //  $alert .= Alert::alert_success("Produto removido com sucesso");
+                $objCategoriaProduto->setIdCategoriaProduto($_GET['idCategoriaProduto']);
+                $objCategoriaProdutoRN->remover($objCategoriaProduto);
+                $alert .= Alert::alert_success("Categoria do produto removido com sucesso");
                 break;
             } catch (Throwable $ex) {
                 Pagina::getInstance()->processar_excecao($ex);

@@ -83,7 +83,7 @@ class Sessao {
                 $objRecursoRN = new RecursoRN();
 
                 foreach ($objPerfilUsuario->getListaRecursos() as $r){
-                    if($r != null) {
+                    if($r != null || $r >= 0) {
                         $objRecurso->setIdRecurso($r);
                         $objRecurso = $objRecursoRN->consultar($objRecurso);
                         $arr_recursos[] = $objRecurso->getLink();
