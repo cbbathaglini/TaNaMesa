@@ -43,7 +43,7 @@ try {
             $objProduto = $objProdutoRN->consultar($objProduto);
 
            foreach ($arr_categorias as $categoria) {
-               if ($categoria->getIdCategoriaProduto() == $objProduto->getCategoria()) {
+               if ($categoria->getIdCategoriaProduto() == $objProduto->getCategoriaProduto()) {
                    if ($categoria->getDescricao() == 'Peixe') {
                        $quantidadePeixe++;
                    }
