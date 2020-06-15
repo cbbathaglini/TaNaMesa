@@ -28,6 +28,7 @@ try {
     $objProdutoRN = new ProdutoRN();
 
     $arr_pedidos = $objPedidoRN->listar($objPedido);
+    $arr_categorias = $objCategoriaProdutoRN->listar($objCategoriaProduto);
 
     $quantidadePeixe =0;
     $quantidadeCarne = 0;
@@ -41,23 +42,25 @@ try {
             $objProduto->setIdProduto($p['idProduto']);
             $objProduto = $objProdutoRN->consultar($objProduto);
 
-            $objCategoriaProduto->setIdCategoriaProduto($objProduto->getCategoriaProduto());
-            $objCategoriaProduto= $objCategoriaProdutoRN->consultar($objCategoriaProduto);
-            if($objCategoriaProduto->getDescricao() == 'Peixe'){
-                $quantidadePeixe++;
-            }
-            if($objCategoriaProduto->getDescricao() == 'Frango'){
-                $quantidadeFrango++;
-            }
-            if($objCategoriaProduto->getDescricao() == 'Massa'){
-                $quantidadeMassa++;
-            }
-            if($objCategoriaProduto->getDescricao() == 'Cerveja'){
-                $quantidadeCerveja++;
-            }
-            if($objCategoriaProduto->getDescricao() == 'Carne'){
-                $quantidadeCarne++;
-            }
+           foreach ($arr_categorias as $categoria) {
+               if ($categoria->getIdCategoriaProduto() == $objProduto->getCategoria()) {
+                   if ($categoria->getDescricao() == 'Peixe') {
+                       $quantidadePeixe++;
+                   }
+                   if ($categoria->getDescricao() == 'Frango') {
+                       $quantidadeFrango++;
+                   }
+                   if ($categoria->getDescricao() == 'Massa') {
+                       $quantidadeMassa++;
+                   }
+                   if ($categoria->getDescricao() == 'Cerveja') {
+                       $quantidadeCerveja++;
+                   }
+                   if ($categoria->getDescricao() == 'Carne') {
+                       $quantidadeCarne++;
+                   }
+               }
+           }
         }
     }
 
