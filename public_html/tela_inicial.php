@@ -1,65 +1,77 @@
 <?php
 session_start();
-
+try {
     require_once '../classes/Sessao/Sessao.php';
     require_once __DIR__ . '/../classes/Pagina/Pagina.php';
 
-    require_once __DIR__.'/../classes/Usuario/Usuario.php';
-    require_once __DIR__.'/../classes/Usuario/UsuarioRN.php';
+    require_once __DIR__ . '/../utils/Utils.php';
 
-    require_once __DIR__.'/../classes/Mesa/Mesa.php';
-    require_once __DIR__.'/../classes/Mesa/MesaRN.php';
+    require_once __DIR__ . '/../classes/Usuario/Usuario.php';
+    require_once __DIR__ . '/../classes/Usuario/UsuarioRN.php';
+    require_once __DIR__ . '/../classes/Mesa/Mesa.php';
+    require_once __DIR__ . '/../classes/Mesa/MesaRN.php';
 
-Sessao::getInstance()->validar();
-date_default_timezone_set('America/Sao_Paulo');
-$objUsuario = new Usuario();
-$objUsuarioRN = new UsuarioRN();
+    require_once __DIR__ . '/../classes/Pedido/Pedido.php';
+    require_once __DIR__ . '/../classes/Pedido/PedidoRN.php';
 
-$objMesa = new Mesa();
-$objMesaRN = new MesaRN();
 
-$html_mesas = '';
-$mesas = $objMesaRN->listar($objMesa);
-foreach ($mesas as $mesa){
-    if( (in_array(Sessao::getInstance()->getIdUsuario(),$mesa->getIdFuncionario()) && $mesa->getIdFuncionario() != null) || $_SESSION['TANAMESA']['PERFIL'] == PerfilUsuarioRN::$PU_ADMINISTRADOR) {
-        if ($mesa->getBoolPrecisaFunc()) {
-            $html_mesas .= '<div class="col-xl-3 col-md-6">
-                                <div class="card bg-warning text-white mb-4">
-                                    <div class="card-body"> Mesa ' . $mesa->getIdMesa() . ' (AGUARDANDO GARÇOM)</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_pedido&idMesa='.$mesa->getIdMesa()).'">Ver Pedido</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+    Sessao::getInstance()->validar();
+
+    $objPedido = new Pedido();
+    $objPedidoRN = new PedidoRN();
+
+    date_default_timezone_set('America/Sao_Paulo');
+    $objUsuario = new Usuario();
+    $objUsuarioRN = new UsuarioRN();
+
+    $objMesa = new Mesa();
+    $objMesaRN = new MesaRN();
+
+    $html_mesas = '';
+    $mesas = $objMesaRN->listar($objMesa);
+    foreach ($mesas as $mesa) {
+        if ((in_array(Sessao::getInstance()->getIdUsuario(), $mesa->getIdFuncionario()) && $mesa->getIdFuncionario() != null) || $_SESSION['TANAMESA']['PERFIL'] == PerfilUsuarioRN::$PU_ADMINISTRADOR) {
+            if ($mesa->getBoolPrecisaFunc()) {
+                $html_mesas .= '<div class="col-xl-3 col-md-6">
+                                    <div class="card bg-warning text-white mb-4">
+                                        <div class="card-body"> Mesa ' . $mesa->getIdMesa() . ' (AGUARDANDO GARÇOM)</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <a class="small text-white stretched-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_pedido&idMesa=' . $mesa->getIdMesa()) . '">Ver Pedido</a>
+                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>';
-        }
+                                </div>';
+            }
 
-        if ($mesa->getDisponivel() && !$mesa->getEsperandoPedido() && !$mesa->getBoolPrecisaFunc()) {
-            $html_mesas .= '<div class="col-xl-3 col-md-6">
-                                <div class="card bg-success text-white mb-4">
-                                    <div class="card-body"> Mesa ' . $mesa->getIdMesa() . ' (DISPONÍVEL)</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link links_cards" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=realizar_pedido&idMesa='.$mesa->getIdMesa()).'"> Fazer pedido  </a>
-                                        <div class="small text-white"></div>
+            if ($mesa->getDisponivel() && !$mesa->getEsperandoPedido() && !$mesa->getBoolPrecisaFunc()) {
+                $html_mesas .= '<div class="col-xl-3 col-md-6">
+                                    <div class="card bg-success text-white mb-4">
+                                        <div class="card-body"> Mesa ' . $mesa->getIdMesa() . ' (DISPONÍVEL)</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <a class="small text-white stretched-link links_cards" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_pedido&idMesa=' . $mesa->getIdMesa()) . '"> Fazer pedido  </a>
+                                            <div class="small text-white"></div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>';
-        }
+                                </div>';
+            }
 
-        if (!$mesa->getDisponivel() && !$mesa->getBoolPrecisaFunc()) {
-            $html_mesas .= '<div class="col-xl-3 col-md-6">
-                                <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body"> Mesa ' . $mesa->getIdMesa() . ' (OCUPADA)</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_pedido&idMesa='.$mesa->getIdMesa().'&idPedido='.$mesa->getIdPedido()).'">Ver Pedido</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            if (!$mesa->getDisponivel() && !$mesa->getBoolPrecisaFunc()) {
+                $html_mesas .= '<div class="col-xl-3 col-md-6">
+                                    <div class="card bg-danger text-white mb-4">
+                                        <div class="card-body"> Mesa ' . $mesa->getIdMesa() . ' (OCUPADA)</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <a class="small text-white stretched-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_pedido&idMesa=' . $mesa->getIdMesa() . '&idPedido=' . $mesa->getIdPedido()) . '">Ver Pedido</a>
+                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>';
+                                </div>';
+            }
         }
     }
+}catch (Throwable $e){
+    die($e);
+    Pagina::getInstance()->processar_excecao($e);
 }
-
 
 //$objUsuario->setIdUsuario(Sessao::getInstance()->getCPF());
 //$objUsuario = $objUsuarioRN->consultar($objUsuario);
@@ -84,7 +96,7 @@ Pagina::abrir_head("TÁ NA MESA");
                 var myLineChart = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: ["Mar 1", "Mar 2", "Mar 3", "Mar 4", "Mar 5", "Mar 6", "Mar 7", "Mar 8", "Mar 9", "Mar 10", "Mar 11", "Mar 12", "Mar 13"],
+                        labels: result['mes'],
                         datasets: [{
                             label: "Pedidos",
                             lineTension: 0.3,
@@ -97,7 +109,7 @@ Pagina::abrir_head("TÁ NA MESA");
                             pointHoverBackgroundColor: "rgba(2,117,216,1)",
                             pointHitRadius: 50,
                             pointBorderWidth: 2,
-                            data:result,
+                            data:result['qntPedidos'],
                         }],
                     },
                     options: {
@@ -116,7 +128,7 @@ Pagina::abrir_head("TÁ NA MESA");
                             yAxes: [{
                                 ticks: {
                                     min: 0,
-                                    max: 200,
+                                    max: 15,
                                     maxTicksLimit: 5
                                 },
                                 gridLines: {
@@ -141,6 +153,7 @@ Pagina::abrir_body();
 Pagina::getInstance()->montar_menu_topo();
 
 Pagina::abrir_lateral();
+
 echo '    
                     <div class="container-fluid">
                         <h1 class="mt-4">Dashboard</h1>

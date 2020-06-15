@@ -48,7 +48,7 @@ try{
     $caractere = '';
 
 
-
+    $arrProdutos = $objProdutoRN->listar($objProduto);
     switch($_GET['action']){
         case 'realizar_pedido':
 
@@ -56,7 +56,7 @@ try{
                 if(isset($_GET['idMesa'])) {
                     $objPedido->setIdMesa(intval($_GET['idMesa']));
                 }else{
-                    $objPedido->setIdMesa(intval($_GET['numMesa']));
+                    $objPedido->setIdMesa(intval($_POST['numMesa']));
                 }
 
                 $objMesa->setIdMesa($objPedido->getIdMesa());
@@ -76,13 +76,16 @@ try{
                             }
                         }
                     }
+
+                    //print_r($arr_lista_produtos);
+                    //die("a");
                     //echo $total;
                     $objPedido->setPreco($total);
                     $objPedido->setListaProdutos($arr_lista_produtos);
                     $objPedido->setSituacao("andamento");
 
-                    $objMesa->setIdMesa($_GET['idMesa']);
-                    $objMesa = $objMesaRN->consultar($objMesa);
+
+                    //$objMesa = $objMesaRN->consultar();
                     $objMesa->setDisponivel(false);
                     $objMesa->setEsperandoPedido(true);
 
@@ -93,33 +96,13 @@ try{
 
                     // $objProdutoRN->cadastrar($objProduto);
 
-                    $alert = Alert::alert_success("Produto " . $objProduto->getNome() . " <strong>cadastrado</strong> com sucesso");
+                    $alert = Alert::alert_success("Pedido " . $objPedido->getIdPedido() . "  <strong>cadastrado</strong> com sucesso");
                 }else{
                     $alert = Alert::alert_danger("A mesa tem um pedido em andamento");
                 }
-                $arrProdutos = $objProdutoRN->listar($objProduto);
-                foreach ($arrProdutos as $p){
-                    if($p->getCategoriaProduto() == 2 || $p->getCategoriaProduto() == 1 || $p->getCategoriaProduto() == 8){ //massas,frangos e massas
-                        $style = ' width="100px" height="80px" ';
-                    }else{
-                        $style = ' width="50px" height="80px" ';
-                    }
-                    $objCategoriaProduto->setIdCategoriaProduto($p->getCategoriaProduto());
-                    $objCategoriaProduto = $objCategoriaProdutoRN->consultar($objCategoriaProduto);
-                    $html.='<tr>
-                        <th scope="row">'.Pagina::formatar_html($p->getIdProduto()).'</th>
-                         <td><img '.$style.'  src="'.$p->getCaminhoImgSistWEB().'" ></td>
-                         <td>'.Pagina::formatar_html($p->getNome()).'</td>
-                        <td>'.Pagina::formatar_html($objCategoriaProduto->getDescricao()).'</td>
-                        <td>'.Pagina::formatar_html($p->getPreco()).'</td>';
 
-                    $html .= '<td><input type="number" class="form-control" placeholder="nº" 
-                   name="numQuantidade_produto'.$p->getIdProduto().'"  value="'.$_POST['numQuantidade_produto'.$p->getIdProduto()].'"></td>';
-
-
-                    $html .= ' </tr>';
-                }
             }
+
             break;
 
         case 'editar_pedido':
@@ -131,6 +114,7 @@ try{
             $arr_todos_produtos = $objProdutoRN->listar($objProduto);
 
             $arr_produtos = $objPedido->getListaProdutos();
+
             foreach ($arr_produtos as $produto){
                 $objProduto->setIdProduto($produto['idProduto']);
                 $objProduto = $objProdutoRN->consultar($objProduto);
@@ -149,56 +133,107 @@ try{
                         <td>'.Pagina::formatar_html($objProduto->getPreco()).'</td>';
 
                 $html .= '<td><input type="number" '.$disabled.' class="form-control" placeholder="nº" 
-                   name="numQuantidade_produto'.$objProduto->getIdProduto().'"  value="'.$produto['quantidade'].'"></td>';
+                   name="numQuantidade_produtosAntigos'.$objProduto->getIdProduto().'"  value="'.$produto['quantidade'].'"></td>';
 
 
                 $html .= ' </tr>';
+                /*if($_POST['numQuantidade_produtosAntigos'.$objProduto->getIdProduto()]){
+                    $arr_lista_produtos[] = array("idProduto" => $objProduto->getIdProduto(), "quantidade" =>$_POST['numQuantidade_produtosAntigos'.$objProduto->getIdProduto()]);
+                    $total += $objProduto->getPreco() * $_POST['numQuantidade_produtosAntigos'.$objProduto->getIdProduto()];
+                }*/
             }
+            $html .= '<tr><td colspan="5"> <hr/><hr/></td></tr>';
 
-            foreach ($arr_todos_produtos as $objProduto){
+
+            if(isset($_POST['btn_editar_pedido'])){
+
+                $objPedido->setIdMesa(intval($_GET['idMesa']));
+                $objMesa->setIdMesa($objPedido->getIdMesa());
+                $objMesa = $objMesaRN->consultar($objMesa);
+
+                $objPedido->setIdPedido(intval($_GET['idPedido']));
+                $objPedido = $objPedidoRN->consultar($objPedido);
+
+                //if($objMesa->getDisponivel()) {
+                $objPedido->setDataHora(date("d/m/Y H:i:s"));
+                $arr_lista_produtos = $arr_produtos;
+
+                $total = 0;
                 $encontrou = false;
-                foreach ($arr_produtos as $produto) {
-                    if($objProduto->getIdProduto() == $produto['idProduto']) {
-                        $encontrou = true;
+                foreach ($arrProdutos as $p) {
+                    $encontrou = false;
+                    if (isset($_POST['numQuantidade_produto' . $p->getIdProduto()])) {
+                        //echo "produ: ".$p->getIdProduto()."\n";
+                        //echo "qnt: ".$_POST['numQuantidade_produto'.$p->getIdProduto()]."\n\n";
+                        if (strlen($_POST['numQuantidade_produto' . $p->getIdProduto()]) > 0) {
+
+                            for($i=0; $i<count($arr_lista_produtos); $i++){
+                                if($p->getIdProduto() == $arr_lista_produtos[$i]['idProduto']){
+                                    $encontrou = true;
+                                    $arr_lista_produtos[$i] = array("idProduto" => intval($p->getIdProduto()), "quantidade" =>intval(($_POST['numQuantidade_produto' . $p->getIdProduto()]+$arr_lista_produtos[$i]['quantidade'])));
+                                    $total += $p->getPreco() * ($_POST['numQuantidade_produto' . $p->getIdProduto()]+$arr_lista_produtos[$i]['quantidade']);
+                                }
+                            }
+
+                            if(!$encontrou) {
+                                $encontrou = false;
+                                $arr_lista_produtos[] = array("idProduto" => intval($p->getIdProduto()), "quantidade" => intval($_POST['numQuantidade_produto' . $p->getIdProduto()]));
+                                $total += $p->getPreco() * $_POST['numQuantidade_produto' . $p->getIdProduto()];
+                            }
+                        }
                     }
                 }
-                if(!$encontrou) {
-                    if ($objProduto->getCategoriaProduto() == 2 || $objProduto->getCategoriaProduto() == 1 || $objProduto->getCategoriaProduto() == 8) { //massas,frangos e massas
-                        $style = ' width="100px" height="80px" ';
-                    } else {
-                        $style = ' width="50px" height="80px" ';
-                    }
-                    $objCategoriaProduto->setIdCategoriaProduto($objProduto->getCategoriaProduto());
-                    $objCategoriaProduto = $objCategoriaProdutoRN->consultar($objCategoriaProduto);
-                    $html .= '<tr>
-                        <th scope="row"><img ' . $style . '  src="' . $objProduto->getCaminhoImgSistWEB() . '" ></th>
-                         <td>' . Pagina::formatar_html($objProduto->getNome()) . '</td>
-                        <td>' . Pagina::formatar_html($objCategoriaProduto->getDescricao()) . '</td>
-                        <td>' . Pagina::formatar_html($objProduto->getPreco()) . '</td>';
-
-                    $html .= '<td><input type="number"  class="form-control" placeholder="nº" 
-                   name="numQuantidade_produto' . $objProduto->getIdProduto() . '"  value="' . $_POST['numQuantidade_produto' . $objProduto->getIdProduto()] . '"></td>';
 
 
-                    $html .= ' </tr>';
-                }
-            }
 
-            if(isset($_POST['btn_salvar_Prato'])){
-                $objProduto->setPreco($_POST['numPreco']);
-                $objProduto->setNome($_POST['txtNome']);
-                $objProduto->setIndexNome(strtoupper($objUtils->tirarAcentos($_POST['txtNome'])));
-                $objProduto->setCategoriaProduto($_POST['sel_categoria_produto']);
+                //echo $total;
+                $objPedido->setPreco(doubleval($total));
+                $objPedido->setListaProdutos($arr_lista_produtos);
+                $objPedido->setSituacao("andamento");
 
-                //$objProdutoRN->alterar($objProduto);
 
-                $alert = Alert::alert_success("Produto ".$objProduto->getNome()." <strong>alterado</strong> com sucesso");
+                //$objMesa = $objMesaRN->consultar();
+                $objMesa->setDisponivel(false);
+                $objMesa->setEsperandoPedido(true);
+
+
+                $objPedidoRN->alterar($objPedido);
+                $objMesa->setIdPedido($objPedido->getIdPedido());
+                $objMesaRN->alterar($objMesa);
+
+                // $objProdutoRN->cadastrar($objProduto);
+
+                $alert = Alert::alert_success("Pedido " . $objPedido->getIdPedido() . " <strong>alterado</strong> com sucesso");
+                header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_pedido&idMesa='.$_GET['idMesa'].'&idPedido='.$_GET['idPedido']));
+                die();
+
             }
 
             break;
         default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador em cadastro_produto.php');
     }
 
+    foreach ($arrProdutos as $p){
+        if($p->getCategoriaProduto() == 2 || $p->getCategoriaProduto() == 1 || $p->getCategoriaProduto() == 8){ //massas,frangos e massas
+            $style = ' width="100px" height="80px" ';
+        }else{
+            $style = ' width="50px" height="80px" ';
+        }
+        $objCategoriaProduto->setIdCategoriaProduto($p->getCategoriaProduto());
+        $objCategoriaProduto = $objCategoriaProdutoRN->consultar($objCategoriaProduto);
+        $html.='<tr>
+                       
+                         <th scope="row"><img '.$style.'  src="'.$p->getCaminhoImgSistWEB().'" ></th>
+                         <td>'.Pagina::formatar_html($p->getNome()).'</td>
+                        <td>'.Pagina::formatar_html($objCategoriaProduto->getDescricao()).'</td>
+                        <td>'.Pagina::formatar_html($p->getPreco()).'</td>';
+
+        $html .= '<td><input type="number" class="form-control" placeholder="nº" 
+                   name="numQuantidade_produto'.$p->getIdProduto().'"  value="'.$_POST['numQuantidade_produto'.$p->getIdProduto()].'"></td>';
+
+
+        $html .= ' </tr>';
+    }
 
 
 
@@ -232,12 +267,13 @@ if($_GET['action'] == 'realizar_pedido') {
     echo '<div class="conteudo_grande" >
     <form method="POST">';
     if (!isset($_GET['idMesa'])) {
-        echo ' <div class="col-md-4 mb-3">
+        echo ' <div class="col-md-12 mb-3">
             <label >Informe a mesa:</label>
             <input type="number" class="form-control" placeholder="nº mesa" 
                    name="numMesa"  value="' . $objPedido->getIdMesa() . '">
         </div>';
     }
+
     echo ' <table class="table table-hover">
             <thead>
                 <tr>
@@ -288,7 +324,7 @@ if($_GET['action'] == 'editar_pedido') {
     echo '  <div class="form-row">
             <div class="col-md-12 mb-3">
         <label >Número da mesa:</label>
-        <input '.$disabled.' type="number" class="form-control" placeholder="nº mesa" 
+        <input  type="number" class="form-control" placeholder="nº mesa" 
                name="numMesa"  value="' . $objPedido->getIdMesa() . '">
                </div>
     </div>';
@@ -336,13 +372,13 @@ if($_GET['action'] == 'editar_pedido') {
         </div>
         </div>       
     
-    <div class="form-row">
+    <div class="form-row" style="margin-left: -25%;">
         <div class="col-md-6">
-            <button class="btn btn-primary" type="submit" style="width: 100%;" name="btn_editar_pedido">EDITAR PEDIDO</button>
+            <button class="btn btn-primary" type="submit" style="width: 80%;margin-left: 30%; " name="btn_editar_pedido">EDITAR PEDIDO</button>
         </div>
     
         <div class="col-md-6">
-            <button class="btn btn-primary" type="submit" style="width: 100%; " name="btn_pagar_pedido">PAGAMENTO</button>
+            <button class="btn btn-primary" type="submit" style="width: 80%;margin-right: 15%; " name="btn_pagar_pedido">FINALIZAR PEDIDO</button>
         </div>
     </div>
         

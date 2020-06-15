@@ -391,7 +391,7 @@ class Pagina {
                                         </div>';
         }
 
-        if(Sessao::getInstance()->verificar_permissao('cadastrar_produto') || Sessao::getInstance()->verificar_permissao('listar_produto')) {
+        if(Sessao::getInstance()->verificar_permissao('realizar_pedido') || Sessao::getInstance()->verificar_permissao('listar_pedido')) {
             echo '  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePedido" aria-expanded="false" aria-controls="collapsePedido" >
                                 <div class="sb-nav-link-icon"><i class="fas fa-utensils"></i></div>
                                          Pedido
@@ -468,20 +468,18 @@ class Pagina {
                                 </nav>
                             </div>';*/
                // }
-                            
-                echo '            <div class="sb-sidenav-menu-heading">Extras</div>
+
+
+                echo '   <div class="sb-sidenav-menu-heading">Gráficos</div>
                             <a class="nav-link" href="charts.html"
                                 ><div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Charts</a
-                            ><a class="nav-link" href="tables.html"
-                                ><div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Tables</a
+                                Pedidos</a
                             >
                         </div>
-                    </div>
-                    
-                    <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
+                    </div>';
+
+        echo '      <div class="sb-sidenav-footer">
+                        <div class="small">Logado como:</div>
                         '.Sessao::getInstance()->getCPF().'
                     </div>
                 </nav>
