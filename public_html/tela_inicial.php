@@ -1,7 +1,7 @@
 <?php
 session_start();
 try {
-    require_once '../classes/Sessao/Sessao.php';
+    require_once __DIR__ . '/../classes/Sessao/Sessao.php';
     require_once __DIR__ . '/../classes/Pagina/Pagina.php';
 
     require_once __DIR__ . '/../utils/Utils.php';
@@ -14,12 +14,29 @@ try {
     require_once __DIR__ . '/../classes/Pedido/Pedido.php';
     require_once __DIR__ . '/../classes/Pedido/PedidoRN.php';
 
+    require_once __DIR__ . '/../classes/Produto/Produto.php';
+    require_once __DIR__ . '/../classes/Produto/ProdutoRN.php';
+
+    require_once __DIR__ . '/../classes/CategoriaProduto/CategoriaProduto.php';
+    require_once __DIR__ . '/../classes/CategoriaProduto/CategoriaProdutoRN.php';
+
 
     Sessao::getInstance()->validar();
 
     $objPedido = new Pedido();
     $objPedidoRN = new PedidoRN();
 
+    $objProduto = new Produto();
+    $objProdutoRN = new ProdutoRN();
+
+    $objCategoriaProduto = new CategoriaProduto();
+    $objCategoriaProdutoRN = new CategoriaProdutoRN();
+
+
+    if(isset($_POST['btn_mais'])){
+        header('Location: '.Sessao::getInstance()->assinar_link('controlador.php?action=ver_mais_pedidos'));
+        die();
+    }
     date_default_timezone_set('America/Sao_Paulo');
     $objUsuario = new Usuario();
     $objUsuarioRN = new UsuarioRN();
@@ -128,7 +145,7 @@ Pagina::abrir_head("TÁ NA MESA");
                             yAxes: [{
                                 ticks: {
                                     min: 0,
-                                    max: 15,
+                                    max: 8,
                                     maxTicksLimit: 5
                                 },
                                 gridLines: {
@@ -146,6 +163,129 @@ Pagina::abrir_head("TÁ NA MESA");
         //}
         //alert(<?php echo $res;?>);
 
+    </script>
+
+    <script type="text/javascript">
+
+        $.ajax({
+            url: "<?=Sessao::getInstance()->assinar_link('controlador.php?action=ver_categorias_pedidos') ?>",
+            success: function (third_result) {
+
+                // Pie Chart Example
+                var ctx = document.getElementById("pieCategorias");
+                var myPieChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ["Peixe", "Massa", "Carne", "Frango"],
+                        datasets: [{
+                            data: [third_result['qntPeixe'],third_result['qntCarne'],third_result['qntMassa'], third_result['qntFrango']],
+                            backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745'],
+                        }],
+                    },
+                });
+            }
+
+                /*
+
+                // Bar Chart Example
+                var ctx = document.getElementById("myBarChart");
+                var myLineChart = new Chart(ctx, {
+
+                    type: 'bar',
+                    data: {
+                        labels: ["Peixe","Carne","Massa","Frango"],
+                        datasets: [{
+                            label: "Quantidade vendida",
+                            backgroundColor: [ 'rgba(2,117,216,1)','rgba(64,224,208,1)','rgba(218,165,32,1)','rgba(218,130,238,1)'],
+                            borderColor:[ 'rgba(2,117,216,1)','rgba(64,224,208,1)','rgba(218,165,32,1)','rgba(218,130,238,1)'],
+                            data: [third_result['qntPeixe'],third_result['qntCarne'],third_result['qntMassa'], third_result['qntFrango']]
+                        }]
+
+                    },
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                    unit: 'month'
+                                },
+                                gridLines: {
+                                    display: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 6
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: 15,
+                                    maxTicksLimit: 5
+                                },
+                                gridLines: {
+                                    display: true
+                                }
+                            }],
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                });
+            }*/
+        });
+    </script>
+
+    <script type="text/javascript">
+
+        $.ajax({
+            url: "<?=Sessao::getInstance()->assinar_link('controlador.php?action=ver_mais_pedidos') ?>",
+            success: function (second_result) {
+
+
+                // Bar Chart Example
+                var ctx = document.getElementById("barCharCategorias");
+                var myLineChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: second_result['nomeProduto'],
+                        datasets: [{
+                            label: "Produtos",
+                            backgroundColor: "rgba(2,117,216,1)",
+                            borderColor: "rgba(2,117,216,1)",
+                            data: second_result['quantidade'],
+                        }],
+                    },
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                    unit: 'month'
+                                },
+                                gridLines: {
+                                    display: true
+                                },
+                                ticks: {
+                                    maxTicksLimit: 50
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: 7,
+                                    maxTicksLimit: 5
+                                },
+                                gridLines: {
+                                    display: true
+                                }
+                            }],
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                });
+            }
+        });
     </script>
 <?php
 Pagina::fechar_head();
@@ -170,21 +310,31 @@ echo '
                                 <div class="card mb-4">
                                     <div class="card-header"><i class="fas fa-chart-area mr-1"></i>Pedidos por dia <small style="color: grey;">*Últimos 7 dias</small></div>
                                     <div class="card-body"><canvas id="myAreaChart" width="100%"  height="40"></canvas></div>
-                                    <div class="card-footer small text-muted">Atualizado hoje às '.date("H:i:s").'</div>
+                                    <div class="card-footer small text-muted">Atualizado em '.date("d/m/Y H:i:s").'</div>
                                 </div>
-                                
                             </div>
-                           <!-- <div class="col-xl-6">
+                      
+                            <div class="col-xl-6">
                                 <div class="card mb-4">
-                                    <div class="card-header"><i class="fas fa-chart-bar mr-1"></i>Bar Chart Example</div>
-                                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                                    <div class="card-header"><i class="fas fa-chart-pie mr-1"></i>Categorias de pratos</div>
+                                    <div class="card-body"><canvas id="pieCategorias" width="100%" height="50"></canvas></div>
+                                     <div class="card-footer small text-muted">Atualizado em '.date("d/m/Y H:i:s").'</div>
                                 </div>
-                            </div>-->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="card mb-4">
+                                    <div class="card-header"><i class="fas fa-chart-bar mr-1"></i>Quantidade vendida de cada produto</div>
+                                    <div class="card-body"><canvas id="barCharCategorias" width="100%" height="50"></canvas></div>
+                                     <div class="card-footer small text-muted">Atualizado em '.date("d/m/Y H:i:s").'</div>
+                                </div>
+                            </div>
                         </div>
                     </div>';
 
 
-
+//echo '  <form method="post"> <button class="btn btn-primary" type="submit" name="btn_mais">button</button></form>';
 
 /*
 echo

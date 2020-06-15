@@ -25,6 +25,12 @@ switch ($_GET['action']):
     case 'ver_pedidos_dia':
         require_once '../acoes/Pedido/ver_pedidos_dia.php';
         break;
+    case 'ver_mais_pedidos':
+        require_once '../acoes/Pedido/ver_mais_pedidos.php';
+        break;
+    case 'ver_categorias_pedidos':
+        require_once '../acoes/Pedido/ver_categorias_pedidos.php';
+        break;
 
     /*
      * MESA
