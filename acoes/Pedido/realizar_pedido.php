@@ -62,7 +62,7 @@ try{
                 $objMesa->setIdMesa($objPedido->getIdMesa());
                 $objMesa = $objMesaRN->consultar($objMesa);
 
-                if($objMesa->getDisponivel()) {
+                if($objMesa->getDisponivel() || $objMesa->getBoolPrecisaFunc()) {
                     $objPedido->setDataHora(date("d/m/Y H:i:s"));
 
                     $total = 0;
