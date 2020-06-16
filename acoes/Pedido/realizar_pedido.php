@@ -97,6 +97,8 @@ try{
                     // $objProdutoRN->cadastrar($objProduto);
 
                     $alert = Alert::alert_success("Pedido " . $objPedido->getIdPedido() . "  <strong>cadastrado</strong> com sucesso");
+                    header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_pedido&idMesa='.$_GET['idMesa'].'&idPedido='.$_GET['idPedido']));
+                    die();
                 }else{
                     $alert = Alert::alert_danger("A mesa tem um pedido em andamento");
                 }
