@@ -53,7 +53,7 @@ try {
                                     <div class="card bg-warning text-white mb-4">
                                         <div class="card-body"> Mesa ' . $mesa->getIdMesa() . ' (AGUARDANDO GARÇOM)</div>
                                         <div class="card-footer d-flex align-items-center justify-content-between">
-                                            <a class="small text-white stretched-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_pedido&idMesa=' . $mesa->getIdMesa()) . '">Ver Pedido</a>
+                                            <a class="small text-white stretched-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_pedido&idMesa=' . $mesa->getIdMesa()). '">Fazer Pedido</a>
                                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                         </div>
                                     </div>
