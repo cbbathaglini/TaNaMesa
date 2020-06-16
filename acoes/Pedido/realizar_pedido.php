@@ -277,7 +277,7 @@ if($_GET['action'] == 'realizar_pedido') {
     echo ' <table class="table table-hover">
             <thead>
                 <tr>
-                    <th scope="col">#ID</th>
+                    
                     <th scope="col">FOTO PRODUTO</th>
                     <th scope="col">NOME</th>
                     <th scope="col">CATEGORIA</th>
