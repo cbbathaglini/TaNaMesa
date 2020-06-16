@@ -88,7 +88,7 @@ try{
                     //$objMesa = $objMesaRN->consultar();
                     $objMesa->setDisponivel(false);
                     $objMesa->setEsperandoPedido(true);
-
+                    $objMesa->setBoolPrecisaFunc(false);
 
                     $objPedido = $objPedidoRN->cadastrar($objPedido);
                     $objMesa->setIdPedido($objPedido->getIdPedido());
