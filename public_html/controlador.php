@@ -22,6 +22,9 @@ switch ($_GET['action']):
         break;
 
 
+    case 'ver_situacao_mesa':
+        require_once '../acoes/Mesa/ver_situacao_mesa.php';
+        break;
     case 'ver_pedidos_dia':
         require_once '../acoes/Pedido/ver_pedidos_dia.php';
         break;

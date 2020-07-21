@@ -6,11 +6,12 @@
 class Produto
 {
     private $idProduto;
-    private $caminho_img_sistWEB;
+    private $strURLImagem;
     private $categoriaProduto;
     private $preco;
     private $nome;
     private $index_nome;
+    private $dataHora;
 
     private $lista_ingredientes;
     private $informacoes;
@@ -18,19 +19,36 @@ class Produto
     /**
      * @return mixed
      */
-    public function getCaminhoImgSistWEB()
+    public function getDataHora()
     {
-        return $this->caminho_img_sistWEB;
+        return $this->dataHora;
     }
 
     /**
-     * @param mixed $caminho_img_sistWEB
+     * @param mixed $dataHora
      */
-    public function setCaminhoImgSistWEB($caminho_img_sistWEB)
+    public function setDataHora($dataHora)
     {
-        $this->caminho_img_sistWEB = $caminho_img_sistWEB;
+        $this->dataHora = $dataHora;
     }
 
+
+
+    /**
+     * @return mixed
+     */
+    public function getStrURLImagem()
+    {
+        return $this->strURLImagem;
+    }
+
+    /**
+     * @param mixed $strURLImagem
+     */
+    public function setStrURLImagem($strURLImagem)
+    {
+        $this->strURLImagem = $strURLImagem;
+    }
 
 
 

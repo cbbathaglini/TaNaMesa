@@ -6,6 +6,24 @@
     margin-top: 10px;
 }
 
+.pedido{
+    width: 0%;
+}
+.verificarPedidos{
+    color: white;
+    width: 80%;
+    padding-top: -10px;
+    background-color: #ffc107 !important;
+    text-align: center;
+}
+
+.verificarPedidos a{
+    text-decoration: none;
+    color: black;
+    text-align: center;
+
+}
+
 .topo_listar{
     width:100%;
     margin-bottom: 15px;

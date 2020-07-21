@@ -1,5 +1,7 @@
 <?php
 
+//andamento
+//finalizado
 
 class Pedido
 {

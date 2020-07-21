@@ -20,53 +20,46 @@ try {
     $objPedido = new Pedido();
     $objPedidoRN = new PedidoRN();
 
+    $objProduto = new Produto();
+    $objProdutoRN = new ProdutoRN();
 
     $objCategoriaProduto = new CategoriaProduto();
     $objCategoriaProdutoRN = new CategoriaProdutoRN();
 
-    $objProduto = new Produto();
-    $objProdutoRN = new ProdutoRN();
-
     $arr_pedidos = $objPedidoRN->listar($objPedido);
     $arr_categorias = $objCategoriaProdutoRN->listar($objCategoriaProduto);
 
-    $quantidadePeixe =0;
-    $quantidadeCarne = 0;
-    $quantidadeMassa = 0;
-    $quantidadeFrango = 0;
-    $quantidadeCerveja = 0;
-    $quantidadeRefrigerante = 0;
     foreach ($arr_pedidos as $pedido){
         $listaProdutos = $pedido->getListaProdutos();
         foreach ($listaProdutos as $p){
-            $objProduto->setIdProduto($p['idProduto']);
-            $objProduto = $objProdutoRN->consultar($objProduto);
+            $arr_categoria[] = $p->getCategoriaProduto();
+            $arr_produtos[] = $p->getNome();
+            /*foreach ($arr_categorias as $categoria) {
+                if ($categoria->getIdCategoriaProduto() == $objProduto->getCategoriaProduto()) {
 
-           foreach ($arr_categorias as $categoria) {
-               if ($categoria->getIdCategoriaProduto() == $objProduto->getCategoriaProduto()) {
-                   if ($categoria->getDescricao() == 'Peixe') {
-                       $quantidadePeixe++;
-                   }
-                   if ($categoria->getDescricao() == 'Frango') {
-                       $quantidadeFrango++;
-                   }
-                   if ($categoria->getDescricao() == 'Massa') {
-                       $quantidadeMassa++;
-                   }
-                   if ($categoria->getDescricao() == 'Cerveja') {
-                       $quantidadeCerveja++;
-                   }
-                   if ($categoria->getDescricao() == 'Carne') {
-                       $quantidadeCarne++;
-                   }
-               }
-           }
+                }
+            }*/
         }
     }
+    $arr_categoria_count = array_count_values($arr_categoria);
+    $arr_categoria_cores = array();
+    for($i=0; $i<count($arr_categoria_count); $i++){
+        $arr_categoria_cores[] = Utils::random_color(0.5);
+    }
+
+    $arr_produtos_count = array_count_values($arr_produtos);
+    $arr_produtos_cores = array();
+    for($i=0; $i<count($arr_produtos_count); $i++){
+        $arr_produtos_cores[] = Utils::random_color(0.5);
+    }
+    $arr_JSON['categorias'] = $arr_categoria_count;
+    $arr_JSON['categorias_cores'] = $arr_categoria_cores;
+    $arr_JSON['produtos'] = $arr_produtos_count;
+    $arr_JSON['produtos_cores'] = $arr_produtos_cores;
 
 
-    $arr_retorno = array("qntPeixe" => $quantidadePeixe, "qntFrango" => $quantidadeFrango, "qntMassa" => $quantidadeMassa, "qntCerveja" => $quantidadeCerveja, "qntCarne" => $quantidadeCarne);
-    echo json_encode($arr_retorno);
+
+    echo json_encode($arr_JSON);
 
 }catch (Throwable $e){
     die($e);

@@ -90,8 +90,7 @@ class Pagina {
                         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
                         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                  
-                        <link href="css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
-                        <script src="js/all.min.js" crossorigin="anonymous"></script>
+                        
                        
                                                   
                         <link rel="icon" type="text/css" href="##">
@@ -141,7 +140,8 @@ class Pagina {
 
                         <!-- Estilo customizado -->
                         <!--<link rel="stylesheet" type="text/css" href="css/style.css">-->
-                        
+                        <link href="css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
+                        <script src="js/all.min.js" crossorigin="anonymous"></script>
                         <style>
                         
                        
@@ -204,17 +204,49 @@ class Pagina {
                                 background: #56baed;
                         }  
 
-                        </style>
-                                                
+                        </style>';
+
+                        if(isset($_GET['action']) && $_GET['action'] !=  'login') {
+                            echo '<script type="text/javascript">
+                                    //$( document ).ready(function() {
+                                    //  alert( "ready!" );
+                                    setInterval(verificarPedido, 1000);
+                                //});
                         
-                        ';
+                                function verificarPedido(){
+                                    $.ajax({url: "' . Sessao::getInstance()->assinar_link('controlador.php?action=ver_situacao_mesa') . '", success: function(result){
+                                        //alert(result);
+                                        //retornar o id da mesa
+                                        if(result !== null){
+                                           
+                                        /*
+                                            if(document.getElementById("idMesa_"+result).classList.contains("bg-danger")){
+                                                document.getElementById("idMesa_"+result).classList.remove("bg-danger");                                            }
+                                            }
+                                            if(document.getElementById("idMesa_"+result).classList.contains("bg-success")){
+                                                document.getElementById("idMesa_"+result).classList.remove("bg-success");              
+                                            }
+                                            document.getElementById("idMesa_"+result).classList.add("bg-warning");*/
+                                            
+                                            //document.getElementById("idPedidos").classList.add("bg-warning");
+                                            document.getElementById("idPedidos").classList.add("verificarPedidos");
+                                            //document.getElementById("idPedidos").innerHTML = "há uma mesa aguardando clique  <a href=\"' . Sessao::getInstance()->assinar_link("controlador.php?action=realizar_pedido&idMesa='.result.'") . '\">aqui</a>" 
+                                            document.getElementById("idPedidos").innerHTML = " Há uma mesa aguardando. <br>Clique  <a href=\"' . Sessao::getInstance()->assinar_link("controlador.php?action=principal") . '\">aqui</a>"
+                                        }
+                                        }});
+                                } 
+                            </script>';
+                        }
+
     }
 
     public static function abrir_lateral() {
-        echo ' <div id="layoutSidenav">
+        echo ' 
+            <div id="layoutSidenav">
                 <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
+                    
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Início</div>
                             <a class="nav-link" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'"
@@ -228,7 +260,6 @@ class Pagina {
              }else if($_SESSION['TANAMESA']['PERFIL'] == PerfilUsuarioRN::$PU_GERENTE) {
                  echo '   <div class="sb-sidenav-menu-heading">'.PerfilUsuarioRN::mostrarDescricaoTipoUsuario(PerfilUsuarioRN::$PU_GERENTE).'</div>';
              }
-
         if(Sessao::getInstance()->verificar_permissao('cadastrar_usuario') || Sessao::getInstance()->verificar_permissao('listar_usuario')) {
             echo '       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts"
                                 ><div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
@@ -248,7 +279,6 @@ class Pagina {
                                             </nav>  
                                         </div>';
         }
-
         if(Sessao::getInstance()->verificar_permissao('cadastrar_mesa') || Sessao::getInstance()->verificar_permissao('listar_mesa')) {
             echo '  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts1" aria-expanded="false" aria-controls="collapseLayouts1" >
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
@@ -268,8 +298,6 @@ class Pagina {
                                             </nav>  
                                         </div>';
         }
-
-
         if(Sessao::getInstance()->verificar_permissao('cadastrar_perfil_usuario') || Sessao::getInstance()->verificar_permissao('listar_perfil_usuario')) {
             echo '  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts3" aria-expanded="false" aria-controls="collapseLayouts3" >
                                 <div class="sb-nav-link-icon"><i class="fas fa-female"></i><i class="fas fa-male"></i></div>
@@ -289,8 +317,6 @@ class Pagina {
                                             </nav>  
                                         </div>';
         }
-
-
         if(Sessao::getInstance()->verificar_permissao('cadastrar_recurso') || Sessao::getInstance()->verificar_permissao('listar_recurso')) {
             echo '  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts4" aria-expanded="false" aria-controls="collapseLayouts4" >
                                 <div class="sb-nav-link-icon"><i class="fas fa-sitemap"></i></div>
@@ -310,7 +336,6 @@ class Pagina {
                                             </nav>  
                                         </div>';
         }
-
         if(Sessao::getInstance()->verificar_permissao('cadastrar_usuario_perfilUsuario') || Sessao::getInstance()->verificar_permissao('listar_usuario_perfilUsuario')) {
             echo '  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts5" aria-expanded="false" aria-controls="collapseLayouts5" >
                                 <div class="sb-nav-link-icon"><i class="fas fa-user"></i><i class="fas fa-female"></i></div>
@@ -330,7 +355,6 @@ class Pagina {
                                             </nav>  
                                         </div>';
         }
-
         if(Sessao::getInstance()->verificar_permissao('cadastrar_perfilUsuario_recurso') || Sessao::getInstance()->verificar_permissao('listar_perfilUsuario_recurso')) {
             echo '  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts6" aria-expanded="false" aria-controls="collapseLayouts6" >
                                 <div class="sb-nav-link-icon"><i class="fas fa-female"></i><i class="fas fa-sitemap"></i></div>
@@ -350,7 +374,6 @@ class Pagina {
                                             </nav>  
                                         </div>';
         }
-
         if(Sessao::getInstance()->verificar_permissao('cadastrar_categoria_produto') || Sessao::getInstance()->verificar_permissao('listar_categoria_produto')) {
             echo '  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts7" aria-expanded="false" aria-controls="collapseLayouts7" >
                                 <div class="sb-nav-link-icon"><i class="fas fa-wine-glass-alt"></i></div>
@@ -370,7 +393,6 @@ class Pagina {
                                             </nav>  
                                         </div>';
         }
-
         if(Sessao::getInstance()->verificar_permissao('cadastrar_produto') || Sessao::getInstance()->verificar_permissao('listar_produto')) {
             echo '  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts8" aria-expanded="false" aria-controls="collapseLayouts8" >
                                 <div class="sb-nav-link-icon"><i class="fas fa-hamburger"></i></div>
@@ -390,7 +412,6 @@ class Pagina {
                                             </nav>  
                                         </div>';
         }
-
         if(Sessao::getInstance()->verificar_permissao('realizar_pedido') || Sessao::getInstance()->verificar_permissao('listar_pedido')) {
             echo '  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePedido" aria-expanded="false" aria-controls="collapsePedido" >
                                 <div class="sb-nav-link-icon"><i class="fas fa-utensils"></i></div>
@@ -411,7 +432,7 @@ class Pagina {
                                         </div>';
         }
                                 
-                               /* echo '<div class="collapse" id="collapsePages" aria-labelledby="heading3" data-parent="#sidenavAccordion">
+        /* echo '<div class="collapse" id="collapsePages" aria-labelledby="heading3" data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth"
                                         >Perfil Usuário
@@ -440,9 +461,6 @@ class Pagina {
                                     </div>
                                 </nav>
                             </div>'; */
-
-
-
                       /* echo '   <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages"
                                 ><div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Mesa
@@ -470,12 +488,12 @@ class Pagina {
                // }
 
 
-                echo '   <div class="sb-sidenav-menu-heading">Gráficos</div>
+                /*echo '   <div class="sb-sidenav-menu-heading">Gráficos</div>
                             <a class="nav-link" href="charts.html"
                                 ><div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Pedidos</a
-                            >
-                        </div>
+                            >';*/
+                      echo '  </div>
                     </div>';
 
         echo '      <div class="sb-sidenav-footer">
@@ -505,6 +523,7 @@ class Pagina {
         echo '<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <a class="navbar-brand" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">TaNaMesa <img width="40px" height="40px;" src="imgs/logo.PNG" /> </a><button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button
             ><!-- Navbar Search-->
+            <div id="idPedidos" class="" style="width: 80%;padding-top: -10px"></div>
             <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
                 <div class="input-group">
                
@@ -594,6 +613,7 @@ class Pagina {
 
     public static function  abrir_body(){
         echo '<body class="sb-nav-fixed">';
+                 
     }
 
     public static function fechar_body(){
@@ -606,7 +626,7 @@ class Pagina {
               
                 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
                 <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
-                <script src="assets/demo/datatables-demo.js"></script>  
+                <script src="js/datatables-demo.js"></script>  
                 </body>';
     }
     public static function footer(){

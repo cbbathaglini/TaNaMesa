@@ -20,8 +20,13 @@ try {
     require_once __DIR__ . '/../classes/CategoriaProduto/CategoriaProduto.php';
     require_once __DIR__ . '/../classes/CategoriaProduto/CategoriaProdutoRN.php';
 
+    require_once __DIR__ . '/../classes/Historico/Historico.php';
+    require_once __DIR__ . '/../classes/Historico/HistoricoRN.php';
 
     Sessao::getInstance()->validar();
+
+    $objCategoriaProduto = new CategoriaProduto();
+    $objCategoriaProdutoRN = new CategoriaProdutoRN();
 
     $objPedido = new Pedido();
     $objPedidoRN = new PedidoRN();
@@ -47,10 +52,10 @@ try {
     $html_mesas = '';
     $mesas = $objMesaRN->listar($objMesa);
     foreach ($mesas as $mesa) {
-        if ((in_array(Sessao::getInstance()->getIdUsuario(), $mesa->getIdFuncionario()) && $mesa->getIdFuncionario() != null) || $_SESSION['TANAMESA']['PERFIL'] == PerfilUsuarioRN::$PU_ADMINISTRADOR) {
+       // if ((in_array(Sessao::getInstance()->getIdUsuario(), $mesa->getIdFuncionario()) && $mesa->getIdFuncionario() != null) || $_SESSION['TANAMESA']['PERFIL'] == PerfilUsuarioRN::$PU_ADMINISTRADOR) {
             if ($mesa->getBoolPrecisaFunc()) {
                 $html_mesas .= '<div class="col-xl-3 col-md-6">
-                                    <div class="card bg-warning text-white mb-4">
+                                    <div class="card bg-warning text-white mb-4" id="idMesa_'.$mesa->getIdMesa().'">
                                         <div class="card-body"> Mesa ' . $mesa->getIdMesa() . ' (AGUARDANDO GARÇOM)</div>
                                         <div class="card-footer d-flex align-items-center justify-content-between">
                                             <a class="small text-white stretched-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_pedido&idMesa=' . $mesa->getIdMesa()). '">Fazer Pedido</a>
@@ -62,7 +67,7 @@ try {
 
             if ($mesa->getDisponivel() && !$mesa->getEsperandoPedido() && !$mesa->getBoolPrecisaFunc()) {
                 $html_mesas .= '<div class="col-xl-3 col-md-6">
-                                    <div class="card bg-success text-white mb-4">
+                                    <div class="card bg-success text-white mb-4" id="idMesa_'.$mesa->getIdMesa().'">
                                         <div class="card-body"> Mesa ' . $mesa->getIdMesa() . ' (DISPONÍVEL)</div>
                                         <div class="card-footer d-flex align-items-center justify-content-between">
                                             <a class="small text-white stretched-link links_cards" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_pedido&idMesa=' . $mesa->getIdMesa()) . '"> Fazer pedido  </a>
@@ -74,19 +79,19 @@ try {
 
             if (!$mesa->getDisponivel() && !$mesa->getBoolPrecisaFunc()) {
                 $html_mesas .= '<div class="col-xl-3 col-md-6">
-                                    <div class="card bg-danger text-white mb-4">
+                                    <div class="card bg-danger text-white mb-4" id="idMesa_'.$mesa->getIdMesa().'">
                                         <div class="card-body"> Mesa ' . $mesa->getIdMesa() . ' (OCUPADA)</div>
                                         <div class="card-footer d-flex align-items-center justify-content-between">
-                                            <a class="small text-white stretched-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_pedido&idMesa=' . $mesa->getIdMesa() . '&idPedido=' . $mesa->getIdPedido()) . '">Ver Pedido</a>
+                                            <a class="small text-white stretched-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_pedido&idMesa=' . $mesa->getIdMesa()) . '">Ver Pedido</a>
                                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                         </div>
                                     </div>
                                 </div>';
             }
-        }
+       // }
     }
 }catch (Throwable $e){
-    die($e);
+    //die($e);
     Pagina::getInstance()->processar_excecao($e);
 }
 
@@ -102,59 +107,48 @@ Pagina::abrir_head("TÁ NA MESA");
         //function verificarAmostras(){
         $.ajax({
             url: "<?=Sessao::getInstance()->assinar_link('controlador.php?action=ver_pedidos_dia') ?>",
-            success: function (result) {
-                //alert(result);
+            success: function (arr_result) {
+                //alert(arr_result);
                 //Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
                 //Chart.defaults.global.defaultFontColor = '#292b2c';
 
+                var arr_nomes = arr_result['nomes'];
+                var arr_nomes_cores = arr_result['nomes_cores'];
 
-                // Area Chart Example
-                var ctx = document.getElementById("myAreaChart");
-                var myLineChart = new Chart(ctx, {
-                    type: 'line',
+                var i = 0;
+                var nomes = new Array();
+                var valoresNomes = new Array();
+                for (var nome in arr_nomes) {
+                    console.log(nome);
+                    nomes[i] = nome + " (" + arr_nomes[nome] + ")";
+                    console.log(arr_nomes[nome]);
+                    valoresNomes[i] = arr_nomes[nome];
+                    i++;
+                }
+
+                // Polar Chart Example
+                var ctxCategorias = document.getElementById("polarPedidosDia");
+                var myPolarChart = new Chart(ctxCategorias, {
+                    type: 'pie',
                     data: {
-                        labels: result['mes'],
-                        datasets: [{
-                            label: "Pedidos",
-                            lineTension: 0.3,
-                            backgroundColor: "rgba(2,117,216,0.2)",
-                            borderColor: "rgba(2,117,216,1)",
-                            pointRadius: 5,
-                            pointBackgroundColor: "rgba(2,117,216,1)",
-                            pointBorderColor: "rgba(255,255,255,0.8)",
-                            pointHoverRadius: 5,
-                            pointHoverBackgroundColor: "rgba(2,117,216,1)",
-                            pointHitRadius: 50,
-                            pointBorderWidth: 2,
-                            data:result['qntPedidos'],
-                        }],
+                        labels: nomes,
+                        datasets: [
+                            {
+                                label: "Population (millions)",
+                                backgroundColor: arr_nomes_cores,
+                                data: valoresNomes
+                            }
+                        ]
                     },
                     options: {
-                        scales: {
-                            xAxes: [{
-                                time: {
-                                    unit: 'date'
-                                },
-                                gridLines: {
-                                    display: false
-                                },
-                                ticks: {
-                                    maxTicksLimit: 7
-                                }
-                            }],
-                            yAxes: [{
-                                ticks: {
-                                    min: 0,
-                                    max: 8,
-                                    maxTicksLimit: 5
-                                },
-                                gridLines: {
-                                    color: "rgba(0, 0, 0, .125)",
-                                }
-                            }],
+                        title: {
+                            display: false,
+                            text: 'Predicted world population (millions) in 2050'
                         },
                         legend: {
-                            display: false
+                            display: true,
+                            position: 'right',
+                            fontSize: 12
                         }
                     }
                 });
@@ -166,7 +160,136 @@ Pagina::abrir_head("TÁ NA MESA");
     </script>
 
     <script type="text/javascript">
+        /*
+            qntSobremesa" => $quantidadeSobremesa,
+                         "qntFrango" => $quantidadeFrango,
+                         "qntMassa" => $quantidadeMassa,
+                         "qntDiversos" => $quantidadeDiversos,
+                        "qntPorco" => $quantidadePorco,
+                        "qntCordeiro" => $quantidadeCordeiro,
+                        "qntBode" => $quantidadeBode,
+                        "qntVegano" => $quantidadeVegano,
+                        "qntVegetariano" => $quantidadeVegetariano,
+                        "qntCarne" => $quantidadeCarne,
+                        "qntCafeManha" => $quantidadeCafeManha,
+                        "qntFrutosMar"
+        */
 
+
+        $.ajax({
+            url: "<?=Sessao::getInstance()->assinar_link('controlador.php?action=ver_categorias_pedidos') ?>",
+            success: function (arr_result) {
+
+                var arr_categorias = arr_result['categorias'];
+                var arr_categorias_cores = arr_result['categorias_cores'];
+
+                var arr_produtos = arr_result['produtos'];
+                var arr_produtos_cores = arr_result['produtos_cores'];
+
+                var i = 0;
+                var nomesCategorias = new Array();
+                var valoresCategorias = new Array();
+                for (var categoria in arr_categorias) {
+                    //console.log(categoria);
+                    nomesCategorias[i] = categoria + " (" + arr_categorias[categoria] + ")";
+                    //console.log(arr_categorias[categoria]);
+                    valoresCategorias[i] = arr_categorias[categoria];
+                    i++;
+                }
+
+                // Polar Chart Example
+                var ctxCategorias = document.getElementById("polarCategorias");
+                var myPolarChart = new Chart(ctxCategorias, {
+                    type: 'polarArea',
+                    data: {
+                        labels: nomesCategorias,
+                        datasets: [
+                            {
+                                label: "Population (millions)",
+                                backgroundColor: arr_categorias_cores,
+                                data: valoresCategorias
+                            }
+                        ]
+                    },
+                    options: {
+                        title: {
+                            display: false,
+                            text: 'Predicted world population (millions) in 2050'
+                        },
+                        legend: {
+                            display: true,
+                            position: 'right',
+                            fontSize: 12
+                        }
+                    }
+                });
+
+
+                var i = 0;
+                var nomesProdutos = new Array();
+                var valoresProdutos = new Array();
+                for (var produto in arr_produtos) {
+                    //console.log(produto);
+                    nomesProdutos[i] = produto + " (" + arr_produtos[produto] + ")";
+                    //console.log(arr_produtos[produto]);
+                    valoresProdutos[i] = arr_produtos[produto];
+                    i++;
+                }
+
+                // Bar Chart Example
+                var ctxBarProduto = document.getElementById("barChartProdutos");
+                var myLineChart = new Chart(ctxBarProduto, {
+
+                    type: 'horizontalBar',
+                    data: {
+                        labels: nomesProdutos,
+                        datasets: [{
+                            label: "Quantidade vendida",
+                            backgroundColor: arr_produtos_cores,
+                            borderColor: arr_produtos_cores,
+                            data: valoresProdutos
+                        }]
+
+                    },
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                    unit: 'month'
+                                },
+                                gridLines: {
+                                    display: false
+                                },
+                                ticks: {
+                                    min: 0,
+                                    max: 15
+                                    //maxTicksLimit: 5
+                                },
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: 15
+                                    //maxTicksLimit: 5
+                                },
+                                gridLines: {
+                                    display: true
+                                }
+                            }],
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                });
+            }
+        });
+
+    </script>
+
+
+    <script type="text/javascript">
+        /******
         $.ajax({
             url: "<?=Sessao::getInstance()->assinar_link('controlador.php?action=ver_categorias_pedidos') ?>",
             success: function (third_result) {
@@ -232,11 +355,11 @@ Pagina::abrir_head("TÁ NA MESA");
                     }
                 });
             }*/
-        });
+       // });
     </script>
 
-    <script type="text/javascript">
-
+     <script type="text/javascript">
+    /*************
         $.ajax({
             url: "<?=Sessao::getInstance()->assinar_link('controlador.php?action=ver_mais_pedidos') ?>",
             success: function (second_result) {
@@ -286,8 +409,10 @@ Pagina::abrir_head("TÁ NA MESA");
                 });
             }
         });
+     **************/
     </script>
 <?php
+
 Pagina::fechar_head();
 Pagina::abrir_body();
 Pagina::getInstance()->montar_menu_topo();
@@ -300,6 +425,7 @@ echo '
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Dashboard</li>
                         </ol>
+                        
                        
                         <div class="row" >
                             '.$html_mesas.'
@@ -308,16 +434,16 @@ echo '
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="card mb-4">
-                                    <div class="card-header"><i class="fas fa-chart-area mr-1"></i>Pedidos por dia <small style="color: grey;">*Últimos 7 dias</small></div>
-                                    <div class="card-body"><canvas id="myAreaChart" width="100%"  height="40"></canvas></div>
+                                    <div class="card-header"><i class="fas fa-chart-area mr-1"></i>Mais pedidos do dia </div>
+                                    <div class="card-body"><canvas id="polarPedidosDia" width="100%"  height="40"></canvas></div>
                                     <div class="card-footer small text-muted">Atualizado em '.date("d/m/Y H:i:s").'</div>
                                 </div>
-                            </div>
+                            </div> 
                       
                             <div class="col-xl-6">
                                 <div class="card mb-4">
                                     <div class="card-header"><i class="fas fa-chart-pie mr-1"></i>Categorias de pratos</div>
-                                    <div class="card-body"><canvas id="pieCategorias" width="100%" height="50"></canvas></div>
+                                    <div class="card-body"><canvas id="polarCategorias" width="100%" height="50"></canvas></div>
                                      <div class="card-footer small text-muted">Atualizado em '.date("d/m/Y H:i:s").'</div>
                                 </div>
                             </div>
@@ -326,7 +452,7 @@ echo '
                             <div class="col-xl-12">
                                 <div class="card mb-4">
                                     <div class="card-header"><i class="fas fa-chart-bar mr-1"></i>Quantidade vendida de cada produto</div>
-                                    <div class="card-body"><canvas id="barCharCategorias" width="100%" height="50"></canvas></div>
+                                    <div class="card-body"><canvas id="barChartProdutos" width="100%" height="50"></canvas></div>
                                      <div class="card-footer small text-muted">Atualizado em '.date("d/m/Y H:i:s").'</div>
                                 </div>
                             </div>

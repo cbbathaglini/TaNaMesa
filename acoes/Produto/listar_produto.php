@@ -41,31 +41,56 @@ try{
 
 
     $arrProdutos = $objProdutoRN->listar($objProduto);
+    /*
+    echo "<pre>";
+    print_r($arrProdutos);
+    echo "</pre>";
+    */
+    $arrCategorias = $objCategoriaProdutoRN->listar($objCategoriaProduto);
+    $contador = 0;
+    foreach ($arrCategorias as $categoria) {
+        $html .= '<div id="accordion" style="margin-top: 10px;">
+                              <div class="card">
+                                <div class="card-header" id="heading_'.$contador.'">
+                                  <h5 class="mb-0">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse'.$contador.'" aria-expanded="true" aria-controls="collapse'.$contador.'">
+                                                '.$categoria->getStrCategoria().'
+                                            </button>
+                                  </h5>
+                                </div>
+                                <div id="collapse'.$contador.'" class="collapse show" aria-labelledby="heading'.$contador.'" data-parent="#accordion">
+                                  <div class="card-body">
+                                  ';
+        foreach ($arrProdutos as $p){
+            if($p->getCategoriaProduto() == $categoria->getStrCategoriaEnglish()) {
 
-    foreach ($arrProdutos as $p){
-       if($p->getCategoriaProduto() == 2 || $p->getCategoriaProduto() == 1 || $p->getCategoriaProduto() == 8){ //massas,frangos e massas
-           $style = ' width="100px" height="80px" ';
-       }else{
-           $style = ' width="50px" height="80px" ';
-       }
-        $objCategoriaProduto->setIdCategoriaProduto($p->getCategoriaProduto());
-        $objCategoriaProduto = $objCategoriaProdutoRN->consultar($objCategoriaProduto);
-        $html.='<tr>
-                        <th scope="row">'.Pagina::formatar_html($p->getIdProduto()).'</th>
-                         <td><img '.$style.'  src="'.$p->getCaminhoImgSistWEB().'" ></td>
-                         <td>'.Pagina::formatar_html($p->getNome()).'</td>
-                        <td>'.Pagina::formatar_html($objCategoriaProduto->getDescricao()).'</td>
-                        <td>'.Pagina::formatar_html($p->getPreco()).'</td>';
+                $html .= '<table class="table table-hover" >';
+                $html .= '<tr>
+                        <th scope="row">' . Pagina::formatar_html($p->getIdProduto()) . '</th>
+                         <td ><img style="width: 100px;height: 100px;" src="' . $p->getStrURLImagem() . '" ></td>
+                         <td>' . Pagina::formatar_html($p->getNome()) . '</td>
+                        <td>' . Pagina::formatar_html($p->getCategoriaProduto()) . '</td>
+                        <td>' . Pagina::formatar_html($p->getPreco()) . '</td>';
 
-        if(Sessao::getInstance()->verificar_permissao('editar_produto')) {
-            $html .= '<td><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_produto&idProduto='.Pagina::formatar_html($p->getIdProduto())).'"><i class="fas fa-edit "></i></a></td>';
+                if (Sessao::getInstance()->verificar_permissao('editar_produto')) {
+                    $html .= '<td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_produto&idProduto=' . Pagina::formatar_html($p->getIdProduto())) . '"><i class="fas fa-edit "></i></a></td>';
+                }
+
+                if (Sessao::getInstance()->verificar_permissao('remover_produto')) {
+                    $html .= '<td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_produto&idProduto=' . Pagina::formatar_html($p->getIdProduto())) . '"><i class="fas fa-trash-alt"></a></td>';
+                }
+
+                $html .= ' </tr>';
+                $html .= '</table>';
+
+            }
         }
-
-        if(Sessao::getInstance()->verificar_permissao('remover_produto')) {
-            $html .= '<td><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=remover_produto&idProduto='.Pagina::formatar_html($p->getIdProduto())).'"><i class="fas fa-trash-alt"></a></td>';
-        }
-
-        $html .= ' </tr>';
+        $contador++;
+        $html .= '        
+                        </div>
+                    </div>
+                  </div>
+                </div>';
     }
 
 } catch (Throwable $ex) {
@@ -90,9 +115,12 @@ echo $alert.'
             }
 echo '         <li class="breadcrumb-item active">Listar Produto</li>';
 echo '  </ol>
-    </div>
- 
-    <div class="conteudo_listar">'.
+    </div>';
+
+echo '<div class="conteudo_grande">'.$html.'</div>';
+
+/*
+echo'    <div class="conteudo_listar">'.
     '<div class="conteudo_tabela"><table class="table table-hover">
             <table class="table table-hover">
                 <thead>
@@ -112,6 +140,7 @@ echo '  </ol>
               </table>
         </div>
     </div>';
+ */
 
 Pagina::fechar_lateral();
 Pagina::footer();

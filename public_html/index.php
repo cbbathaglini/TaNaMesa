@@ -167,13 +167,65 @@ try {
     session_destroy();
     Pagina::abrir_head("Login - Tá Na Mesa");
     Pagina::getInstance()->adicionar_css("style_login");
+    Pagina::getInstance()->adicionar_css("style");
     Pagina::fechar_head();
     Pagina::abrir_body();
     //Pagina::getInstance()->mostrar_excecoes();
     //Pagina::getInstance()->adicionar_javascript();
 
-
-
+echo ' 
+ 
+    <div class="container">
+        <div class="login-content">
+            <form method="post">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <i class="fas fa-user fa-4x" style="color: #3399ff;"></i>
+                        <h2 class="title">BEM-VINDO</h2>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <div class="input-div one">
+                            <div class="i">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="div">
+                                <h5>CPF</h5>
+                                <input type="text" class="input" name="txtCPF" placeholder="CPF"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <div class="input-div pass">
+                            <div class="i">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="div">
+                                <h5>Senha</h5>
+                                <input type="password" class="input" name="txtSenha" placeholder="senha"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <a href="#">Esqueceu a senha?</a>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <input type="submit" class="btn" value="Login" name="btn_logar" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/main.js"></script>
+    ';
+/*
 echo '<div class="wrapper fadeInDown">
         <div id="formContent">
             <!-- Tabs Titles -->
@@ -191,7 +243,7 @@ echo '<div class="wrapper fadeInDown">
         </div>
     </div>';
    
-
+*/
 
     /*<main>
       <div class="form-box" style="margin-top: 10px;">
@@ -206,4 +258,5 @@ echo '<div class="wrapper fadeInDown">
         </div>
     </main>*/
 
-   // Pagina::getInstance()->fechar_corpo();
+Pagina::fechar_body();
+Pagina::fechar_html();

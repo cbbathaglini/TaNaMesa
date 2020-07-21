@@ -42,7 +42,8 @@ try{
         //print_r($categoria);
         $html.='<tr>
                         <th scope="row">'.Pagina::formatar_html($categoria->getIdCategoriaProduto()).'</th>
-                        <td>'.Pagina::formatar_html($categoria->getDescricao()).'</td>';
+                        <td>'.Pagina::formatar_html($categoria->getStrCategoria()).'</td>
+                        <td>'.Pagina::formatar_html($categoria->getStrDescricao()).'</td>';
 
         if(Sessao::getInstance()->verificar_permissao('editar_categoria_produto')) {
             $html .= '<td><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_categoria_produto&idCategoriaProduto='.Pagina::formatar_html($categoria->getIdCategoriaProduto())).'"><i class="fas fa-edit "></i></a></td>';

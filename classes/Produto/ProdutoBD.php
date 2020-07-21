@@ -6,7 +6,7 @@ use Kreait\Firebase\ServiceAccount;
 class ProdutoBD {
     protected $database;
     protected $dbname = 'app';
-    protected $child = 'produtos';
+    protected $child = 'Products';
 
     public function __construct(){
         $acc = ServiceAccount::fromJsonFile(__DIR__ . '/../../utils/ta-na-mesa-mobile-b7e69bf0ea6e.json');
@@ -18,15 +18,16 @@ class ProdutoBD {
 
             if (empty($objProduto->getIdProduto())) { return FALSE; }
 
-            $filho = $this->database->getReference($this->dbname)->getChild($this->child)->getChild($objProduto->getIdProduto())->getValue();
+            $filho = $this->database->getReference($this->dbname)->getChild($this->child)->getChild($objProduto->getCategoriaProduto())->getChild($objProduto->getIdProduto())->getValue();
+
             if(!is_null($filho)) {
                 $produto = new Produto();
-                $produto->setIdProduto($filho['idProduto']);
-                $produto->setCategoriaProduto($filho['categoria_produto']);
-                $produto->setNome($filho['nome']);
-                $produto->setIndexNome($filho['index_produto']);
-                $produto->setPreco($filho['preco']);
-                $produto->setCaminhoImgSistWEB($filho['caminho_img_sistWEB']);
+                $produto->setIdProduto($filho['idMeal']);
+                $produto->setCategoriaProduto($filho['category']);
+                $produto->setNome($filho['strMeal']);
+                $produto->setIndexNome($filho['englishName']);
+                $produto->setPreco($filho['price']);
+                $produto->setStrURLImagem($filho['strMealThumb']);
 
                 return $produto;
             }
@@ -46,7 +47,7 @@ class ProdutoBD {
                 'preco' =>  $objProduto->getPreco(),
                 'index_produto' =>  $objProduto->getIndexNome(),
                 'categoria_produto' =>  $objProduto->getCategoriaProduto(),
-                'caminho_img_sistWEB' =>  $objProduto->getCaminhoImgSistWEB()
+                'caminho_img_sistWEB' =>  $objProduto->getStrURLImagem()
             );
 
 
@@ -69,7 +70,7 @@ class ProdutoBD {
                             'preco' =>  $objProduto->getPreco(),
                         'index_produto' =>  $objProduto->getIndexNome(),
                 'categoria_produto' =>  $objProduto->getCategoriaProduto(),
-                'caminho_img_sistWEB' =>  $objProduto->getCaminhoImgSistWEB()
+                'caminho_img_sistWEB' =>  $objProduto->getStrURLImagem()
                 );
 
 
@@ -94,19 +95,36 @@ class ProdutoBD {
             }
 
             $arr = $this->database->getReference($this->dbname)->getChild($this->child)->getValue();
+            /*
+            echo "<pre>";
+            print_r($arr);
+            echo "</pre>";
+            */
 
             $arrProdutos = array();
-            foreach ($arr as $id) {
-                if (!is_null($id)) {
-                    $produto = new Produto();
-                    $produto->setIdProduto($id['idProduto']);
-                    $produto->setCategoriaProduto($id['categoria_produto']);
-                    $produto->setIndexNome($id['index_produto']);
-                    $produto->setNome($id['nome']);
-                    $produto->setPreco($id['preco']);
-                    $produto->setCaminhoImgSistWEB($id['caminho_img_sistWEB']);
-                    $arrProdutos[] = $produto;
+            foreach ($arr as $nome => $id) {
+                foreach ($id as $valor){
+                    if (!is_null($valor)) {
+                        $produto = new Produto();
+                        $produto->setIdProduto($valor['idMeal']);
+                        $produto->setCategoriaProduto($valor['category']);
+                        //$produto->setIndexNome($id['strMeal']);
+                        $produto->setNome($valor['strMeal']);
+                        $produto->setPreco($valor['price']);
+                        $produto->setStrURLImagem($valor['strMealThumb']);
+
+                        $arrProdutos[] = $produto;
+                    }
+
                 }
+                /*
+                //echo $nome;
+                echo "<pre>";
+                print_r($id);
+                echo "</pre>";
+                echo $id['idMeal'];
+
+                */
             }
             return $arrProdutos;
         } catch (Throwable $ex) {
