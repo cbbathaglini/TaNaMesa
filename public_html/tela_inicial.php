@@ -442,7 +442,7 @@ echo '
                       
                             <div class="col-xl-6">
                                 <div class="card mb-4">
-                                    <div class="card-header"><i class="fas fa-chart-pie mr-1"></i>Categorias de pratos</div>
+                                    <div class="card-header"><i class="fas fa-chart-pie mr-1"></i>Categorias de pratos em andamento</div>
                                     <div class="card-body"><canvas id="polarCategorias" width="100%" height="50"></canvas></div>
                                      <div class="card-footer small text-muted">Atualizado em '.date("d/m/Y H:i:s").'</div>
                                 </div>
@@ -451,7 +451,7 @@ echo '
                         <div class="row">
                             <div class="col-xl-12">
                                 <div class="card mb-4">
-                                    <div class="card-header"><i class="fas fa-chart-bar mr-1"></i>Quantidade vendida de cada produto</div>
+                                    <div class="card-header"><i class="fas fa-chart-bar mr-1"></i>Pedidos em andamento</div>
                                     <div class="card-body"><canvas id="barChartProdutos" width="100%" height="50"></canvas></div>
                                      <div class="card-footer small text-muted">Atualizado em '.date("d/m/Y H:i:s").'</div>
                                 </div>
