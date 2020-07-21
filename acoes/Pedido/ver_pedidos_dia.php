@@ -26,8 +26,8 @@ try {
     $objHistorico = new Historico();
     $objHistoricoRN = new HistoricoRN();
 
-    $dataAtual = date("d_m_Y ");
-    $objHistorico->setDataHistorico("17_07_2020");
+    $dataAtual = date("d_m_Y");
+    $objHistorico->setDataHistorico($dataAtual);
     $objHistorico = $objHistoricoRN->consultar($objHistorico);
 
 
