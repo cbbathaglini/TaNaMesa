@@ -185,9 +185,10 @@ try {
                 //die("aaa");
                 foreach ($lista_historicos as $historico){
                     if($historico->getDataHistorico()  == $strIdHistorico){
-                        $arr_produtos[] = $historico->getObjProdutos();
-                        $arr_produtos[] = $pedido->getListaProdutos();
-                        $objHistorico->setObjProdutos($arr_produtos);
+                        //$arr_produtos[] = $historico->getObjProdutos();
+                        //$arr_produtos[] = $pedido->getListaProdutos();
+                        $result = array_merge($historico->getObjProdutos(), $pedido->getListaProdutos());
+                        $objHistorico->setObjProdutos($result);
                         $objHistorico = $objHistoricoRN->cadastrar($objHistorico);
                         $encontrouHistorico = true;
                     }
