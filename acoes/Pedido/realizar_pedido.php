@@ -195,7 +195,7 @@ try {
                 }
 
                 if(!$encontrouPedido){
-                    $objHistorico->setDataHistorico($strIdHistorico);
+                    $objHistorico->setDataHistorico(date("d_m_Y"));
                     $objHistorico->setObjProdutos($pedido->getListaProdutos());
                     $objHistorico->setIdMesa($_GET['idMesa']);
                     $objHistorico = $objHistoricoRN->cadastrar($objHistorico);
